@@ -1,10 +1,16 @@
 import { QuranClient } from '@quranjs/api';
+import { qfConfig } from './qf-config';
 
 let _client: QuranClient | null = null;
 
 export function getQuranClient() {
   if (_client) return _client;
-  _client = new QuranClient();
+  _client = new QuranClient({
+    clientId: qfConfig.clientId,
+    clientSecret: qfConfig.clientSecret,
+    authBaseUrl: qfConfig.authBaseUrl,
+    contentBaseUrl: 'https://api.quran.com/api/v4' // Default for quran.com content
+  });
   return _client;
 }
 

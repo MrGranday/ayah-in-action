@@ -22,12 +22,13 @@ export async function proxy(request: NextRequest) {
 
   const response = NextResponse.next();
   const session = await getIronSession(request, response, sessionOptions);
+  const sessionData = session as any;
 
-  if (!session.accessToken) {
+  if (!sessionData.accessToken) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  const expiresAt = session.expiresAt || 0;
+  const expiresAt = sessionData.expiresAt || 0;
   const now = Math.floor(Date.now() / 1000);
   const fiveMinutes = 5 * 60;
 
