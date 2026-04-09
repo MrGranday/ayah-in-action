@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { getTypedSession } from '@/lib/session';
 import { getAllNotes } from '@/lib/api';
 import { parseNoteBody } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
+import { HistoryClient } from '@/components/HistoryClient';
 import { EmptyState } from '@/components/EmptyState';
 import { Metadata } from 'next';
 
@@ -16,7 +16,7 @@ export const dynamic = 'force-dynamic';
 
 async function getNotes(accessToken: string) {
   try {
-    const result = await getAllNotes(accessToken, undefined, 50);
+    const result = await getAllNotes(accessToken, undefined, 100);
     return result.data || [];
   } catch {
     return [];
@@ -26,53 +26,48 @@ async function getNotes(accessToken: string) {
 export default async function HistoryPage() {
   const cookieStore = await cookies();
   const session = await getTypedSession(cookieStore);
-  
+
   const accessToken = session.accessToken;
   if (!accessToken) {
     redirect('/login');
   }
 
-  const notes = await getNotes(accessToken || '');
-  const appNotes = notes
-    .filter(n => n.body.includes('<!--aia'))
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const rawNotes = await getNotes(accessToken || '');
 
-  return (
-    <div className="max-w-3xl mx-auto">
-      <h1 className="text-2xl font-semibold mb-6">History</h1>
-      
-      {appNotes.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <div className="space-y-4">
-          {appNotes.map((note) => {
-            const { logText, metadata } = parseNoteBody(note.body);
-            const date = new Date(note.createdAt);
-            const formattedDate = date.toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric',
-            });
-            
-            return (
-              <div key={note.id} className="parchment p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-text-muted">{formattedDate}</span>
-                  <Badge variant="gold">{metadata?.verseKey || 'Unknown'}</Badge>
-                </div>
-                <p className="text-text-primary mb-3">{logText}</p>
-                <div className="flex flex-wrap gap-2">
-                  {(metadata?.categories as string[] || []).map((cat) => (
-                    <Badge key={cat} variant="secondary" className="text-xs">
-                      {cat}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+  const appNotes = rawNotes
+    .filter((n: { body: string }) => n.body.includes('<!--aia'))
+    .sort(
+      (a: { createdAt: string }, b: { createdAt: string }) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
+    .map((note: { id: string; body: string; createdAt: string }) => {
+      const { logText, metadata } = parseNoteBody(note.body);
+      return {
+        id: note.id,
+        logText,
+        metadata,
+        date: new Date(note.createdAt),
+      };
+    });
+
+  if (appNotes.length === 0) {
+    return (
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-2xl font-bold mb-8" style={{ color: 'var(--color-text-primary)' }}>
+          My Journal
+        </h1>
+        <div
+          className="parchment p-12"
+          style={{ border: '1px solid var(--color-border)' }}
+        >
+          <EmptyState
+            title="No applications yet…"
+            description="The first one always feels special. Head to the Dashboard and log today's ayah."
+          />
         </div>
-      )}
-    </div>
-  );
+      </div>
+    );
+  }
+
+  return <HistoryClient notes={appNotes} />;
 }

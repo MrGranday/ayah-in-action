@@ -2,54 +2,63 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getTypedSession } from '@/lib/session';
 
-const publicPaths = ['/login', '/api/auth/login', '/api/auth/callback', '/api/auth/logout', '/api/auth/refresh'];
+const publicPaths = [
+  '/',
+  '/login',
+  '/api/auth/login',
+  '/api/auth/callback',
+  '/api/auth/logout',
+  '/api/auth/refresh',
+  '/api/auth/me',
+  '/api/ayah',
+  '/api/voice',
+  '/favicon.ico',
+  '/icons',
+  '/manifest.webmanifest',
+];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname === '/' || pathname === '/favicon.ico') {
+  // Allow public + static paths
+  if (
+    publicPaths.some((p) => pathname === p || pathname.startsWith(p + '/')) ||
+    pathname.startsWith('/_next')
+  ) {
     return NextResponse.next();
   }
 
-  if (publicPaths.some(path => pathname.startsWith(path))) {
-    return NextResponse.next();
-  }
-
-  if (pathname.startsWith('/api/ayah') || pathname.startsWith('/api/voice')) {
-    return NextResponse.next();
-  }
-
-  const response = NextResponse.next();
-  const session = await getTypedSession(request);
+  // Check session for all protected routes
+  const session = await getTypedSession(request as any);
 
   if (!session.accessToken) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('from', pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
+  // Proactive token refresh when < 5 minutes to expiry
   const expiresAt = session.expiresAt || 0;
   const now = Math.floor(Date.now() / 1000);
   const fiveMinutes = 5 * 60;
 
-  if (expiresAt > 0 && expiresAt - now < fiveMinutes) {
+  if (expiresAt > 0 && expiresAt - now < fiveMinutes && session.refreshToken) {
     try {
       const refreshRes = await fetch(new URL('/api/auth/refresh', request.url).toString(), {
         method: 'POST',
-        headers: {
-          Cookie: request.headers.get('cookie') || '',
-        },
+        headers: { Cookie: request.headers.get('cookie') || '' },
       });
-
       if (!refreshRes.ok) {
         return NextResponse.redirect(new URL('/login', request.url));
       }
     } catch {
-      return NextResponse.redirect(new URL('/login', request.url));
+      // Silent fail — let the request through; it will 401 on the API call
     }
   }
 
-  return response;
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|icons/).*)'],
 };
