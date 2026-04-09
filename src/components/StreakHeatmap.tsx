@@ -32,13 +32,13 @@ export function StreakHeatmap({ values }: StreakHeatmapProps) {
         classForValue={classForValue}
         showWeekdayLabels
         gutterSize={2}
-        tooltipDataAttrs={(value: any) => {
+        tooltipDataAttrs={((value: any) => {
           if (!value || !value.date) return { 'data-tooltip-id': 'heatmap-tooltip' };
           return {
             'data-tooltip-id': 'heatmap-tooltip',
             'data-tooltip-content': `${value.count || 0} reflections on ${value.date}`,
           };
-        }}
+        }) as any}
       />
     </div>
   );

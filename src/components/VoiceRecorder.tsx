@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Mic, RotateCcw } from 'lucide-react';
+import type { SpeechRecognition, SpeechRecognitionEvent } from '@/types/pwa';
 
 type RecordingState = 'idle' | 'requesting' | 'recording' | 'transcribing' | 'done' | 'error' | 'permission-denied';
 
