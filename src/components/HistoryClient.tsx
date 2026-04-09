@@ -19,7 +19,7 @@ interface ParsedNote {
   metadata: {
     verseKey?: string;
     categories?: string[];
-    voiceTranscript?: string;
+    voiceTranscript?: string | null;
     date?: string;
   } | null;
   date: Date;

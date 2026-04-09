@@ -59,20 +59,17 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
     
     const sortedDates = [...new Set(appNotes.map(n => new Date(n.createdAt).toLocaleDateString('en-CA')))].sort().reverse();
     let longestStreak = 0;
-    let currentStreak = 0;
     
     if (sortedDates.length > 0) {
       const today = new Date().toLocaleDateString('en-CA');
       const yesterday = new Date(Date.now() - 86400000).toLocaleDateString('en-CA');
       
       if (sortedDates[0] === today || sortedDates[0] === yesterday) {
-        currentStreak = 1;
         for (let i = 1; i < sortedDates.length; i++) {
           const prev = new Date(sortedDates[i - 1]);
           const curr = new Date(sortedDates[i]);
           const diff = Math.round((prev.getTime() - curr.getTime()) / 86400000);
-          if (diff === 1) currentStreak++;
-          else break;
+          if (diff !== 1) break;
         }
       }
       
@@ -90,6 +87,7 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
       longestStreak = Math.max(longestStreak, tempStreak);
     }
     
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStats({
       totalLogs: appNotes.length,
       currentStreak: streak,

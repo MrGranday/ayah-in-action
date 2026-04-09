@@ -132,6 +132,7 @@ export function NavSidebar() {
           >
             <div className="flex items-center gap-3">
               {user.picture ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img src={user.picture} alt={user.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
               ) : (
                 <div

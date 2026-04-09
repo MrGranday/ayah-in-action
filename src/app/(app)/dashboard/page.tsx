@@ -83,8 +83,9 @@ export default async function DashboardPage() {
           hasLoggedToday={hasLogged}
           verseKey={ayah?.verse_key || '1:1'}
           existingLogText={existingLogText}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           existingCategories={existingCategories as any}
-          existingLogId={existingLogId}
+
         />
       </div>
     </div>

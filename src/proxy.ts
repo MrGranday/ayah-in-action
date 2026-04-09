@@ -29,6 +29,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // Check session for all protected routes
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const session = await getTypedSession(request as any);
 
   if (!session.accessToken) {

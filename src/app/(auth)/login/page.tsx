@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { Loader2, AlertCircle } from 'lucide-react';
 
 /* ─── Orbiting Arabic letters (pure CSS animation) ──────────────────── */
@@ -53,6 +54,7 @@ export default function LoginPage() {
   const errorMessage = errorParam ? (errorMessages[errorParam] || 'An error occurred. Please try again.') : null;
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     // Check for existing session cookie
     if (document.cookie.includes('ayah-session')) {
@@ -201,7 +203,7 @@ export default function LoginPage() {
                 </span>
               </div>
               <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-                We use Quran Foundation's secure OAuth to authenticate you. Your reflections are stored in your own Quran.com account.
+                We use Quran Foundation&apos;s secure OAuth to authenticate you. Your reflections are stored in your own Quran.com account.
               </p>
             </div>
 
@@ -239,13 +241,13 @@ export default function LoginPage() {
 
           {/* Back to home */}
           <div className="text-center">
-            <a
+            <Link
               href="/"
               className="text-sm transition-colors hover:underline"
               style={{ color: 'var(--color-text-muted)' }}
             >
               ← Back to home
-            </a>
+            </Link>
           </div>
         </div>
       </div>

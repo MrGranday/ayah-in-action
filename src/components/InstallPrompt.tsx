@@ -23,6 +23,7 @@ export function InstallPrompt() {
     if (dismissedTime) {
       const thirtyDays = 30 * 24 * 60 * 60 * 1000;
       if (Date.now() - parseInt(dismissedTime) < thirtyDays) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setDismissed(true);
       }
     }

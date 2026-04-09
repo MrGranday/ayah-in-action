@@ -19,6 +19,7 @@ export function AyahCard({ ayah }: AyahCardProps) {
     if (ayah.audio_url) {
       const audioEl = new Audio(ayah.audio_url);
       audioEl.onended = () => setIsPlaying(false);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAudio(audioEl);
     }
     return () => {

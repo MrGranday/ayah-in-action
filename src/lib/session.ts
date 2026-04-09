@@ -27,6 +27,7 @@ export const sessionOptions: SessionOptions = {
   },
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function getTypedSession(cookieStore: any) {
   return await getIronSession<SessionData>(cookieStore, sessionOptions);
 }

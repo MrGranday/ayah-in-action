@@ -15,7 +15,6 @@ interface LogFormProps {
   verseKey: string;
   existingLogText?: string;
   existingCategories?: Category[];
-  existingLogId?: string;
   onSaveSuccess?: (logId: string) => void;
 }
 
@@ -24,7 +23,6 @@ export function LogForm({
   verseKey,
   existingLogText = '',
   existingCategories = [],
-  existingLogId,
   onSaveSuccess,
 }: LogFormProps) {
   const [logText, setLogText] = useState(existingLogText);

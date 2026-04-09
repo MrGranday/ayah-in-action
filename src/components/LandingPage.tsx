@@ -369,7 +369,7 @@ export function LandingPage() {
                         className="text-lg italic"
                         style={{ color: 'var(--color-text-muted)' }}
                       >
-                        "Verily, with hardship comes ease."
+                        &ldquo;Verily, with hardship comes ease.&rdquo;
                       </p>
                     </div>
 
@@ -383,14 +383,14 @@ export function LandingPage() {
                     >
                       <div className="flex justify-between items-start mb-4">
                         <span className="text-sm font-bold" style={{ color: 'var(--color-emerald)' }}>
-                          Today's Reflection
+                          Today&apos;s Reflection
                         </span>
                         <span className="text-xs italic" style={{ color: 'var(--color-text-muted)' }}>
                           Apr 9, 2026
                         </span>
                       </div>
                       <p className="italic leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
-                        "Today I felt overwhelmed with my workload, but reading this ayah reminded me that ease is not just after hardship — it's <em>with</em> it. I found calm in small wins."
+                        &ldquo;Today I felt overwhelmed with my workload, but reading this ayah reminded me that ease is not just after hardship — it&apos;s <em>with</em> it. I found calm in small wins.&rdquo;
                       </p>
                       <div className="mt-4 flex flex-wrap gap-2">
                         {['Patience', 'Gratitude', 'Work'].map((tag) => (
@@ -581,7 +581,7 @@ export function LandingPage() {
                     ))}
                   </div>
                   <p className="text-sm leading-relaxed italic mb-6" style={{ color: 'var(--color-text-primary)' }}>
-                    "{t.text}"
+                    &ldquo;{t.text}&rdquo;
                   </p>
                   <div>
                     <div className="font-bold text-sm" style={{ color: 'var(--color-text-primary)' }}>{t.name}</div>
@@ -613,7 +613,7 @@ export function LandingPage() {
             The Quran as a Methodology of Life.
           </h2>
           <p className="text-white/70 text-lg mb-12 max-w-xl mx-auto">
-            Join thousands of believers tracking the Quran's impact on their daily lives. Your journey starts with one ayah.
+            Join thousands of believers tracking the Quran&apos;s impact on their daily lives. Your journey starts with one ayah.
           </p>
           <Link
             href="/api/auth/login"
