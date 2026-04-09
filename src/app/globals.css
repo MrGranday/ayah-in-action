@@ -91,6 +91,10 @@ body {
   animation: fadeIn 0.3s ease-out forwards;
 }
 
+.animate-fade-in {
+  animation: fadeIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 .tag-chip {
   transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
 }
