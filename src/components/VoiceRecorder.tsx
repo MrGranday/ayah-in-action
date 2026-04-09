@@ -53,19 +53,19 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
 
-      const SpeechRecognition =
-        (window as unknown as { SpeechRecognition?: typeof window.SpeechRecognition }).SpeechRecognition ||
-        (window as unknown as { webkitSpeechRecognition?: typeof window.SpeechRecognition }).webkitSpeechRecognition;
+      const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
 
-      let recognition: SpeechRecognition | null = null;
+      let recognition: any = null;
       if (SpeechRecognition) {
         recognition = new SpeechRecognition();
         recognition.continuous = true;
         recognition.interimResults = false;
         recognition.lang = 'en-US';
-        recognition.onresult = (e: unknown) => {
-          const results = e as { results: { [key: number]: { [key: number]: { transcript: string } } } };
-          const transcripts = Array.from(results.results).map((r) => Object.values(r)[0].transcript).join(' ');
+        recognition.onresult = (e: any) => {
+          let transcripts = '';
+          for (let i = e.resultIndex; i < e.results.length; i++) {
+            transcripts += e.results[i][0].transcript;
+          }
           transcriptRef.current = transcripts;
         };
       }

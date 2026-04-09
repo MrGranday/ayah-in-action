@@ -18,13 +18,6 @@ export function formatDate(date: Date): string {
   }).format(date);
 }
 
-export function generateRandomBytes(length: number): string {
-  const array = new Uint8Array(length);
-  crypto.getRandomValues(array);
-  return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join(
-    ''
-  );
-}
 
 export async function sha256hash(message: string): Promise<string> {
   const msgBuffer = new TextEncoder().encode(message);
