@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Loader2, AlertCircle } from 'lucide-react';
@@ -37,7 +37,7 @@ function OrbitRing({ radius, duration, letters }: { radius: number; duration: nu
   );
 }
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -266,5 +266,13 @@ export default function LoginPage() {
         }
       `}</style>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#051a13]"><Loader2 className="w-8 h-8 animate-spin text-white" /></div>}>
+      <LoginContent />
+    </Suspense>
   );
 }
