@@ -1,26 +1,163 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg: #f8f1e3;
+  --color-surface: #efe8d6;
+  --color-parchment: #f5ead4;
+  --color-emerald: #0a6650;
+  --color-emerald-dark: #0d8c6c;
+  --color-gold: #d4a017;
+  --color-gold-dark: #e8b933;
+  --color-text-primary: #1c160f;
+  --color-text-muted: #7a6a50;
+  --color-border: #dcd0b0;
+  --background: var(--color-bg);
+  --foreground: var(--color-text-primary);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme="dark"] {
+  --color-bg: #0f1117;
+  --color-surface: #1a1f2e;
+  --color-parchment: #1e2433;
+  --color-emerald: #0d8c6c;
+  --color-gold: #e8b933;
+  --color-text-primary: #f0ebe0;
+  --color-text-muted: #8a8070;
+  --color-border: #2a3040;
+  --background: var(--color-bg);
+  --foreground: var(--color-text-primary);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --color-bg: #0f1117;
+    --color-surface: #1a1f2e;
+    --color-parchment: #1e2433;
+    --color-emerald: #0d8c6c;
+    --color-gold: #e8b933;
+    --color-text-primary: #f0ebe0;
+    --color-text-muted: #8a8070;
+    --color-border: #2a3040;
+    --background: var(--color-bg);
+    --foreground: var(--color-text-primary);
   }
 }
 
+@theme inline {
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-text-primary);
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-amiri);
+}
+
+* {
+  border-color: var(--color-border);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+.parchment {
+  background-color: var(--color-parchment);
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(212, 160, 23, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(10, 102, 80, 0.04) 0%, transparent 40%);
+  border: 1px solid var(--color-border);
+  box-shadow:
+    inset 0 0 60px rgba(138, 77, 15, 0.08),
+    0 4px 24px rgba(0, 0, 0, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+}
+
+@keyframes ayahSettle {
+  0% { opacity: 0; transform: scale(0.97) translateY(8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.ayah-enter {
+  animation: ayahSettle 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.tag-chip {
+  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.tag-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(10, 102, 80, 0.2);
+}
+
+.tag-chip.selected {
+  background-color: var(--color-emerald);
+  color: white;
+  border-color: var(--color-emerald);
+  font-weight: 600;
+}
+
+.btn-save:active {
+  transform: scale(0.98);
+}
+
+.waveform-bar {
+  width: 3px;
+  border-radius: 2px;
+  background: var(--color-emerald);
+  animation: waveformPulse 0.8s ease-in-out infinite alternate;
+}
+
+.waveform-bar:nth-child(2) { animation-delay: 0.1s; }
+.waveform-bar:nth-child(3) { animation-delay: 0.2s; }
+.waveform-bar:nth-child(4) { animation-delay: 0.3s; }
+.waveform-bar:nth-child(5) { animation-delay: 0.4s; }
+.waveform-bar:nth-child(6) { animation-delay: 0.5s; }
+.waveform-bar:nth-child(7) { animation-delay: 0.6s; }
+
+@keyframes waveformPulse {
+  from { height: 8px; }
+  to { height: 24px; }
+}
+
+.handwritten-date {
+  transform: rotate(-1deg);
+  font-style: italic;
+  color: var(--color-text-muted);
+  background: rgba(212, 160, 23, 0.1);
+  padding: 4px 12px;
+  border-radius: 4px;
+}
+
+.color-empty { fill: #e8e0d0; }
+.color-scale-1 { fill: #c6e9da; }
+.color-scale-2 { fill: #6ec9a2; }
+.color-scale-3 { fill: #0a6650; }
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
 }

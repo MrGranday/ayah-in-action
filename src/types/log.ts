@@ -1,0 +1,40 @@
+export const CATEGORIES = [
+  'Patience',
+  'Gratitude',
+  'Family',
+  'Work',
+  'Anger',
+  'Honesty',
+  'Kindness',
+  'Reflection',
+  'Sabr',
+  'Tawakkul',
+] as const;
+
+export type Category = (typeof CATEGORIES)[number];
+
+export interface ApplicationLog {
+  id: string;
+  verseKey: string;
+  logText: string;
+  categories: Category[];
+  voiceTranscript?: string;
+  voiceNoteUrl?: string;
+  createdAt: string;
+  collectionItemId: string;
+}
+
+export interface NoteMetadata {
+  v: number;
+  app: string;
+  verseKey: string;
+  categories: Category[];
+  voiceTranscript: string | null;
+  date: string;
+  appVersion?: string;
+}
+
+export interface ParsedNote {
+  logText: string;
+  metadata: NoteMetadata | null;
+}
