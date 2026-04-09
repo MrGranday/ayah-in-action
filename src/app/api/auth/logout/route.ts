@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { getIronSession } from 'iron-session';
 import { sessionOptions } from '@/lib/session';
 
 export async function POST(request: NextRequest) {
-  const session = await getIronSession(request.cookies, sessionOptions);
+  const session = await getIronSession(await cookies(), sessionOptions);
   const sessionData = session as any;
   
   sessionData.accessToken = undefined;

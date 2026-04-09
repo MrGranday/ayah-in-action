@@ -4,6 +4,7 @@ import { getIronSession } from 'iron-session';
 import { sessionOptions } from '@/lib/session';
 import { getAllNotes } from '@/lib/api';
 import { ImpactDashboard } from '@/components/ImpactDashboard';
+import { PdfExportButton } from '@/components/PdfExportButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,7 +30,10 @@ export default async function ImpactPage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <h1 className="text-2xl font-semibold mb-6">Impact</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold">Impact</h1>
+        <PdfExportButton notes={notes} />
+      </div>
       <ImpactDashboard notes={notes} />
     </div>
   );

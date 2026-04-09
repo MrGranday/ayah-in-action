@@ -8,31 +8,31 @@ export async function GET(request: NextRequest) {
     const client = getQuranClient();
     
     const chapterId = getRandomChapter();
-    const chapter = await client.chapters.chapter(chapterId);
-    const versesCount = chapter.data.verses_count;
+    const chapter = await client.chapters.findById(chapterId as any);
+    const versesCount = chapter.versesCount;
     const verseNum = getRandomVerse(chapterId, versesCount);
     
-    const verse = await client.quran.getVerse(chapterId, verseNum);
-    const verseData = verse.data;
+    // Fetch verse with English translation (Resource ID 131 is generally Clear Quran or similar popular one)
+    // and audio
+    const verse = await client.verses.findByKey(`${chapterId}:${verseNum}` as any, {
+      translations: [131],
+      audio: 1
+    } as any);
     
-    const translations = await client.quran.getTranslations(verseData.translations.map(t => t.id), chapterId, verseNum);
-    const translationText = translations.data[0]?.text || 'No translation available';
+    const translationText = verse.translations?.[0]?.text || 'No translation available';
     
-    let audioUrl = '';
-    if (verseData.audio_files && verseData.audio_files.length > 0) {
-      audioUrl = verseData.audio_files[0].url;
-    }
+    let audioUrl = verse.audio?.url || '';
     
     const processedVerse = {
-      verse_key: verseData.verse_key,
-      chapter_id: verseData.chapter_id,
-      verse_number: verseData.verse_number,
-      text_uthmani: verseData.text_uthmani,
+      verse_key: verse.verseKey,
+      chapter_id: chapterId,
+      verse_number: verseNum,
+      text_uthmani: verse.textUthmani || verse.textUthmaniSimple || '',
       translation: translationText,
       tafsir_snippet: 'Reflect on this verse and consider how it applies to your daily life.',
       audio_url: audioUrl,
-      chapter_name_arabic: chapter.data.name_arabic,
-      chapter_name_english: chapter.data.name_simple,
+      chapter_name_arabic: chapter.nameArabic,
+      chapter_name_english: chapter.nameSimple,
     };
 
     return NextResponse.json(processedVerse);

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useUIStore } from '@/stores/useUIStore';
 import { Button } from './ui/button';
+import type { BeforeInstallPromptEvent } from '@/types/pwa';
 
 export function InstallPrompt() {
   const { installPromptEvent, setInstallPromptEvent } = useUIStore();
@@ -36,8 +37,8 @@ export function InstallPrompt() {
     if (!installPromptEvent) return;
     const { prompt } = installPromptEvent;
     await prompt();
-    const { userChoice } = await installPromptEvent.userChoice;
-    if (userChoice === 'accepted') {
+    const { outcome } = await installPromptEvent.userChoice;
+    if (outcome === 'accepted') {
       setInstallPromptEvent(null);
     }
   };

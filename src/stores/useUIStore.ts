@@ -2,6 +2,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import type { BeforeInstallPromptEvent } from '@/types/pwa';
 
 type Theme = 'light' | 'dark' | 'system';
 

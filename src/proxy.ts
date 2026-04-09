@@ -5,7 +5,7 @@ import { sessionOptions } from '@/lib/session';
 
 const publicPaths = ['/login', '/api/auth/login', '/api/auth/callback', '/api/auth/logout', '/api/auth/refresh'];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname === '/' || pathname === '/favicon.ico') {
@@ -20,7 +20,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const session = await getIronSession(request.cookies, sessionOptions);
+  const response = NextResponse.next();
+  const session = await getIronSession(request, response, sessionOptions);
 
   if (!session.accessToken) {
     return NextResponse.redirect(new URL('/login', request.url));
@@ -47,7 +48,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {

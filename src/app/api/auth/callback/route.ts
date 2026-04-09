@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { getIronSession } from 'iron-session';
 import { sessionOptions } from '@/lib/session';
 import { getTokenUrl, getBasicAuthHeader, parseJwtPayload } from '@/lib/auth';
@@ -12,7 +13,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/login?error=missing_params', request.url));
   }
 
-  const session = await getIronSession(request.cookies, sessionOptions);
+  const session = await getIronSession(await cookies(), sessionOptions);
   const sessionData = session as any;
 
   if (state !== sessionData.state) {
