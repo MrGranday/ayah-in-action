@@ -1,5 +1,11 @@
 import { qfConfig } from './qf-config';
 
+export function generateRandomBytes(length: number): string {
+  const array = new Uint8Array(length);
+  crypto.getRandomValues(array);
+  return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
 export function getAuthUrl(codeChallenge: string, state: string, nonce: string) {
   const params = new URLSearchParams({
     response_type: 'code',

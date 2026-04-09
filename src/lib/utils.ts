@@ -50,9 +50,11 @@ export function isAyahInActionNote(note: { body: string }): boolean {
   return note.body.includes('<!--aia');
 }
 
+import type { NoteMetadata } from '@/types/log';
+
 export function parseNoteBody(body: string): {
   logText: string;
-  metadata: Record<string, unknown> | null;
+  metadata: NoteMetadata | null;
 } {
   try {
     const match = body.match(/<!--aia\n({.*?})\naia-->/s);

@@ -1,10 +1,10 @@
-import { createClient } from '@quranjs/api';
+import { QuranClient } from '@quranjs/api';
 
-let _client: ReturnType<typeof createClient> | null = null;
+let _client: QuranClient | null = null;
 
 export function getQuranClient() {
   if (_client) return _client;
-  _client = createClient();
+  _client = new QuranClient();
   return _client;
 }
 

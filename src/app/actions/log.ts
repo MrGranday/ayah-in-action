@@ -29,7 +29,8 @@ export async function saveApplicationLog(formData: {
   const { verseKey, logText, categories, voiceTranscript } = parsed.data;
   const session = await getIronSession(await cookies(), sessionOptions);
 
-  if (!session.accessToken) {
+  const accessToken = (session as any).accessToken;
+  if (!accessToken) {
     return { success: false, error: 'Not authenticated' };
   }
 
@@ -48,7 +49,7 @@ export async function saveApplicationLog(formData: {
   const range = `${chapter}:${ayahNum}-${chapter}:${ayahNum}`;
 
   try {
-    const result = await addApplicationNote(session.accessToken, {
+    const result = await addApplicationNote(accessToken, {
       body: noteBody,
       ranges: [range],
       attachedEntities: [
@@ -66,7 +67,7 @@ export async function saveApplicationLog(formData: {
     });
 
     try {
-      await postActivityDay(session.accessToken, {
+      await postActivityDay(accessToken, {
         type: 'QURAN',
         seconds: 60,
         mushafId: 1,

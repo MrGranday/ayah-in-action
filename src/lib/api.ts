@@ -1,5 +1,12 @@
 import { qfConfig } from './qf-config';
 
+export interface Note {
+  id: string;
+  body: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
     super(message);
@@ -68,10 +75,10 @@ export async function getAllNotes(
   accessToken: string,
   cursor?: string,
   limit = 20
-) {
+): Promise<{ data: Note[] }> {
   const params = new URLSearchParams({ first: String(limit) });
   if (cursor) params.set('after', cursor);
-  return userApiFetch(`/notes?${params}`, accessToken);
+  return userApiFetch(`/notes?${params}`, accessToken) as Promise<{ data: Note[] }>;
 }
 
 export async function getNotesByVerse(

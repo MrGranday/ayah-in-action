@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 import { getIronSession } from 'iron-session';
 import { sessionOptions } from '@/lib/session';
 import { getAllNotes } from '@/lib/api';
@@ -33,14 +34,16 @@ async function getNotes(accessToken: string) {
 }
 
 export default async function DashboardPage() {
-  const session = await getIronSession({ cookies: () => Promise.resolve({}) } as any, sessionOptions);
+  const cookieStore = await cookies();
+  const session = await getIronSession(cookieStore, sessionOptions);
   
-  if (!session.accessToken) {
+  const accessToken = (session as any).accessToken;
+  if (!accessToken) {
     redirect('/login');
   }
 
   const ayah = await getRandomAyah();
-  const notesResult = await getNotes(session.accessToken || '');
+  const notesResult = await getNotes(accessToken || '');
   const notes = notesResult.data || [];
   const today = toLocalDate(new Date());
   const hasLogged = hasLoggedOnDate(notes, today);
@@ -62,9 +65,11 @@ export default async function DashboardPage() {
     }
   }
 
+  const user = (session as any).user;
+
   return (
     <div className="max-w-3xl mx-auto">
-      <DailyGreeting user={session.user || null} />
+      <DailyGreeting user={user || null} />
       
       {ayah && <AyahCard ayah={ayah} />}
       

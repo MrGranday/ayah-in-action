@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getIronSession } from 'iron-session';
-import { redirect } from 'next/navigation';
-import { sessionOptions, defaultSession } from '../session';
-import { getAuthUrl, base64UrlEncode, generateRandomBytes } from '@/lib/utils';
+import { sessionOptions } from '@/lib/session';
+import { getAuthUrl, generateRandomBytes } from '@/lib/auth';
 import { sha256hash } from '@/lib/utils';
 
 export async function GET(request: NextRequest) {
@@ -22,11 +21,3 @@ export async function GET(request: NextRequest) {
   
   return NextResponse.redirect(authUrl);
 }
-
-const defaultSession = {
-  accessToken: undefined,
-  refreshToken: undefined,
-  idToken: undefined,
-  expiresAt: undefined,
-  user: undefined,
-};

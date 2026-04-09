@@ -1,5 +1,20 @@
 import { SessionOptions } from 'iron-session';
-import type { SessionData } from '@/types/auth';
+
+export interface SessionData {
+  accessToken?: string;
+  refreshToken?: string;
+  idToken?: string;
+  expiresAt?: number;
+  user?: {
+    sub: string;
+    name: string;
+    email: string;
+    picture?: string;
+  };
+  codeVerifier?: string;
+  state?: string;
+  nonce?: string;
+}
 
 export const sessionOptions: SessionOptions = {
   password: process.env.NEXTAUTH_SECRET || 'fallback-secret-change-in-production',

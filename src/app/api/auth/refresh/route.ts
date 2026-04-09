@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getIronSession } from 'iron-session';
-import { sessionOptions } from '../../session';
+import { sessionOptions } from '@/lib/session';
 import { getTokenUrl, getBasicAuthHeader } from '@/lib/auth';
 
 let refreshPromise: Promise<unknown> | null = null;

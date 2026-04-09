@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 import { getIronSession } from 'iron-session';
 import { sessionOptions } from '@/lib/session';
 import { getAllNotes } from '@/lib/api';
@@ -16,13 +17,15 @@ async function getNotes(accessToken: string) {
 }
 
 export default async function ImpactPage() {
-  const session = await getIronSession({ cookies: () => Promise.resolve({}) } as any, sessionOptions);
+  const cookieStore = await cookies();
+  const session = await getIronSession(cookieStore, sessionOptions);
   
-  if (!session.accessToken) {
+  const accessToken = (session as any).accessToken;
+  if (!accessToken) {
     redirect('/login');
   }
 
-  const notes = await getNotes(session.accessToken || '');
+  const notes = await getNotes(accessToken || '');
 
   return (
     <div className="max-w-4xl mx-auto">
