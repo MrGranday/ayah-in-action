@@ -1,4 +1,4 @@
-import { SessionOptions } from 'iron-session';
+import { SessionOptions, getIronSession } from 'iron-session';
 
 export interface SessionData {
   accessToken?: string;
