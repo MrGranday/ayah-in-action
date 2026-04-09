@@ -20,7 +20,7 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!mounted) return null;
 

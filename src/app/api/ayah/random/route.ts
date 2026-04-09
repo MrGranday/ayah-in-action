@@ -8,20 +8,20 @@ export async function GET(request: NextRequest) {
     const client = getQuranClient();
     
     const chapterId = getRandomChapter();
-    const chapter = await client.chapters.findById(chapterId as any);
+    const chapter = await client.chapters.findById(chapterId.toString());
     const versesCount = chapter.versesCount;
     const verseNum = getRandomVerse(chapterId, versesCount);
     
     // Fetch verse with English translation (Resource ID 131 is generally Clear Quran or similar popular one)
     // and audio
-    const verse = await client.verses.findByKey(`${chapterId}:${verseNum}` as any, {
+    const verse = await client.verses.findByKey(`${chapterId}:${verseNum}`, {
       translations: [131],
       audio: 1
-    } as any);
+    });
     
     const translationText = verse.translations?.[0]?.text || 'No translation available';
     
-    let audioUrl = verse.audio?.url || '';
+    const audioUrl = verse.audio?.url || '';
     
     const processedVerse = {
       verse_key: verse.verseKey,

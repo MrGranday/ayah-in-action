@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getIronSession } from 'iron-session';
-import { sessionOptions } from '@/lib/session';
+import { getTypedSession } from '@/lib/session';
 
 const publicPaths = ['/login', '/api/auth/login', '/api/auth/callback', '/api/auth/logout', '/api/auth/refresh'];
 
@@ -21,14 +20,13 @@ export async function proxy(request: NextRequest) {
   }
 
   const response = NextResponse.next();
-  const session = await getIronSession(request, response, sessionOptions);
-  const sessionData = session as any;
+  const session = await getTypedSession(request);
 
-  if (!sessionData.accessToken) {
+  if (!session.accessToken) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  const expiresAt = sessionData.expiresAt || 0;
+  const expiresAt = session.expiresAt || 0;
   const now = Math.floor(Date.now() / 1000);
   const fiveMinutes = 5 * 60;
 

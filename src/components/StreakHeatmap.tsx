@@ -16,7 +16,7 @@ export function StreakHeatmap({ values }: StreakHeatmapProps) {
   startDate.setDate(startDate.getDate() - 90);
   const endDate = new Date();
 
-  const classForValue = (value: any) => {
+  const classForValue = (value: { date: string; count: number } | undefined) => {
     if (!value || !value.count) return 'color-empty';
     if (value.count === 1) return 'color-scale-1';
     if (value.count <= 3) return 'color-scale-2';
@@ -32,13 +32,13 @@ export function StreakHeatmap({ values }: StreakHeatmapProps) {
         classForValue={classForValue}
         showWeekdayLabels
         gutterSize={2}
-        tooltipDataAttrs={((value: any) => {
+        tooltipDataAttrs={(value: { date: string; count: number } | undefined) => {
           if (!value || !value.date) return { 'data-tooltip-id': 'heatmap-tooltip' };
           return {
             'data-tooltip-id': 'heatmap-tooltip',
             'data-tooltip-content': `${value.count || 0} reflections on ${value.date}`,
           };
-        }) as any}
+        }}
       />
     </div>
   );

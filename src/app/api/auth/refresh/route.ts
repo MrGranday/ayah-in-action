@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { getIronSession } from 'iron-session';
-import { sessionOptions } from '@/lib/session';
+import { getTypedSession } from '@/lib/session';
 import { getTokenUrl, getBasicAuthHeader } from '@/lib/auth';
 
 let refreshPromise: Promise<unknown> | null = null;
@@ -13,10 +12,9 @@ export async function POST(request: NextRequest) {
   }
 
   refreshPromise = (async () => {
-    const session = await getIronSession(await cookies(), sessionOptions);
-    const sessionData = session as any;
+    const session = await getTypedSession(await cookies());
     
-    const refreshToken = sessionData.refreshToken;
+    const refreshToken = session.refreshToken;
     if (!refreshToken) {
       return NextResponse.json({ error: 'No refresh token' }, { status: 401 });
     }
@@ -45,11 +43,11 @@ export async function POST(request: NextRequest) {
 
       const tokens = await tokenResponse.json();
       
-      sessionData.accessToken = tokens.access_token;
-      sessionData.expiresAt = Math.floor(Date.now() / 1000) + tokens.expires_in;
+      session.accessToken = tokens.access_token;
+      session.expiresAt = Math.floor(Date.now() / 1000) + tokens.expires_in;
       
       if (tokens.refresh_token) {
-        sessionData.refreshToken = tokens.refresh_token;
+        session.refreshToken = tokens.refresh_token;
       }
       
       await session.save();

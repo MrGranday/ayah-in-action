@@ -1,16 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { getIronSession } from 'iron-session';
-import { sessionOptions } from '@/lib/session';
+import { getTypedSession } from '@/lib/session';
 
 export async function GET(request: NextRequest) {
-  const session = await getIronSession(await cookies(), sessionOptions);
+  const session = await getTypedSession(await cookies());
 
-  const sessionData = session as any;
-
-  if (!sessionData.accessToken || !sessionData.user) {
+  if (!session.accessToken || !session.user) {
     return NextResponse.json({ user: null }, { status: 401 });
   }
 
-  return NextResponse.json({ user: sessionData.user });
+  return NextResponse.json({ user: session.user });
 }

@@ -27,8 +27,8 @@ export const sessionOptions: SessionOptions = {
   },
 };
 
-declare module 'iron-session' {
-  interface IronSessionData {
-    ayah: SessionData;
-  }
+export async function getTypedSession(cookieStore: any) {
+  return await getIronSession<SessionData>(cookieStore, sessionOptions);
 }
+
+

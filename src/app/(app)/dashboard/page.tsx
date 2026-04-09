@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { getIronSession } from 'iron-session';
-import { sessionOptions } from '@/lib/session';
+import { getTypedSession, sessionOptions } from '@/lib/session';
 import { getAllNotes } from '@/lib/api';
 import { hasLoggedOnDate, toLocalDate, parseNoteBody } from '@/lib/utils';
 import { DailyGreeting } from '@/components/DailyGreeting';
@@ -41,9 +40,9 @@ async function getNotes(accessToken: string) {
 
 export default async function DashboardPage() {
   const cookieStore = await cookies();
-  const session = await getIronSession(cookieStore, sessionOptions);
+  const session = await getTypedSession(cookieStore);
   
-  const accessToken = (session as any).accessToken;
+  const accessToken = session.accessToken;
   if (!accessToken) {
     redirect('/login');
   }
@@ -71,7 +70,7 @@ export default async function DashboardPage() {
     }
   }
 
-  const user = (session as any).user;
+  const user = session.user;
 
   return (
     <div className="max-w-3xl mx-auto">

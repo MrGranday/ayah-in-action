@@ -2,10 +2,9 @@
 
 import { z } from 'zod';
 import { cookies } from 'next/headers';
-import { getIronSession } from 'iron-session';
 import { revalidatePath } from 'next/cache';
 import { addApplicationNote, postActivityDay } from '@/lib/api';
-import { sessionOptions } from '@/lib/session';
+import { getTypedSession } from '@/lib/session';
 import type { Category } from '@/types/log';
 
 const LogSchema = z.object({
@@ -27,9 +26,9 @@ export async function saveApplicationLog(formData: {
   }
 
   const { verseKey, logText, categories, voiceTranscript } = parsed.data;
-  const session = await getIronSession(await cookies(), sessionOptions);
+  const session = await getTypedSession(await cookies());
 
-  const accessToken = (session as any).accessToken;
+  const accessToken = session.accessToken;
   if (!accessToken) {
     return { success: false, error: 'Not authenticated' };
   }

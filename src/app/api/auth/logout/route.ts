@@ -1,17 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { getIronSession } from 'iron-session';
-import { sessionOptions } from '@/lib/session';
+import { getTypedSession } from '@/lib/session';
 
 export async function POST(request: NextRequest) {
-  const session = await getIronSession(await cookies(), sessionOptions);
-  const sessionData = session as any;
-  
-  sessionData.accessToken = undefined;
-  sessionData.refreshToken = undefined;
-  sessionData.idToken = undefined;
-  sessionData.expiresAt = undefined;
-  sessionData.user = undefined;
+  const session = await getTypedSession(await cookies());
+  session.accessToken = undefined;
+  session.refreshToken = undefined;
+  session.idToken = undefined;
+  session.expiresAt = undefined;
+  session.user = undefined;
   
   await session.save();
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Mic, MicOff, RotateCcw } from 'lucide-react';
+import { Mic, RotateCcw } from 'lucide-react';
 
 type RecordingState = 'idle' | 'requesting' | 'recording' | 'transcribing' | 'done' | 'error' | 'permission-denied';
 
@@ -53,15 +53,15 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
 
-      const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const recognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-      let recognition: any = null;
-      if (SpeechRecognition) {
-        recognition = new SpeechRecognition();
+      let recognition: SpeechRecognition | null = null;
+      if (recognitionClass) {
+        recognition = new recognitionClass();
         recognition.continuous = true;
         recognition.interimResults = false;
         recognition.lang = 'en-US';
-        recognition.onresult = (e: any) => {
+        recognition.onresult = (e: SpeechRecognitionEvent) => {
           let transcripts = '';
           for (let i = e.resultIndex; i < e.results.length; i++) {
             transcripts += e.results[i][0].transcript;

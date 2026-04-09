@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { getIronSession } from 'iron-session';
-import { sessionOptions } from '@/lib/session';
+import { getTypedSession } from '@/lib/session';
 import { getAllNotes } from '@/lib/api';
 import { parseNoteBody } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -26,9 +25,9 @@ async function getNotes(accessToken: string) {
 
 export default async function HistoryPage() {
   const cookieStore = await cookies();
-  const session = await getIronSession(cookieStore, sessionOptions);
+  const session = await getTypedSession(cookieStore);
   
-  const accessToken = (session as any).accessToken;
+  const accessToken = session.accessToken;
   if (!accessToken) {
     redirect('/login');
   }

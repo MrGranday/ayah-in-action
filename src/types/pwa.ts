@@ -7,11 +7,24 @@ export interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
+export interface SpeechRecognitionEvent {
+  readonly resultIndex: number;
+  readonly results: {
+    readonly length: number;
+    [index: number]: {
+      readonly length: number;
+      [index: number]: {
+        readonly transcript: string;
+      };
+    };
+  };
+}
+
 export interface SpeechRecognition extends EventTarget {
   continuous: boolean;
   interimResults: boolean;
   lang: string;
-  onresult: (event: any) => void;
+  onresult: (event: SpeechRecognitionEvent) => void;
   start(): void;
   stop(): void;
 }

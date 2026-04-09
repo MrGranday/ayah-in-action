@@ -6,7 +6,7 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({
-  title = "No applications yet… the first one always feels special.",
+  title = "No applications yet&hellip; the first one always feels special.",
   description,
 }: EmptyStateProps) {
   return (

@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { getIronSession } from 'iron-session';
-import { sessionOptions } from '@/lib/session';
+import { getTypedSession } from '@/lib/session';
 import { getAllNotes } from '@/lib/api';
 import { ImpactDashboard } from '@/components/ImpactDashboard';
 import { PdfExportButton } from '@/components/PdfExportButton';
@@ -25,9 +24,9 @@ async function getNotes(accessToken: string) {
 
 export default async function ImpactPage() {
   const cookieStore = await cookies();
-  const session = await getIronSession(cookieStore, sessionOptions);
+  const session = await getTypedSession(cookieStore);
   
-  const accessToken = (session as any).accessToken;
+  const accessToken = session.accessToken;
   if (!accessToken) {
     redirect('/login');
   }

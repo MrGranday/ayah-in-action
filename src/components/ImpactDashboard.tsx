@@ -8,6 +8,7 @@ import { StreakHeatmap } from './StreakHeatmap';
 import { ImpactStats } from './ImpactStats';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { EmptyState } from './EmptyState';
+import { computeAppStreak, parseNoteBody } from '@/lib/utils';
 
 interface Note {
   id: string;
@@ -31,8 +32,6 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
   });
 
   useEffect(() => {
-    const { computeAppStreak, parseNoteBody } = require('@/lib/utils');
-    
     const appNotes = notes.filter(n => n.body.includes('<!--aia'));
     const streak = computeAppStreak(notes);
     

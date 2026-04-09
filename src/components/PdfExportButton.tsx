@@ -6,7 +6,13 @@ import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { parseNoteBody } from '@/lib/utils';
 
-export function PdfExportButton({ notes }: { notes: any[] }) {
+interface Note {
+  id: string;
+  body: string;
+  createdAt: string;
+}
+
+export function PdfExportButton({ notes }: { notes: Note[] }) {
   const [isExporting, setIsExporting] = useState(false);
 
   const handleExport = async () => {

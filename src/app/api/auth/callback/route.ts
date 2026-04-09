@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { getIronSession } from 'iron-session';
-import { sessionOptions } from '@/lib/session';
+import { getTypedSession } from '@/lib/session';
 import { getTokenUrl, getBasicAuthHeader, parseJwtPayload } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
@@ -13,10 +12,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/login?error=missing_params', request.url));
   }
 
-  const session = await getIronSession(await cookies(), sessionOptions);
-  const sessionData = session as any;
-
-  if (state !== sessionData.state) {
+  const session = await getTypedSession(await cookies());
+ 
+  if (state !== session.state) {
     return NextResponse.redirect(new URL('/login?error=invalid_state', request.url));
   }
 
@@ -27,7 +25,7 @@ export async function GET(request: NextRequest) {
     grant_type: 'authorization_code',
     code,
     redirect_uri: process.env.NEXTAUTH_URL + '/api/auth/callback',
-    code_verifier: sessionData.codeVerifier || '',
+    code_verifier: session.codeVerifier || '',
   });
 
   try {
@@ -50,23 +48,23 @@ export async function GET(request: NextRequest) {
     const idToken = tokens.id_token;
     if (idToken) {
       const payload = parseJwtPayload(idToken);
-      if (payload && sessionData.nonce) {
+      if (payload && session.nonce) {
         const tokenNonce = payload.nonce as string;
-        if (tokenNonce !== sessionData.nonce) {
+        if (tokenNonce !== session.nonce) {
           return NextResponse.redirect(new URL('/login?error=invalid_nonce', request.url));
         }
       }
     }
 
-    sessionData.accessToken = tokens.access_token;
-    sessionData.refreshToken = tokens.refresh_token;
-    sessionData.idToken = tokens.id_token;
-    sessionData.expiresAt = Math.floor(Date.now() / 1000) + tokens.expires_in;
+    session.accessToken = tokens.access_token;
+    session.refreshToken = tokens.refresh_token;
+    session.idToken = tokens.id_token;
+    session.expiresAt = Math.floor(Date.now() / 1000) + tokens.expires_in;
     
     if (tokens.id_token) {
       const idPayload = parseJwtPayload(tokens.id_token);
       if (idPayload) {
-        sessionData.user = {
+        session.user = {
           sub: idPayload.sub as string,
           name: idPayload.name as string,
           email: idPayload.email as string,
@@ -75,9 +73,9 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    sessionData.codeVerifier = undefined;
-    sessionData.state = undefined;
-    sessionData.nonce = undefined;
+    session.codeVerifier = undefined;
+    session.state = undefined;
+    session.nonce = undefined;
     
     await session.save();
 
