@@ -5,6 +5,12 @@ import { sessionOptions } from '@/lib/session';
 import { getAllNotes } from '@/lib/api';
 import { ImpactDashboard } from '@/components/ImpactDashboard';
 import { PdfExportButton } from '@/components/PdfExportButton';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'My Impact Dashboard',
+  description: 'Visualize your consistency and the categories of your reflections.',
+};
 
 export const dynamic = 'force-dynamic';
 

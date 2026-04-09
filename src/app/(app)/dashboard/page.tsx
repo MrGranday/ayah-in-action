@@ -7,6 +7,12 @@ import { hasLoggedOnDate, toLocalDate, parseNoteBody } from '@/lib/utils';
 import { DailyGreeting } from '@/components/DailyGreeting';
 import { AyahCard } from '@/components/AyahCard';
 import { LogForm } from '@/components/LogForm';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Your Daily Ayah',
+  description: 'Reflect on today\'s ayah and track your progress.',
+};
 
 export const dynamic = 'force-dynamic';
 

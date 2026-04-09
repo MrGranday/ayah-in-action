@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { StreakHeatmap } from './StreakHeatmap';
 import { ImpactStats } from './ImpactStats';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { EmptyState } from './EmptyState';
 
 interface Note {
   id: string;
@@ -111,6 +112,19 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
       }
       return acc;
     }, []);
+
+  const appNotesCount = notes.filter(n => n.body.includes('<!--aia')).length;
+
+  if (appNotesCount === 0) {
+    return (
+      <div className="parchment p-12">
+        <EmptyState 
+          title="Start logging to see your journey take shape." 
+          description="Your impact, streaks, and reflections will appear here as soon as you record your first action."
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

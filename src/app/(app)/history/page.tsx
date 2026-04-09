@@ -6,6 +6,12 @@ import { getAllNotes } from '@/lib/api';
 import { parseNoteBody } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { EmptyState } from '@/components/EmptyState';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'My Quran Journal',
+  description: 'A timeline of your reflections and applications of the Quran.',
+};
 
 export const dynamic = 'force-dynamic';
 
