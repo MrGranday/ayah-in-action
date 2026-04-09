@@ -61,30 +61,16 @@ export function NavSidebar() {
         >
           {sidebarOpen ? (
             <Link href="/dashboard" className="flex items-center gap-2.5 min-w-0">
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-                style={{ background: 'var(--color-emerald)' }}
-              >
-                <svg viewBox="0 0 100 100" className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="6">
-                  <path d="M50 12 C50 12 18 30 18 52 C18 74 50 90 50 90 C50 90 82 74 82 52 C82 30 50 12 50 12Z" />
-                  <circle cx="50" cy="52" r="13" strokeWidth="5" />
-                </svg>
-              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icons/icon-192.png" alt="Ayah in Action Logo" className="w-8 h-8 rounded-full shrink-0 object-cover" />
               <span className="font-bold text-sm truncate" style={{ color: 'var(--color-text-primary)' }}>
                 Ayah in Action
               </span>
             </Link>
           ) : (
             <Link href="/dashboard" className="mx-auto">
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center"
-                style={{ background: 'var(--color-emerald)' }}
-              >
-                <svg viewBox="0 0 100 100" className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="6">
-                  <path d="M50 12 C50 12 18 30 18 52 C18 74 50 90 50 90 C50 90 82 74 82 52 C82 30 50 12 50 12Z" />
-                  <circle cx="50" cy="52" r="13" strokeWidth="5" />
-                </svg>
-              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icons/icon-192.png" alt="Ayah in Action Logo" className="w-8 h-8 rounded-full shrink-0 object-cover" />
             </Link>
           )}
           <button

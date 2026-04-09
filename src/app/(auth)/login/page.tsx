@@ -93,14 +93,11 @@ export default function LoginPage() {
           <OrbitRing radius={80} duration={20} letters={['ا', 'ل', 'ق', 'ر', 'آ', 'ن']} />
 
           <div
-            className="w-32 h-32 rounded-3xl flex items-center justify-center shadow-2xl"
+            className="w-32 h-32 rounded-full flex items-center justify-center shadow-2xl overflow-hidden"
             style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)', border: '2px solid rgba(255,255,255,0.3)' }}
           >
-            <svg viewBox="0 0 100 100" className="w-16 h-16 text-white" fill="none" stroke="currentColor" strokeWidth="5">
-              <path d="M50 12 C50 12 18 30 18 52 C18 74 50 90 50 90 C50 90 82 74 82 52 C82 30 50 12 50 12Z" />
-              <circle cx="50" cy="52" r="13" strokeWidth="4" />
-              <path d="M50 26 L50 39 M50 65 L50 78 M26 52 L39 52 M61 52 L74 52" strokeWidth="3" />
-            </svg>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/icons/icon-192.png" alt="Ayah in Action Logo" className="w-full h-full object-cover" />
           </div>
         </div>
 
@@ -139,15 +136,8 @@ export default function LoginPage() {
 
           {/* Mobile logo */}
           <div className="lg:hidden text-center">
-            <div
-              className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
-              style={{ background: 'var(--color-emerald)' }}
-            >
-              <svg viewBox="0 0 100 100" className="w-9 h-9 text-white" fill="none" stroke="currentColor" strokeWidth="5">
-                <path d="M50 12 C50 12 18 30 18 52 C18 74 50 90 50 90 C50 90 82 74 82 52 C82 30 50 12 50 12Z" />
-                <circle cx="50" cy="52" r="13" strokeWidth="4" />
-              </svg>
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/icons/icon-192.png" alt="Ayah in Action Logo" className="w-16 h-16 rounded-full mx-auto mb-4 shadow-lg object-cover" />
             <h1 className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>Ayah in Action</h1>
             <p className="font-amiri text-lg mt-1" style={{ color: 'var(--color-text-muted)' }} dir="rtl">
               ٱلْقُرْآنُ مَنْهَجُ حَيَاةٍ

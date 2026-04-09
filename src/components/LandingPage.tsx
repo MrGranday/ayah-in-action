@@ -201,15 +201,8 @@ export function LandingPage() {
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center shadow-lg"
-              style={{ background: 'var(--color-emerald)' }}
-            >
-              <svg viewBox="0 0 100 100" className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="6">
-                <path d="M50 15 C50 15 20 32 20 52 C20 72 50 88 50 88 C50 88 80 72 80 52 C80 32 50 15 50 15Z" />
-                <circle cx="50" cy="52" r="12" strokeWidth="5" />
-              </svg>
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/icons/icon-192.png" alt="Ayah in Action Logo" className="w-9 h-9 rounded-full shadow-lg shrink-0 object-cover" />
             <span className="text-lg font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Ayah in Action</span>
           </div>
           {/* Nav links */}
@@ -634,15 +627,8 @@ export function LandingPage() {
       >
         <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-3">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center"
-              style={{ background: 'var(--color-emerald)' }}
-            >
-              <svg viewBox="0 0 100 100" className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="6">
-                <path d="M50 15 C50 15 20 32 20 52 C20 72 50 88 50 88 C50 88 80 72 80 52 C80 32 50 15 50 15Z" />
-                <circle cx="50" cy="52" r="12" strokeWidth="5" />
-              </svg>
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/icons/icon-192.png" alt="Ayah in Action Logo" className="w-8 h-8 rounded-full shrink-0 object-cover" />
             <span className="font-bold" style={{ color: 'var(--color-text-primary)' }}>Ayah in Action</span>
           </div>
           <div className="flex gap-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>
