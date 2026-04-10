@@ -158,6 +158,12 @@ export default async function DashboardPage() {
       </div>
     );
   } catch (error: any) {
+    // CRITICAL: Next.js 'redirect()' throws a special Error under the hood. 
+    // If you catch it and don't rethrow it, Next.js panics and throws a 500 Internal Server Error.
+    if (error && typeof error === 'object' && 'digest' in error && typeof error.digest === 'string' && error.digest.startsWith('NEXT_REDIRECT')) {
+      throw error;
+    }
+
     return (
       <div className="p-8 text-red-500">
         <h1 className="text-2xl font-bold mb-4">Error Rendering Dashboard</h1>
