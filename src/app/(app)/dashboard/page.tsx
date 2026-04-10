@@ -16,6 +16,18 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic';
 
+const FALLBACK_AYAH = {
+  verse_key: '2:255',
+  chapter_id: 2,
+  verse_number: 255,
+  text_uthmani: 'ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلْحَيُّ ٱلْقَيُّومُ ۚ لَا تَأْخُذُهُۥ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُۥ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلْأَرْضِ ۚ مَن ذَا ٱلَّذِي يَشْفَعُ عِندَهُۥ إِلَّا بِإِذْنِهِۥ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۚ وَلَا يُحِيطُونَ بِشَىْءٍ مِّنْ عِلْمِهِۥ إِلَّا بِمَا شَآءَ ۚ وَسِعَ كُرْسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلْأَرْضَ ۚ وَلَا يَئُودُهُۥ حِفْظُهُمَا ۚ وَهُوَ ٱلْعَلِيُّ ٱلْعَظِيمُ',
+  translation: 'Allah - there is no deity except Him, the Ever-Living, the Sustainer of existence. Neither drowsiness overtakes Him nor sleep. To Him belongs whatever is in the heavens and whatever is on the earth. Who is it that can intercede with Him except by His permission? He knows what is present before them and what is after them, and they encompass not a thing of His knowledge except for what He wills. His Throne extends over the heavens and the earth, and their preservation does not burden Him; and He is the Most High, the Most Great.',
+  tafsir_snippet: 'This is Ayah al-Kursi, one of the greatest verses in the Quran. Reflect on Allah\'s names and attributes.',
+  audio_url: '',
+  chapter_name_arabic: 'البقرة',
+  chapter_name_english: 'Al-Baqarah',
+};
+
 async function getRandomAyah() {
   try {
     const client = getQuranClient();
@@ -41,15 +53,20 @@ async function getRandomAyah() {
       chapter_name_english: chapter.nameSimple,
     };
   } catch (err) {
-    return null;
+    console.error('Failed to fetch ayah:', err);
+    return FALLBACK_AYAH;
   }
 }
 
 async function getNotes(accessToken: string) {
+  if (!accessToken) {
+    return { data: [] };
+  }
   try {
     const result = await getAllNotes(accessToken, undefined, 50);
     return result;
-  } catch {
+  } catch (error) {
+    console.error('Failed to fetch notes:', error);
     return { data: [] };
   }
 }
