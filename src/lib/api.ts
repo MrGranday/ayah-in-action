@@ -40,16 +40,20 @@ async function userApiFetch(
       throw new ApiError(401, 'Unauthorized');
     }
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new ApiError(res.status, `API error ${res.status}: ${errorText}`);
-  }
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new ApiError(res.status, `API error ${res.status}: ${errorText}`);
+    }
 
-  const contentType = res.headers.get('content-type');
-  if (contentType?.includes('application/json')) {
-    return res.json();
-  }
-  return res.text();
+    // Defensive check for headers (Next.js 16 environment)
+    const contentType = res.headers && typeof res.headers.get === 'function' 
+      ? res.headers.get('content-type') 
+      : null;
+
+    if (contentType?.includes('application/json')) {
+      return res.json();
+    }
+    return res.text();
   } catch (error) {
     clearTimeout(timeoutId);
     throw error;

@@ -29,7 +29,21 @@ export const sessionOptions: SessionOptions = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function getTypedSession(cookieStore: any) {
-  return await getIronSession<SessionData>(cookieStore, sessionOptions);
+  // If cookieStore is a promise, wait for it (Next.js 16/15 compatibility)
+  const resolvedStore = await cookieStore;
+  
+  if (!resolvedStore || typeof resolvedStore.get !== 'function') {
+    console.error('[Session] ERROR: Resolved cookieStore is missing .get() method.', typeof resolvedStore);
+    // Return a dummy session object that won't crash but will be unauthenticated
+    return { 
+      accessToken: undefined, 
+      user: undefined, 
+      save: async () => {}, 
+      destroy: () => {} 
+    } as any;
+  }
+
+  return await getIronSession<SessionData>(resolvedStore, sessionOptions);
 }
 
 

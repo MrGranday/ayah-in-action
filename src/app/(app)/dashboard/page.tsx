@@ -73,13 +73,10 @@ async function getNotes(accessToken: string) {
 }
 
 export default async function DashboardPage() {
-  console.log('[Dashboard] Starting...');
-  
   try {
     let cookieStore;
     try {
       cookieStore = await cookies();
-      console.log('[Dashboard] Cookies obtained');
     } catch (cookieError) {
       console.error('[Dashboard] Failed to get cookies:', cookieError);
       return (
@@ -94,7 +91,6 @@ export default async function DashboardPage() {
     let session;
     try {
       session = await getTypedSession(cookieStore);
-      console.log('[Dashboard] Session loaded, has accessToken:', !!session.accessToken);
     } catch (sessionError) {
       console.error('[Dashboard] Failed to load session:', sessionError);
       return (
@@ -107,15 +103,10 @@ export default async function DashboardPage() {
     
     const accessToken = session.accessToken;
     if (!accessToken) {
-      console.log('[Dashboard] No access token, redirecting to login');
       redirect('/login');
     }
 
-    console.log('[Dashboard] Fetching ayah...');
     const ayah = await getRandomAyah();
-    console.log('[Dashboard] Ayah fetched:', ayah?.verse_key);
-
-    console.log('[Dashboard] Fetching notes...');
     const notesResult = await getNotes(accessToken || '');
     const notes = Array.isArray(notesResult.data) ? notesResult.data : [];
     const today = toLocalDate(new Date());
