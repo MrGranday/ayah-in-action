@@ -19,19 +19,26 @@ async function userApiFetch(
   accessToken: string,
   options: RequestInit = {}
 ) {
-  const res = await fetch(`${qfConfig.apiBaseUrl}/auth/v1${path}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      'x-auth-token': accessToken,
-      'x-client-id': qfConfig.clientId,
-      ...(options.headers ?? {}),
-    },
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 second max timeout
 
-  if (res.status === 401) {
-    throw new ApiError(401, 'Unauthorized');
-  }
+  try {
+    const res = await fetch(`${qfConfig.apiBaseUrl}/auth/v1${path}`, {
+      ...options,
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-auth-token': accessToken,
+        'x-client-id': qfConfig.clientId,
+        ...(options.headers ?? {}),
+      },
+    });
+
+    clearTimeout(timeoutId);
+
+    if (res.status === 401) {
+      throw new ApiError(401, 'Unauthorized');
+    }
 
   if (!res.ok) {
     const errorText = await res.text();
@@ -43,6 +50,10 @@ async function userApiFetch(
     return res.json();
   }
   return res.text();
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
+  }
 }
 
 export interface NotePayload {
