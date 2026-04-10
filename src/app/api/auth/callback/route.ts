@@ -59,7 +59,6 @@ export async function GET(request: NextRequest) {
 
     session.accessToken = tokens.access_token;
     session.refreshToken = tokens.refresh_token;
-    session.idToken = tokens.id_token;
     session.expiresAt = Math.floor(Date.now() / 1000) + tokens.expires_in;
     
     if (tokens.id_token) {
@@ -81,8 +80,9 @@ export async function GET(request: NextRequest) {
     await session.save();
 
     return NextResponse.redirect(new URL('/dashboard', request.url));
-  } catch (error) {
+  } catch (error: any) {
     console.error('Auth callback error:', error);
-    return NextResponse.redirect(new URL('/login?error=callback_failed', request.url));
+    const msg = encodeURIComponent(error?.message || String(error));
+    return NextResponse.redirect(new URL(`/login?error=callback_failed&msg=${msg}`, request.url));
   }
 }
