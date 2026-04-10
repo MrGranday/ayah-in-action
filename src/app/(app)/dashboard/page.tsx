@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { getTypedSession, sessionOptions } from '@/lib/session';
 import { getAllNotes } from '@/lib/api';
 import { hasLoggedOnDate, toLocalDate, parseNoteBody } from '@/lib/utils';
+import { getQuranClient, getRandomChapter, getRandomVerse } from '@/lib/quran-sdk';
 import { DailyGreeting } from '@/components/DailyGreeting';
 import { AyahCard } from '@/components/AyahCard';
 import { LogForm } from '@/components/LogForm';
@@ -17,16 +18,31 @@ export const dynamic = 'force-dynamic';
 
 async function getRandomAyah() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/ayah/random`, {
-      cache: 'no-store',
-    });
-    if (res.ok) {
-      return await res.json();
-    }
-  } catch {
-    // ignore
+    const client = getQuranClient();
+    const chapterId = getRandomChapter();
+    const chapter = await client.chapters.findById(chapterId as any);
+    const versesCount = chapter.versesCount;
+    const verseNum = getRandomVerse(chapterId, versesCount);
+    
+    const verse = await client.verses.findByKey(`${chapterId}:${verseNum}` as any, {
+      translations: [131],
+      audio: 1
+    } as any);
+    
+    return {
+      verse_key: verse.verseKey,
+      chapter_id: chapterId,
+      verse_number: verseNum,
+      text_uthmani: verse.textUthmani || verse.textUthmaniSimple || '',
+      translation: verse.translations?.[0]?.text || 'No translation available',
+      tafsir_snippet: 'Reflect on this verse and consider how it applies to your daily life.',
+      audio_url: verse.audio?.url || '',
+      chapter_name_arabic: chapter.nameArabic,
+      chapter_name_english: chapter.nameSimple,
+    };
+  } catch (err) {
+    return null;
   }
-  return null;
 }
 
 async function getNotes(accessToken: string) {

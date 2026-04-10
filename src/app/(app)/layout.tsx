@@ -45,21 +45,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     }
   }, [theme]);
 
-  if (!mounted) {
-    return null;
-  }
-
   return (
     <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
       <div className="min-h-screen bg-background">
         <NavSidebar />
         <main
           className="transition-all duration-300 p-4 md:p-8"
-          style={{ marginLeft: sidebarOpen ? '240px' : '64px' }}
+          style={{ marginLeft: mounted && sidebarOpen ? '240px' : '64px' }}
         >
           {children}
         </main>
-        <InstallPrompt />
+        {mounted && <InstallPrompt />}
         <Toaster position="bottom-center" />
       </div>
     </ThemeProvider>
