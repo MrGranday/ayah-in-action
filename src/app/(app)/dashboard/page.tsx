@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { getTypedSession, sessionOptions } from '@/lib/session';
+import { getTypedSession } from '@/lib/session';
 import { getAllNotes } from '@/lib/api';
 import { hasLoggedOnDate, toLocalDate, parseNoteBody } from '@/lib/utils';
 import { getQuranClient, getRandomChapter, getRandomVerse } from '@/lib/quran-sdk';
@@ -9,12 +9,13 @@ import { AyahCard } from '@/components/AyahCard';
 import { LogForm } from '@/components/LogForm';
 import { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export const metadata: Metadata = {
   title: 'Your Daily Ayah',
   description: 'Reflect on today\'s ayah and track your progress.',
 };
-
-export const dynamic = 'force-dynamic';
 
 const FALLBACK_AYAH = {
   verse_key: '2:255',
@@ -72,16 +73,49 @@ async function getNotes(accessToken: string) {
 }
 
 export default async function DashboardPage() {
+  console.log('[Dashboard] Starting...');
+  
   try {
-    const cookieStore = await cookies();
-    const session = await getTypedSession(cookieStore);
+    let cookieStore;
+    try {
+      cookieStore = await cookies();
+      console.log('[Dashboard] Cookies obtained');
+    } catch (cookieError) {
+      console.error('[Dashboard] Failed to get cookies:', cookieError);
+      return (
+        <div className="p-8 text-center">
+          <h1 className="text-2xl font-bold mb-4">Session Error</h1>
+          <p className="text-text-muted">Unable to access session. Please try logging in again.</p>
+          <a href="/login" className="text-emerald hover:underline mt-4 block">Go to Login</a>
+        </div>
+      );
+    }
+
+    let session;
+    try {
+      session = await getTypedSession(cookieStore);
+      console.log('[Dashboard] Session loaded, has accessToken:', !!session.accessToken);
+    } catch (sessionError) {
+      console.error('[Dashboard] Failed to load session:', sessionError);
+      return (
+        <div className="p-8 text-center">
+          <h1 className="text-2xl font-bold mb-4">Session Error</h1>
+          <p className="text-text-muted">Unable to load your session.</p>
+        </div>
+      );
+    }
     
     const accessToken = session.accessToken;
     if (!accessToken) {
+      console.log('[Dashboard] No access token, redirecting to login');
       redirect('/login');
     }
 
+    console.log('[Dashboard] Fetching ayah...');
     const ayah = await getRandomAyah();
+    console.log('[Dashboard] Ayah fetched:', ayah?.verse_key);
+
+    console.log('[Dashboard] Fetching notes...');
     const notesResult = await getNotes(accessToken || '');
     const notes = Array.isArray(notesResult.data) ? notesResult.data : [];
     const today = toLocalDate(new Date());

@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 };
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 async function getNotes(accessToken: string) {
   try {
