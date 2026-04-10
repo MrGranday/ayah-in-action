@@ -65,11 +65,12 @@ export function parseNoteBody(body: string): {
 }
 
 export function computeAppStreak(
-  notes: Array<{ createdAt: string; body: string }>
+  notes: Array<any>
 ): number {
-  const appNotes = notes.filter(isAyahInActionNote);
+  const appNotes = notes.filter(n => n?.body && isAyahInActionNote(n));
 
-  const dates = [...new Set(appNotes.map((n) => toLocalDate(new Date(n.createdAt))))].sort().reverse();
+  const validAppNotes = appNotes.filter(n => n.createdAt || n.created_at);
+  const dates = [...new Set(validAppNotes.map((n) => toLocalDate(new Date(n.createdAt || n.created_at))))].sort().reverse();
 
   if (dates.length === 0) return 0;
 
@@ -92,10 +93,18 @@ export function computeAppStreak(
 }
 
 export function hasLoggedOnDate(
-  notes: Array<{ createdAt: string; body: string }>,
+  notes: Array<any>,
   date: string
 ): boolean {
-  return notes.filter(isAyahInActionNote).some(
-    (n) => toLocalDate(new Date(n.createdAt)) === date
+  return notes.filter(n => n?.body && isAyahInActionNote(n)).some(
+    (n) => {
+      const ts = n.createdAt || n.created_at;
+      if (!ts) return false;
+      try {
+        return toLocalDate(new Date(ts)) === date;
+      } catch {
+        return false;
+      }
+    }
   );
 }

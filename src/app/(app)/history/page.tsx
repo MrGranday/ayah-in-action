@@ -35,18 +35,21 @@ export default async function HistoryPage() {
   const rawNotes = await getNotes(accessToken || '');
 
   const appNotes = rawNotes
-    .filter((n: { body: string }) => n.body.includes('<!--aia'))
+    .filter((n: any) => n?.body?.includes('<!--aia'))
     .sort(
-      (a: { createdAt: string }, b: { createdAt: string }) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      (a: any, b: any) => {
+        const da = new Date(a.createdAt || a.created_at || 0).getTime();
+        const db = new Date(b.createdAt || b.created_at || 0).getTime();
+        return db - da;
+      }
     )
-    .map((note: { id: string; body: string; createdAt: string }) => {
+    .map((note: any) => {
       const { logText, metadata } = parseNoteBody(note.body);
       return {
         id: note.id,
         logText,
         metadata,
-        date: new Date(note.createdAt),
+        date: new Date(note.createdAt || note.created_at || 0),
       };
     });
 
