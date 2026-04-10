@@ -22,10 +22,12 @@ export function formatDate(date: Date): string {
 export async function sha256hash(message: string): Promise<string> {
   const msgBuffer = new TextEncoder().encode(message);
   const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('')
+  const hashArray = new Uint8Array(hashBuffer);
+  let binary = '';
+  for (let i = 0; i < hashArray.byteLength; i++) {
+    binary += String.fromCharCode(hashArray[i]);
+  }
+  return btoa(binary)
     .replace(/\+/g, '-')
     .replace(/\//g, '_')
     .replace(/=+$/, '');

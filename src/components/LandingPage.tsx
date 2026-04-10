@@ -282,7 +282,7 @@ export function LandingPage() {
 
             {/* CTA buttons */}
             <div className="landing-hero-animate flex flex-col sm:flex-row gap-4 justify-center mb-16" style={{ '--delay': '200ms' } as React.CSSProperties}>
-              <Link
+              <a
                 href="/api/auth/login"
                 className="group flex items-center justify-center gap-3 px-10 py-4 rounded-2xl font-bold text-white transition-all hover:-translate-y-1 hover:shadow-2xl"
                 style={{
@@ -292,7 +292,7 @@ export function LandingPage() {
               >
                 Begin Your Journey
                 <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-              </Link>
+              </a>
               <a
                 href="#features"
                 className="flex items-center justify-center gap-2 px-10 py-4 rounded-2xl font-semibold transition-all hover:-translate-y-0.5"
@@ -608,14 +608,14 @@ export function LandingPage() {
           <p className="text-white/70 text-lg mb-12 max-w-xl mx-auto">
             Join thousands of believers tracking the Quran&apos;s impact on their daily lives. Your journey starts with one ayah.
           </p>
-          <Link
+          <a
             href="/api/auth/login"
             className="group inline-flex items-center gap-3 bg-white font-bold px-12 py-5 rounded-2xl text-lg transition-all hover:scale-105 hover:shadow-2xl"
             style={{ color: 'var(--color-emerald)' }}
           >
             Connect with Quran.com
             <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-          </Link>
+          </a>
           <p className="mt-6 text-white/50 text-sm">Secure. Private. Soulful.</p>
         </Reveal>
       </section>

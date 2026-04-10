@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { getTypedSession } from '@/lib/session';
 import { getTokenUrl, getBasicAuthHeader, parseJwtPayload } from '@/lib/auth';
+import { qfConfig } from '@/lib/qf-config';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -24,7 +25,7 @@ export async function GET(request: NextRequest) {
   const tokenParams = new URLSearchParams({
     grant_type: 'authorization_code',
     code,
-    redirect_uri: process.env.NEXTAUTH_URL + '/api/auth/callback',
+    redirect_uri: qfConfig.callbackUrl,
     code_verifier: session.codeVerifier || '',
   });
 
