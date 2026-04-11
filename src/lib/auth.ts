@@ -23,7 +23,7 @@ export function getAuthUrl(codeChallenge: string, state: string, nonce: string) 
     response_type: 'code',
     client_id: qfConfig.clientId,
     redirect_uri: qfConfig.callbackUrl,
-    scope: 'openid offline_access profile user user_data collections notes',
+    scope: 'openid offline_access profile notes collections',
     prompt: 'consent',
     state,
     nonce,
