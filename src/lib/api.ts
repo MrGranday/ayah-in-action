@@ -8,9 +8,11 @@ export interface Note {
 }
 
 export class ApiError extends Error {
-  constructor(public status: number, message: string) {
+  public type?: string;
+  constructor(public status: number, message: string, type?: string) {
     super(message);
     this.name = 'ApiError';
+    this.type = type;
   }
 }
 
@@ -42,7 +44,17 @@ async function userApiFetch(
 
     if (!res.ok) {
       const errorText = await res.text();
-      throw new ApiError(res.status, `API error ${res.status}: ${errorText}`);
+      let errorType: string | undefined;
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.type) errorType = parsed.type;
+        if (parsed.message) {
+          throw new ApiError(res.status, parsed.message, errorType);
+        }
+      } catch (e) {
+        if (e instanceof ApiError) throw e;
+      }
+      throw new ApiError(res.status, `API error ${res.status}: ${errorText}`, errorType);
     }
 
     // Defensive check for headers (Next.js 16 environment)

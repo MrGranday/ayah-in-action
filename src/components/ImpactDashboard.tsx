@@ -197,7 +197,7 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
                 </div>
               </div>
               <div className="font-serif text-2xl text-on-surface truncate">
-                {item.value}
+                {String(item.value)}
               </div>
             </motion.div>
           ))}

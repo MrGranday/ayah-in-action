@@ -5,6 +5,8 @@ import { getAllNotes } from '@/lib/api';
 import { ImpactDashboard } from '@/components/ImpactDashboard';
 import { PdfExportButton } from '@/components/PdfExportButton';
 import { Metadata } from 'next';
+import { ApiError } from '@/lib/api';
+import { ScopeDoctor } from '@/components/ScopeDoctor';
 
 export const metadata: Metadata = {
   title: 'My Impact Dashboard',
@@ -17,9 +19,16 @@ export const runtime = 'nodejs';
 async function getNotes(accessToken: string) {
   try {
     const result = await getAllNotes(accessToken, undefined, 100);
-    return result.data || [];
-  } catch {
-    return [];
+    return { data: result.data || [], error: null };
+  } catch (error: any) {
+    console.error('[Impact] Failed to fetch notes:', error);
+    return { 
+      data: [], 
+      error: error instanceof ApiError ? { 
+        status: error.status, 
+        type: error.type 
+      } : { status: 500 }
+    };
   }
 }
 
@@ -32,7 +41,15 @@ export default async function ImpactPage() {
     redirect('/login');
   }
 
-  const notes = await getNotes(accessToken || '');
+  const { data: notes, error: notesError } = await getNotes(accessToken || '');
+
+  if (notesError?.type === 'insufficient_scope' || notesError?.status === 403) {
+    return (
+      <div className="pt-12">
+        <ScopeDoctor missingScopes={['notes', 'collections']} />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-5xl mx-auto space-y-12 pb-24">

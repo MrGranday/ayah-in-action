@@ -8,6 +8,8 @@ import { EmptyState } from '@/components/EmptyState';
 import { Metadata } from 'next';
 import { ScrollText } from 'lucide-react';
 import Link from 'next/link';
+import { ApiError } from '@/lib/api';
+import { ScopeDoctor } from '@/components/ScopeDoctor';
 
 export const metadata: Metadata = {
   title: 'My Quran Journal',
@@ -20,9 +22,16 @@ export const runtime = 'nodejs';
 async function getNotes(accessToken: string) {
   try {
     const result = await getAllNotes(accessToken, undefined, 100);
-    return result.data || [];
-  } catch {
-    return [];
+    return { data: result.data || [], error: null };
+  } catch (error: any) {
+    console.error('[History] Failed to fetch notes:', error);
+    return { 
+      data: [], 
+      error: error instanceof ApiError ? { 
+        status: error.status, 
+        type: error.type 
+      } : { status: 500 }
+    };
   }
 }
 
@@ -35,7 +44,15 @@ export default async function HistoryPage() {
     redirect('/login');
   }
 
-  const rawNotes = await getNotes(accessToken || '');
+  const { data: rawNotes, error: notesError } = await getNotes(accessToken || '');
+
+  if (notesError?.type === 'insufficient_scope' || notesError?.status === 403) {
+    return (
+      <div className="pt-12">
+        <ScopeDoctor missingScopes={['notes', 'collections']} />
+      </div>
+    );
+  }
 
   const appNotes = rawNotes
     .filter((n: any) => isAyahInActionNote(n))

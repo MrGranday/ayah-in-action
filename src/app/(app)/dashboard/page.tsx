@@ -29,6 +29,9 @@ const FALLBACK_AYAH = {
   chapter_name_english: 'Al-Baqarah',
 };
 
+import { ScopeDoctor } from '@/components/ScopeDoctor';
+import { ApiError } from '@/lib/api';
+
 async function getRandomAyah() {
   try {
     const client = getQuranClient();
@@ -43,15 +46,15 @@ async function getRandomAyah() {
     } as any);
     
     return {
-      verse_key: verse.verseKey,
-      chapter_id: chapterId,
-      verse_number: verseNum,
-      text_uthmani: verse.textUthmani || verse.textUthmaniSimple || '',
-      translation: verse.translations?.[0]?.text || 'No translation available',
+      verse_key: String(verse.verseKey || ''),
+      chapter_id: Number(chapterId),
+      verse_number: Number(verseNum),
+      text_uthmani: String(verse.textUthmani || verse.textUthmaniSimple || ''),
+      translation: String(verse.translations?.[0]?.text || 'No translation available'),
       tafsir_snippet: 'Reflect on this verse and consider how it applies to your daily life.',
-      audio_url: verse.audio?.url || '',
-      chapter_name_arabic: chapter.nameArabic,
-      chapter_name_english: chapter.nameSimple,
+      audio_url: String(verse.audio?.url || ''),
+      chapter_name_arabic: String(chapter.nameArabic || ''),
+      chapter_name_english: String(chapter.nameSimple || ''),
     };
   } catch (err) {
     console.error('Failed to fetch ayah:', err);
@@ -61,14 +64,21 @@ async function getRandomAyah() {
 
 async function getNotes(accessToken: string) {
   if (!accessToken) {
-    return { data: [] };
+    return { data: [], error: null };
   }
   try {
     const result = await getAllNotes(accessToken, undefined, 50);
-    return result;
-  } catch (error) {
+    return { data: result.data || [], error: null };
+  } catch (error: any) {
     console.error('Failed to fetch notes:', error);
-    return { data: [] };
+    return { 
+      data: [], 
+      error: error instanceof ApiError ? { 
+        status: error.status, 
+        type: error.type,
+        message: error.message 
+      } : { status: 500, message: String(error) }
+    };
   }
 }
 
@@ -107,8 +117,16 @@ export default async function DashboardPage() {
     }
 
     const ayah = await getRandomAyah();
-    const notesResult = await getNotes(accessToken || '');
-    const notes = Array.isArray(notesResult.data) ? notesResult.data : [];
+    const { data: notes, error: notesError } = await getNotes(accessToken || '');
+
+    if (notesError?.type === 'insufficient_scope' || notesError?.status === 403) {
+      return (
+        <div className="pt-12">
+           <ScopeDoctor missingScopes={['notes', 'collections']} />
+        </div>
+      );
+    }
+
     const today = toLocalDate(new Date());
     const hasLogged = hasLoggedOnDate(notes, today);
 
