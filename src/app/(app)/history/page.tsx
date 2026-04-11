@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { getTypedSession } from '@/lib/session';
 import { getAllNotes } from '@/lib/api';
-import { parseNoteBody } from '@/lib/utils';
+import { parseNoteBody, isAyahInActionNote } from '@/lib/utils';
 import { HistoryClient } from '@/components/HistoryClient';
 import { EmptyState } from '@/components/EmptyState';
 import { Metadata } from 'next';
@@ -36,7 +36,7 @@ export default async function HistoryPage() {
   const rawNotes = await getNotes(accessToken || '');
 
   const appNotes = rawNotes
-    .filter((n: any) => n?.body?.includes('<!--aia'))
+    .filter((n: any) => isAyahInActionNote(n))
     .sort(
       (a: any, b: any) => {
         const da = new Date(a.createdAt || a.created_at || 0).getTime();

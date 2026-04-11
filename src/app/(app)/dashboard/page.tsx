@@ -156,11 +156,12 @@ export default async function DashboardPage() {
     }
 
     console.error('[Dashboard] Render Error:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return (
       <div className="p-8 text-red-500">
         <h1 className="text-2xl font-bold mb-4">Error Rendering Dashboard</h1>
         <p className="mb-4">The dashboard failed to load. Check the server logs for detailed trace.</p>
-        <pre className="bg-gray-100 p-4 rounded text-sm overflow-auto">{error?.message || String(error)}</pre>
+        <pre className="bg-gray-100 p-4 rounded text-sm overflow-auto">{errorMessage}</pre>
       </div>
     );
   }
