@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Mic, RotateCcw } from 'lucide-react';
+import { Mic, RotateCcw, Square, Loader2, Sparkles, Volume2 } from 'lucide-react';
 import type { SpeechRecognition, SpeechRecognitionEvent } from '@/types/pwa';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 type RecordingState = 'idle' | 'requesting' | 'recording' | 'transcribing' | 'done' | 'error' | 'permission-denied';
 
@@ -36,7 +38,7 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
   const startRecording = async () => {
     if (!navigator.mediaDevices) {
       setState('error');
-      setErrorMessage('Microphone not available. You can type your reflection instead.');
+      setErrorMessage('Microphone access is unavailable in this environment.');
       return;
     }
 
@@ -115,13 +117,10 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
       console.error('Microphone error:', err);
       if ((err as { name: string }).name === 'NotAllowedError') {
         setState('permission-denied');
-        setErrorMessage('Mic access denied. Enable it in browser settings or type your note.');
-      } else if ((err as { name: string }).name === 'NotFoundError') {
-        setState('error');
-        setErrorMessage('No microphone found on this device.');
+        setErrorMessage('Access denied. Please enable your microphone.');
       } else {
         setState('error');
-        setErrorMessage('Microphone error. Please try again.');
+        setErrorMessage('Could not initiate audio archive.');
       }
     }
   };
@@ -146,98 +145,134 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
     setState('idle');
   };
 
-  const handleTranscriptChange = (value: string) => {
-    transcriptRef.current = value;
-    onTranscriptChange(value);
-  };
-
-  if (state === 'idle') {
-    return (
-      <button
-        onClick={startRecording}
-        className="flex items-center gap-2 text-text-muted hover:text-emerald transition-colors"
-      >
-        <Mic className="w-4 h-4" />
-        <span className="text-sm">Add Voice Note</span>
-      </button>
-    );
-  }
-
-  if (state === 'requesting') {
-    return (
-      <div className="flex items-center gap-2 text-text-muted">
-        <span className="text-sm">Checking microphone...</span>
-      </div>
-    );
-  }
-
-  if (state === 'recording') {
-    return (
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1">
-            {[...Array(7)].map((_, i) => (
-              <div key={i} className="waveform-bar" />
-            ))}
-          </div>
-          <span className="text-sm text-red-500">
-            {Math.floor(recordingTime / 60)}:{String(recordingTime % 60).padStart(2, '0')} / 0:30
-          </span>
-        </div>
-        <button
-          onClick={stopRecording}
-          className="text-sm text-red-500 hover:text-red-600"
-        >
-          Stop Recording
-        </button>
-      </div>
-    );
-  }
-
-  if (state === 'transcribing') {
-    return (
-      <div className="flex items-center gap-2 text-text-muted">
-        <span className="text-sm">Transcribing...</span>
-      </div>
-    );
-  }
-
-  if (state === 'permission-denied' || state === 'error') {
-    return (
-      <div className="flex flex-col gap-2">
-        <p className="text-sm text-red-500">{errorMessage}</p>
-        <button
-          onClick={() => setState('idle')}
-          className="text-sm text-emerald hover:underline"
-        >
-          Try Again
-        </button>
-      </div>
-    );
-  }
-
-  if (state === 'done') {
-    return (
-      <div className="flex flex-col gap-3">
-        {audioUrl && (
-          <audio src={audioUrl} controls className="w-full h-8" />
+  return (
+    <div className="space-y-4">
+      <AnimatePresence mode="wait">
+        {state === 'idle' && (
+          <motion.button
+            key="idle"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={startRecording}
+            className="flex items-center gap-3 px-5 py-2.5 rounded-full bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-all group"
+          >
+            <div className="p-1.5 rounded-full bg-white editorial-shadow text-primary group-hover:scale-110 transition-transform">
+              <Mic className="w-3.5 h-3.5" />
+            </div>
+            <span className="text-[10px] font-label tracking-[0.2em] uppercase font-bold text-primary/60">Archive Voice Reflection</span>
+          </motion.button>
         )}
-        <textarea
-          value={transcript}
-          onChange={(e) => handleTranscriptChange(e.target.value)}
-          placeholder="Edit transcript if needed..."
-          className="flex min-h-[60px] w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
-        />
-        <button
-          onClick={reRecord}
-          className="flex items-center gap-1 text-sm text-text-muted hover:text-emerald"
-        >
-          <RotateCcw className="w-3 h-3" />
-          Re-record
-        </button>
-      </div>
-    );
-  }
 
-  return null;
+        {state === 'requesting' && (
+          <motion.div key="requesting" className="flex items-center gap-3 px-5 py-2.5">
+            <Loader2 className="w-4 h-4 text-primary/40 animate-spin" />
+            <span className="text-[10px] font-label tracking-widest uppercase text-primary/40 italic">Initializing...</span>
+          </motion.div>
+        )}
+
+        {state === 'recording' && (
+          <motion.div 
+            key="recording"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-2xl p-6 border border-red-100 flex items-center justify-between editorial-shadow"
+          >
+            <div className="flex items-center gap-4">
+              <div className="flex items-end gap-1 h-8">
+                {[...Array(12)].map((_, i) => (
+                  <motion.div 
+                    key={i} 
+                    animate={{ height: [8, 24, 12, 28, 8] }}
+                    transition={{ 
+                      duration: 0.8, 
+                      repeat: Infinity, 
+                      delay: i * 0.05,
+                      ease: "easeInOut"
+                    }}
+                    className="w-1 bg-red-400 rounded-full" 
+                  />
+                ))}
+              </div>
+              <div className="space-y-1">
+                <span className="block text-[10px] font-label tracking-widest uppercase text-red-500 font-bold">Recording Archive</span>
+                <span className="text-xl font-serif text-primary">
+                  {Math.floor(recordingTime / 60)}:{String(recordingTime % 60).padStart(2, '0')} <span className="opacity-20">/ 0:30</span>
+                </span>
+              </div>
+            </div>
+            <button
+              onClick={stopRecording}
+              className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center text-red-500 hover:bg-red-100 transition-colors"
+            >
+              <Square className="w-5 h-5 fill-current" />
+            </button>
+          </motion.div>
+        )}
+
+        {state === 'transcribing' && (
+          <motion.div key="transcribing" className="flex items-center gap-3 px-5 py-2.5">
+            <Sparkles className="w-4 h-4 text-gold animate-pulse" />
+            <span className="text-[10px] font-label tracking-widest uppercase text-gold font-bold">Transcribing Wisdom...</span>
+          </motion.div>
+        )}
+
+        {(state === 'error' || state === 'permission-denied') && (
+          <motion.div 
+            key="error"
+            className="p-4 rounded-xl bg-red-50 border border-red-100 space-y-3"
+          >
+            <p className="text-[10px] font-label tracking-widest uppercase text-red-600 font-bold">{errorMessage}</p>
+            <button
+              onClick={() => setState('idle')}
+              className="text-[10px] font-bold tracking-widest uppercase text-primary hover:underline"
+            >
+              Try Again
+            </button>
+          </motion.div>
+        )}
+
+        {state === 'done' && (
+          <motion.div 
+            key="done"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-4"
+          >
+            <div className="bg-surface-container-high rounded-2xl p-6 border border-outline-variant/10 parchment-texture space-y-4 editorial-shadow">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-primary/60">
+                  <Volume2 className="w-4 h-4" />
+                  <span className="text-[10px] font-label tracking-widest uppercase font-bold">Audio Asset Preserved</span>
+                </div>
+                <button
+                  onClick={reRecord}
+                  className="flex items-center gap-2 text-[10px] font-label tracking-widest uppercase text-primary hover:underline font-bold"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  Reset
+                </button>
+              </div>
+
+              {audioUrl && (
+                <div className="bg-white/50 p-2 rounded-xl backdrop-blur-sm border border-outline-variant/10">
+                   <audio src={audioUrl} controls className="w-full h-10" />
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <span className="text-[10px] font-label tracking-widest uppercase text-on-surface-variant/40 block">Digital Transcript</span>
+                <textarea
+                  value={transcript}
+                  onChange={(e) => onTranscriptChange(e.target.value)}
+                  placeholder="The spoken word manifests here..."
+                  className="w-full bg-white/40 border border-outline-variant/5 rounded-xl p-4 text-sm font-body italic text-on-surface-variant focus:bg-white focus:border-primary/20 transition-all outline-none min-h-[100px]"
+                />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 }
