@@ -44,14 +44,20 @@ function LoginContent() {
   const [mounted, setMounted] = useState(false);
 
   const errorParam = searchParams.get('error');
+  const detailsParam = searchParams.get('msg');
   const errorMessages: Record<string, string> = {
     invalid_state: 'Security check failed. Please try again.',
     token_failed: 'Could not complete sign-in. Please try again.',
     callback_failed: 'Authentication failed. Please try again.',
     missing_params: 'Invalid callback. Please try again.',
     invalid_nonce: 'Security validation failed. Please try again.',
+    init_failed: 'Login initialization failed. Check your connection or configuration.',
   };
-  const errorMessage = errorParam ? (errorMessages[errorParam] || 'An error occurred. Please try again.') : null;
+  
+  let errorMessage = errorParam ? (errorMessages[errorParam] || 'An error occurred. Please try again.') : null;
+  if (detailsParam && errorParam) {
+    errorMessage = `${errorMessage} (${detailsParam})`;
+  }
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect

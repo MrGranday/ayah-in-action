@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { getTypedSession } from '@/lib/session';
 import { getTokenUrl, getBasicAuthHeader, parseJwtPayload } from '@/lib/auth';
 import { qfConfig } from '@/lib/qf-config';
@@ -9,14 +10,19 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get('code');
   const state = searchParams.get('state');
 
+  console.log('[Auth] Callback reached with state:', state);
+
   if (!code || !state) {
-    return NextResponse.redirect(new URL('/login?error=missing_params', request.url));
+    console.warn('[Auth] Callback missing code or state');
+    redirect('/login?error=missing_params');
   }
 
-  const session = await getTypedSession(await cookies());
+  const cookieStore = await cookies();
+  const session = await getTypedSession(cookieStore);
  
   if (state !== session.state) {
-    return NextResponse.redirect(new URL('/login?error=invalid_state', request.url));
+    console.error('[Auth] State mismatch. Expected:', session.state, 'Got:', state);
+    redirect('/login?error=invalid_state');
   }
 
   const tokenUrl = getTokenUrl();
@@ -40,11 +46,13 @@ export async function GET(request: NextRequest) {
     });
 
     if (!tokenResponse.ok) {
-      console.error('Token exchange failed:', await tokenResponse.text());
-      return NextResponse.redirect(new URL('/login?error=token_failed', request.url));
+      const errorText = await tokenResponse.text();
+      console.error('[Auth] Token exchange failed:', errorText);
+      redirect('/login?error=token_failed');
     }
 
     const tokens = await tokenResponse.json();
+    console.log('[Auth] Token exchange successful');
     
     const idToken = tokens.id_token;
     if (idToken) {
@@ -52,7 +60,8 @@ export async function GET(request: NextRequest) {
       if (payload && session.nonce) {
         const tokenNonce = payload.nonce as string;
         if (tokenNonce !== session.nonce) {
-          return NextResponse.redirect(new URL('/login?error=invalid_nonce', request.url));
+          console.error('[Auth] Nonce validation failed');
+          redirect('/login?error=invalid_nonce');
         }
       }
     }
@@ -78,11 +87,15 @@ export async function GET(request: NextRequest) {
     session.nonce = undefined;
     
     await session.save();
+    console.log('[Auth] Session saved. Redirecting to dashboard.');
 
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    redirect('/dashboard');
   } catch (error: any) {
-    console.error('Auth callback error:', error);
+    if (error.digest?.startsWith('NEXT_REDIRECT')) {
+      throw error;
+    }
+    console.error('[Auth] Callback error:', error);
     const msg = encodeURIComponent(error?.message || String(error));
-    return NextResponse.redirect(new URL(`/login?error=callback_failed&msg=${msg}`, request.url));
+    redirect(`/login?error=callback_failed&msg=${msg}`);
   }
 }

@@ -1,6 +1,18 @@
 import { qfConfig } from './qf-config';
 
+const getCrypto = () => {
+  if (typeof globalThis.crypto !== 'undefined') return globalThis.crypto;
+  // Node.js fallback if not globally available (though it should be in v19+)
+  try {
+    return require('node:crypto').webcrypto;
+  } catch {
+    console.error('[Auth] Crypto not available in this environment');
+    throw new Error('Crypto environment not initialized');
+  }
+};
+
 export function generateRandomBytes(length: number): string {
+  const crypto = getCrypto();
   const array = new Uint8Array(length);
   crypto.getRandomValues(array);
   return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
@@ -18,7 +30,8 @@ export function getAuthUrl(codeChallenge: string, state: string, nonce: string) 
     code_challenge_method: 'S256',
   });
 
-  return `${qfConfig.authBaseUrl}/oauth2/auth?${params.toString()}`;
+  const url = `${qfConfig.authBaseUrl}/oauth2/auth?${params.toString()}`;
+  return url;
 }
 
 export function getTokenUrl() {

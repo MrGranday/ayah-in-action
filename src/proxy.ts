@@ -28,36 +28,41 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check session for all protected routes
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const session = await getTypedSession(request as any);
+  console.log('[Proxy] Checking auth for:', pathname);
 
-  if (!session.accessToken) {
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('from', pathname);
-    return NextResponse.redirect(loginUrl);
-  }
+  try {
+    // In Proxy/Middleware, we pass the request.cookies object
+    const session = await getTypedSession(request.cookies);
 
-  // Proactive token refresh when < 5 minutes to expiry
-  const expiresAt = session.expiresAt || 0;
-  const now = Math.floor(Date.now() / 1000);
-  const fiveMinutes = 5 * 60;
+    if (!session.accessToken) {
+      console.warn('[Proxy] No session found. Redirecting to login.');
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('from', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
 
-  if (expiresAt > 0 && expiresAt - now < fiveMinutes && session.refreshToken) {
-    try {
+    // Proactive token refresh when < 5 minutes to expiry
+    const expiresAt = session.expiresAt || 0;
+    const now = Math.floor(Date.now() / 1000);
+    const fiveMinutes = 5 * 60;
+
+    if (expiresAt > 0 && expiresAt - now < fiveMinutes && session.refreshToken) {
+      console.log('[Proxy] Token expiring soon. Attempting refresh...');
       const refreshRes = await fetch(new URL('/api/auth/refresh', request.url).toString(), {
         method: 'POST',
         headers: { Cookie: request.headers.get('cookie') || '' },
       });
       if (!refreshRes.ok) {
+        console.error('[Proxy] Refresh failed. Redirecting to login.');
         return NextResponse.redirect(new URL('/login', request.url));
       }
-    } catch {
-      // Silent fail — let the request through; it will 401 on the API call
     }
-  }
 
-  return NextResponse.next();
+    return NextResponse.next();
+  } catch (error) {
+    console.error('[Proxy] Error checking session:', error);
+    return NextResponse.redirect(new URL('/login?error=session_error', request.url));
+  }
 }
 
 export const config = {

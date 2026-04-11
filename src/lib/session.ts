@@ -1,4 +1,5 @@
 import { SessionOptions, getIronSession } from 'iron-session';
+import { cookies } from 'next/headers';
 
 export interface SessionData {
   accessToken?: string;
@@ -17,7 +18,7 @@ export interface SessionData {
 }
 
 export const sessionOptions: SessionOptions = {
-  password: process.env.NEXTAUTH_SECRET || 'fallback-secret-change-in-production',
+  password: process.env.NEXTAUTH_SECRET || 'fallback-secret-change-in-production-must-be-32-chars',
   cookieName: 'ayah-session',
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production',
@@ -27,23 +28,25 @@ export const sessionOptions: SessionOptions = {
   },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+/**
+ * Gets the typed session from the cookie store.
+ * @param cookieStore The cookie store (from cookies() call).
+ */
 export async function getTypedSession(cookieStore: any) {
-  // If cookieStore is a promise, wait for it (Next.js 16/15 compatibility)
+  // Ensure we have a valid store
   const resolvedStore = await cookieStore;
   
   if (!resolvedStore || typeof resolvedStore.get !== 'function') {
-    console.error('[Session] ERROR: Resolved cookieStore is missing .get() method.', typeof resolvedStore);
-    // Return a dummy session object that won't crash but will be unauthenticated
-    return { 
-      accessToken: undefined, 
-      user: undefined, 
-      save: async () => {}, 
-      destroy: () => {} 
-    } as any;
+    console.error('[Session] Invalid cookie store provided:', typeof resolvedStore);
+    throw new Error('Invalid cookie store');
   }
 
   return await getIronSession<SessionData>(resolvedStore, sessionOptions);
 }
 
-
+/**
+ * Specialized helper to get the session without passing the store (Server Components/Routes)
+ */
+export async function getServerSession() {
+  return getTypedSession(await cookies());
+}
