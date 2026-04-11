@@ -9,11 +9,20 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const code = searchParams.get('code');
   const state = searchParams.get('state');
+  const error = searchParams.get('error');
+  const errorDescription = searchParams.get('error_description');
 
-  console.log('[Auth] Callback reached with state:', state);
+  console.log('[Auth] Callback reached');
+  console.log('[Auth] Full Query:', searchParams.toString());
+
+  if (error) {
+    console.error('[Auth] Provider returned error:', error, errorDescription);
+    const msg = encodeURIComponent(`${error}: ${errorDescription || ''}`);
+    redirect(`/login?error=callback_failed&msg=${msg}`);
+  }
 
   if (!code || !state) {
-    console.warn('[Auth] Callback missing code or state');
+    console.warn('[Auth] Callback missing code or state. Params present:', Array.from(searchParams.keys()));
     redirect('/login?error=missing_params');
   }
 
