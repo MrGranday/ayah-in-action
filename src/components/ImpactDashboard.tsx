@@ -8,7 +8,7 @@ import { StreakHeatmap } from './StreakHeatmap';
 import { ImpactStats } from './ImpactStats';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { EmptyState } from './EmptyState';
-import { computeAppStreak, parseNoteBody } from '@/lib/utils';
+import { computeAppStreak, parseNoteBody, isAyahInActionNote } from '@/lib/utils';
 
 interface Note {
   id: string;
@@ -32,7 +32,7 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
   });
 
   useEffect(() => {
-    const appNotes = notes.filter(n => n.body.includes('<!--aia'));
+    const appNotes = notes.filter(n => isAyahInActionNote(n));
     const streak = computeAppStreak(notes);
     
     const categoryCount: Record<string, number> = {};
@@ -98,7 +98,7 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
   }, [notes]);
 
   const heatmapValues = notes
-    .filter(n => n.body.includes('<!--aia'))
+    .filter(n => isAyahInActionNote(n))
     .reduce((acc: { date: string; count: number }[], note) => {
       const date = new Date(note.createdAt).toLocaleDateString('en-CA');
       const existing = acc.find(x => x.date === date);
@@ -110,7 +110,7 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
       return acc;
     }, []);
 
-  const appNotesCount = notes.filter(n => n.body.includes('<!--aia')).length;
+  const appNotesCount = notes.filter(n => isAyahInActionNote(n)).length;
 
   if (appNotesCount === 0) {
     return (

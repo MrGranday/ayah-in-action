@@ -42,6 +42,7 @@ export function base64UrlEncode(str: string): string {
 }
 
 export function isAyahInActionNote(note: { body: string }): boolean {
+  if (!note || !note.body) return false;
   return note.body.includes('<!--aia');
 }
 

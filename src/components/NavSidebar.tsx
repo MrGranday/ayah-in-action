@@ -125,15 +125,15 @@ export function NavSidebar() {
                   className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
                   style={{ background: 'var(--color-emerald)' }}
                 >
-                  {user.name.charAt(0).toUpperCase()}
+                  {(user.name || user.email || '?').charAt(0).toUpperCase()}
                 </div>
               )}
               <div className="min-w-0">
                 <p className="text-sm font-semibold truncate" style={{ color: 'var(--color-text-primary)' }}>
-                  {user.name}
+                  {user.name || 'User'}
                 </p>
                 <p className="text-xs truncate" style={{ color: 'var(--color-text-muted)' }}>
-                  {user.email}
+                  {user.email || ''}
                 </p>
               </div>
             </div>
