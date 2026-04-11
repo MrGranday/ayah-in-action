@@ -165,35 +165,40 @@ export function LandingPage() {
     <div className="min-h-screen parchment-texture bg-surface text-on-surface font-body selection:bg-tertiary-fixed selection:text-on-surface">
       <ParticleCanvas />
 
-      {/* ── Navbar ─────────────────────────────────────────────────── */}
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
-          scrolled ? 'py-4 glass-morphism border-b border-outline-variant/10 shadow-sm' : 'py-8 bg-transparent'
-        }`}
-      >
-        <div className="container mx-auto px-8 flex justify-between items-center">
-          <div className="flex items-center gap-3 group cursor-pointer">
-            <span className="font-serif italic text-2xl text-primary tracking-tight transition-all">
-              Ayah in Action
-            </span>
+      {/* ── Navbar (Floating Glass Island) ─────────────────────────── */}
+      <header className="fixed top-8 left-1/2 -translate-x-1/2 z-[100] w-[92%] max-w-6xl">
+        <div className={`glass-morphism h-20 px-8 rounded-[2rem] flex items-center justify-between border border-white/40 shadow-2xl transition-all duration-700 ${
+            scrolled ? 'scale-[0.98] shadow-primary/5' : 'scale-100'
+        }`}>
+          <div className="flex items-center gap-3">
+             <div className="w-10 h-10 rounded-2xl silk-gradient flex items-center justify-center p-2 shadow-lg group-hover:rotate-12 transition-transform">
+                <img src="/icons/icon-192.png" alt="Logo" className="w-full h-full object-cover brightness-0 invert" />
+             </div>
+             <span className="font-serif italic text-2xl text-primary tracking-tight transition-all hidden sm:block">
+               Ayah in Action
+             </span>
           </div>
           
-          <nav className="hidden md:flex items-center gap-10">
-            {['Journal', 'Reflection', 'Community'].map((item) => (
+          <nav className="hidden md:flex items-center gap-12">
+            {[
+              { label: 'Journal', href: '#features' },
+              { label: 'Reflection', href: '#ritual' },
+              { label: 'Community', href: '#philosophy' },
+            ].map((item) => (
               <a 
-                key={item}
-                href="#" 
-                className="font-serif font-light text-primary/80 hover:text-primary transition-colors relative group"
+                key={item.label}
+                href={item.href} 
+                className="font-serif font-light text-lg text-primary/80 hover:text-primary transition-all relative group"
               >
-                {item}
-                <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary transition-all group-hover:w-full opacity-30" />
+                {item.label}
+                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-px bg-primary transition-all group-hover:w-full opacity-30" />
               </a>
             ))}
           </nav>
 
           <Link
             href="/login"
-            className="silk-gradient text-white px-8 py-2.5 rounded-lg font-medium text-sm tracking-wide hover:scale-105 transition-all duration-500 editorial-shadow"
+            className="silk-gradient text-white px-8 py-3 rounded-xl font-label text-[10px] tracking-widest uppercase font-bold hover:scale-105 active:scale-95 transition-all editorial-shadow"
           >
             Start Writing
           </Link>
@@ -267,7 +272,7 @@ export function LandingPage() {
       </section>
 
       {/* ── Ritual Section ─────────────────────────────────────────── */}
-      <section className="bg-surface-container-low py-32 px-8 relative z-10">
+      <section id="ritual" className="bg-surface-container-low py-32 px-8 relative z-10">
         <div className="container mx-auto">
           <Reveal className="text-center mb-24 max-w-2xl mx-auto">
             <span className="font-label text-xs tracking-[0.3em] uppercase text-on-surface-variant block mb-4">The Ritual</span>
@@ -296,7 +301,7 @@ export function LandingPage() {
       </section>
 
       {/* ── Quote Block ────────────────────────────────────────────── */}
-      <section className="py-32 px-8 overflow-hidden z-10 relative">
+      <section id="philosophy" className="py-32 px-8 overflow-hidden z-10 relative">
         <div className="container mx-auto">
           <Reveal className="max-w-4xl mx-auto text-center relative">
             <span className="font-serif italic text-8xl text-primary/5 absolute -top-12 -left-8 pointer-events-none select-none">
@@ -315,8 +320,8 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* ── Archive stats ─────────────────────────────────────────── */}
-      <section className="py-32 px-8 overflow-hidden z-10 relative">
+      {/* ── Archive stats (Journal) ─────────────────────────────────── */}
+      <section id="features" className="py-32 px-8 overflow-hidden z-10 relative">
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-24 items-center">
             <Reveal className="order-2 lg:order-1 relative">

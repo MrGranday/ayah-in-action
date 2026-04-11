@@ -5,30 +5,31 @@
   --color-primary: #004c3b;
   --color-primary-container: #0a6650;
   --color-on-primary: #ffffff;
-  
+
   --color-secondary: #795900;
   --color-secondary-container: #ffc641;
-  
+
   --color-tertiary: #523f23;
   --color-tertiary-container: #6b5638;
   --color-tertiary-fixed: #fbdeb8;
-  
+
   --color-background: #fafaf3;
   --color-surface: #fafaf3;
   --color-surface-container: #efeee7;
   --color-surface-container-low: #f5f4ed;
   --color-surface-container-lowest: #ffffff;
-  
+
   --color-on-surface: #1b1c18;
   --color-on-surface-variant: #3f4944;
-  
+
   --color-outline: #6f7974;
   --color-outline-variant: #bec9c3;
-  
+
   /* Legacy/Refined mappings for backward compatibility where needed */
   --color-bg: var(--color-background);
   --color-emerald: var(--color-primary);
-  --color-gold: #d4a017; /* Radiant Gold for accents */
+  --color-gold: #d4a017;
+  /* Radiant Gold for accents */
   --color-text-primary: var(--color-on-surface);
   --color-text-muted: var(--color-on-surface-variant);
   --color-border: var(--color-outline-variant);
@@ -62,11 +63,11 @@
   --color-tertiary: var(--color-tertiary);
   --color-surface: var(--color-surface);
   --color-surface-container: var(--color-surface-container);
-  
+
   --font-sans: var(--font-inter);
   --font-serif: var(--font-newsreader);
   --font-amiri: var(--font-amiri);
-  
+
   --radius-lg: 0.5rem;
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;
@@ -95,16 +96,24 @@ body {
 }
 
 .glass-morphism {
-  background: rgba(var(--color-surface), 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* ── Legacy & UI Animations ───────────────────────────────────────── */
 
 @keyframes ayahSettle {
-  0% { opacity: 0; transform: scale(0.97) translateY(8px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.97) translateY(8px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .ayah-enter {
@@ -112,8 +121,13 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .fade-in {
@@ -148,18 +162,35 @@ body {
 }
 
 @keyframes waveformPulse {
-  from { height: 8px; }
-  to { height: 24px; }
+  from {
+    height: 8px;
+  }
+
+  to {
+    height: 24px;
+  }
 }
 
 /* ── Heatmap Color Scales ── */
-.react-calendar-heatmap .color-empty { fill: var(--color-surface-container); }
-.react-calendar-heatmap .color-scale-1 { fill: #0a665040; }
-.react-calendar-heatmap .color-scale-2 { fill: #0a665080; }
-.react-calendar-heatmap .color-scale-3 { fill: var(--color-primary); }
+.react-calendar-heatmap .color-empty {
+  fill: var(--color-surface-container);
+}
+
+.react-calendar-heatmap .color-scale-1 {
+  fill: #0a665040;
+}
+
+.react-calendar-heatmap .color-scale-2 {
+  fill: #0a665080;
+}
+
+.react-calendar-heatmap .color-scale-3 {
+  fill: var(--color-primary);
+}
 
 .react-calendar-heatmap rect {
-  rx: 4px; /* Rounded corners for heatmap tiles */
+  rx: 4px;
+  /* Rounded corners for heatmap tiles */
   ry: 4px;
 }
 

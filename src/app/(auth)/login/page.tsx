@@ -54,7 +54,7 @@ function LoginContent() {
     invalid_nonce: 'Security validation failed. Please try again.',
     init_failed: 'Login initialization failed. Check your connection.',
   };
-  
+
   let errorMessage = errorParam ? (errorMessages[errorParam] || 'An error occurred. Please try again.') : null;
   if (detailsParam && errorParam) {
     errorMessage = `${errorMessage} (${detailsParam})`;
@@ -78,7 +78,7 @@ function LoginContent() {
     <div className="min-h-screen flex bg-background selection:bg-tertiary-fixed/30 overflow-hidden">
       {/* ── Left panel (The Sanctuary) ───────────────── */}
       <div className="hidden lg:flex lg:w-1/2 relative flex-col items-center justify-center p-12 bg-surface-container-low parchment-texture border-r border-outline-variant/10">
-        
+
         {/* Subtle decorative circles */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-primary/5 rounded-full" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-primary/10 rounded-full" />
@@ -97,7 +97,7 @@ function LoginContent() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/icons/icon-192.png" alt="Ayah in Action Logo" className="w-full h-full object-cover scale-90" />
           </motion.div>
-          
+
           <div className="absolute -bottom-4 bg-white/80 backdrop-blur-sm px-4 py-1.5 rounded-full border border-primary/10 shadow-sm flex items-center gap-2">
             <Sparkles className="w-3.5 h-3.5 text-gold" />
             <span className="font-label text-[10px] tracking-widest uppercase text-primary font-bold">Divine Wisdom</span>
@@ -109,7 +109,7 @@ function LoginContent() {
             <h1 className="font-serif text-4xl text-primary">Ayah in Action</h1>
             <p className="font-amiri text-2xl text-primary/60 italic" dir="rtl">ٱلْقُرْآنُ مَنْهَجُ حَيَاةٍ</p>
           </div>
-          
+
           <p className="font-body text-on-surface-variant leading-relaxed italic">
             &ldquo;Transform the verses you read into the life you lead. A digital heirloom for your spiritual journey.&rdquo;
           </p>
@@ -131,39 +131,39 @@ function LoginContent() {
         </div>
 
         <div className="absolute bottom-12 left-12">
-            <span className="font-label text-[10px] tracking-[0.4em] uppercase text-primary/20">Version 2.0 Heirloom</span>
+          <span className="font-label text-[10px] tracking-[0.4em] uppercase text-primary/20">Version 2.0 Heirloom</span>
         </div>
       </div>
 
       {/* ── Right panel (Admission) ─────────────────────────────────── */}
       <div className="flex-1 flex items-center justify-center p-6 lg:p-20 relative">
         <div className="absolute top-0 right-0 p-12 opacity-5 hidden lg:block">
-           <div className="font-amiri text-[200px] leading-none select-none">ب</div>
+          <div className="font-amiri text-[200px] leading-none select-none">ب</div>
         </div>
 
         <div className="w-full max-w-md space-y-12 relative z-10">
           {/* Header */}
           <div className="space-y-4">
-             <motion.div
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-             >
-                <Link href="/" className="inline-flex items-center gap-2 font-label text-[10px] tracking-widest uppercase text-on-surface-variant/40 hover:text-primary transition-colors mb-8 group">
-                  <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
-                  The Sanctuary Home
-                </Link>
-             </motion.div>
-             
-             <div className="lg:hidden mb-8">
-                <img src="/icons/icon-192.png" alt="Logo" className="w-16 h-16 rounded-3xl shadow-xl mb-4" />
-             </div>
+            <motion.div
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+            >
+              <Link href="/" className="inline-flex items-center gap-2 font-label text-[10px] tracking-widest uppercase text-on-surface-variant/40 hover:text-primary transition-colors mb-8 group">
+                <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
+                The Sanctuary Home
+              </Link>
+            </motion.div>
 
-             <h2 className="font-serif text-5xl text-primary leading-tight">
-               Enter the <br/><span className="italic font-light">Archive.</span>
-             </h2>
-             <p className="font-body text-on-surface-variant text-lg">
-               Reconnect with your spiritual collection.
-             </p>
+            <div className="lg:hidden mb-8">
+              <img src="/icons/icon-192.png" alt="Logo" className="w-16 h-16 rounded-3xl shadow-xl mb-4" />
+            </div>
+
+            <h2 className="font-serif text-5xl text-primary leading-tight">
+              Enter the <br /><span className="italic font-light">Archive.</span>
+            </h2>
+            <p className="font-body text-on-surface-variant text-lg">
+              Reconnect with your spiritual collection.
+            </p>
           </div>
 
           {/* Alert */}
@@ -181,14 +181,14 @@ function LoginContent() {
           {/* Main Card */}
           <div className="bg-white rounded-[2.5rem] p-10 space-y-8 editorial-shadow border border-outline-variant/10 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 silk-gradient" />
-            
+
             <div className="space-y-2">
               <span className="font-label text-[10px] tracking-widest uppercase text-primary/40 block">Authentication Source</span>
               <div className="flex items-center gap-3">
-                 <div className="p-2.5 rounded-xl bg-primary/5 text-primary">
-                   <ShieldCheck className="w-5 h-5" />
-                 </div>
-                 <span className="font-serif text-xl text-primary">Quran.com OAuth</span>
+                <div className="p-2.5 rounded-xl bg-primary/5 text-primary">
+                  <ShieldCheck className="w-5 h-5" />
+                </div>
+                <span className="font-serif text-xl text-primary">Quran.com OAuth</span>
               </div>
             </div>
 
@@ -214,16 +214,16 @@ function LoginContent() {
             </div>
 
             <div className="pt-4 text-center">
-               <p className="font-label text-[9px] tracking-widest uppercase text-on-surface-variant/40">
-                 Secure Connection &bull; Privacy Guaranteed
-               </p>
+              <p className="font-label text-[9px] tracking-widest uppercase text-on-surface-variant/40">
+                Secure Connection &bull; Privacy Guaranteed
+              </p>
             </div>
           </div>
 
           <div className="text-center">
-             <p className="font-body text-xs text-on-surface-variant/50">
-               By continuing, you agree to the preservation of your spiritual reflections.
-             </p>
+            <p className="font-body text-xs text-on-surface-variant/50">
+              By continuing, you agree to the preservation of your spiritual reflections.
+            </p>
           </div>
         </div>
       </div>
