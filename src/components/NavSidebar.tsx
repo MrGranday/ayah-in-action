@@ -2,10 +2,11 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Home, ScrollText, BarChart3, LogOut, Moon, Sun, Menu, X } from 'lucide-react';
+import { Home, ScrollText, BarChart3, LogOut, Moon, Sun, Menu, X, Sparkles, User as UserIcon } from 'lucide-react';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export function NavSidebar() {
   const pathname = usePathname();
@@ -13,9 +14,9 @@ export function NavSidebar() {
   const { theme, setTheme, sidebarOpen, toggleSidebar } = useUIStore();
 
   const navItems = [
-    { href: '/dashboard', label: 'Dashboard', icon: Home },
-    { href: '/history', label: 'My Journal', icon: ScrollText },
-    { href: '/impact', label: 'Impact', icon: BarChart3 },
+    { href: '/dashboard', label: 'Sanctuary', icon: Home },
+    { href: '/history', label: 'The Archive', icon: ScrollText },
+    { href: '/impact', label: 'The Influence', icon: BarChart3 },
   ];
 
   const handleLogout = async () => {
@@ -36,54 +37,65 @@ export function NavSidebar() {
   return (
     <>
       {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/40 z-30 md:hidden backdrop-blur-sm"
-          onClick={toggleSidebar}
-        />
-      )}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-primary/20 z-30 md:hidden backdrop-blur-md"
+            onClick={toggleSidebar}
+          />
+        )}
+      </AnimatePresence>
 
       <aside
         className={cn(
-          'fixed left-0 top-0 h-full z-40 flex flex-col transition-all duration-300',
-          'border-r',
-          sidebarOpen ? 'w-64' : 'w-16',
+          'fixed left-0 top-0 h-full z-40 flex flex-col transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]',
+          'border-r bg-surface-container parchment-texture shadow-2xl',
+          sidebarOpen ? 'w-72' : 'w-20',
         )}
         style={{
-          background: 'var(--color-surface)',
-          borderColor: 'var(--color-border)',
+          borderColor: 'rgba(0, 76, 59, 0.05)',
         }}
       >
-        {/* Header */}
+        {/* Header / Logo Section */}
         <div
-          className="flex items-center justify-between p-4 border-b"
-          style={{ borderColor: 'var(--color-border)', minHeight: 64 }}
+          className="flex items-center justify-between p-6 border-b"
+          style={{ borderColor: 'rgba(0, 76, 59, 0.05)', minHeight: 80 }}
         >
-          {sidebarOpen ? (
-            <Link href="/dashboard" className="flex items-center gap-2.5 min-w-0">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icons/icon-192.png" alt="Ayah in Action Logo" className="w-8 h-8 rounded-full shrink-0 object-cover" />
-              <span className="font-bold text-sm truncate" style={{ color: 'var(--color-text-primary)' }}>
+          <Link href="/dashboard" className="flex items-center gap-4 min-w-0 group">
+            <div className="relative shrink-0">
+               <div className="absolute inset-0 bg-primary/20 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+               <img 
+                src="/icons/icon-192.png" 
+                alt="Logo" 
+                className="w-8 h-8 rounded-full border border-primary/10 relative z-10 grayscale hover:grayscale-0 transition-all duration-500" 
+              />
+            </div>
+            {sidebarOpen && (
+              <motion.span 
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="font-serif text-lg text-primary truncate"
+              >
                 Ayah in Action
-              </span>
-            </Link>
-          ) : (
-            <Link href="/dashboard" className="mx-auto">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icons/icon-192.png" alt="Ayah in Action Logo" className="w-8 h-8 rounded-full shrink-0 object-cover" />
-            </Link>
+              </motion.span>
+            )}
+          </Link>
+          
+          {sidebarOpen && (
+            <button
+              onClick={toggleSidebar}
+              className="p-2 rounded-full transition-all hover:bg-primary/5 text-primary/40 hover:text-primary"
+            >
+              <ArrowLeftIcon className="w-4 h-4" />
+            </button>
           )}
-          <button
-            onClick={toggleSidebar}
-            className="p-1.5 rounded-lg transition-colors hover:bg-black/5 ml-1"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
-            {sidebarOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-          </button>
         </div>
 
         {/* Nav items */}
-        <nav className="flex-1 p-2 space-y-0.5 overflow-y-auto">
+        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
             return (
@@ -91,98 +103,128 @@ export function NavSidebar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex items-center rounded-xl transition-all px-3 py-2.5 gap-3',
-                  !sidebarOpen && 'justify-center',
-                  isActive
-                    ? 'font-semibold'
-                    : 'font-medium hover:opacity-80',
+                  'relative group flex items-center transition-all duration-500 rounded-2xl px-4 py-3.5 gap-4 overflow-hidden',
+                  isActive ? 'editorial-shadow scale-[1.02]' : 'hover:bg-primary/5 hover:translate-x-1',
                 )}
-                style={{
-                  background: isActive ? 'rgba(10,102,80,0.1)' : 'transparent',
-                  color: isActive ? 'var(--color-emerald)' : 'var(--color-text-muted)',
-                  borderLeft: isActive && sidebarOpen ? '3px solid var(--color-emerald)' : '3px solid transparent',
-                }}
               >
-                <item.icon className="w-5 h-5 shrink-0" />
-                {sidebarOpen && <span className="text-sm">{item.label}</span>}
+                {isActive && (
+                  <motion.div 
+                    layoutId="nav-bg"
+                    className="absolute inset-0 silk-gradient"
+                  />
+                )}
+                
+                <item.icon className={cn(
+                  'w-5 h-5 shrink-0 relative z-10 transition-colors duration-500',
+                  isActive ? 'text-white' : 'text-primary/40 group-hover:text-primary'
+                )} />
+                
+                {sidebarOpen && (
+                  <span className={cn(
+                    'text-xs font-label tracking-[0.2em] uppercase font-bold relative z-10 transition-colors duration-500',
+                    isActive ? 'text-white' : 'text-on-surface-variant/60 group-hover:text-primary'
+                  )}>
+                    {item.label}
+                  </span>
+                )}
               </Link>
             );
           })}
         </nav>
 
-        {/* User profile */}
-        {sidebarOpen && user && (
-          <div
-            className="px-4 py-3 border-t"
-            style={{ borderColor: 'var(--color-border)' }}
-          >
-            <div className="flex items-center gap-3">
-              {user.picture ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={user.picture} alt={user.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
-              ) : (
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
-                  style={{ background: 'var(--color-emerald)' }}
-                >
-                  {(user.name || user.email || '?').charAt(0).toUpperCase()}
+        {/* User Card */}
+        {user && (
+          <div className="p-4">
+             <div className={cn(
+                "bg-white/50 border border-outline-variant/10 rounded-3xl p-4 transition-all duration-700",
+                !sidebarOpen && "flex justify-center p-2"
+             )}>
+                <div className="flex items-center gap-3">
+                  <div className="relative shrink-0">
+                    {user.picture ? (
+                      <img src={user.picture} alt={user.name} className="w-10 h-10 rounded-2xl object-cover ring-2 ring-primary/5" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-2xl bg-primary/5 flex items-center justify-center text-primary border border-primary/10">
+                        <UserIcon className="w-4 h-4" />
+                      </div>
+                    )}
+                    <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full" />
+                  </div>
+                  
+                  {sidebarOpen && (
+                    <div className="min-w-0">
+                      <p className="text-xs font-serif text-primary truncate">
+                        {user.name?.split(' ')[0] || 'Seeker'}
+                      </p>
+                      <p className="text-[9px] font-label tracking-widest uppercase text-on-surface-variant/40 truncate">
+                        {user.email || 'Preserving Wisdom'}
+                      </p>
+                    </div>
+                  )}
                 </div>
-              )}
-              <div className="min-w-0">
-                <p className="text-sm font-semibold truncate" style={{ color: 'var(--color-text-primary)' }}>
-                  {user.name || 'User'}
-                </p>
-                <p className="text-xs truncate" style={{ color: 'var(--color-text-muted)' }}>
-                  {user.email || ''}
-                </p>
-              </div>
-            </div>
+             </div>
           </div>
         )}
 
-        {/* Bottom actions */}
-        <div
-          className="p-2 border-t space-y-0.5"
-          style={{ borderColor: 'var(--color-border)' }}
-        >
-          <button
-            onClick={toggleTheme}
-            className={cn(
-              'flex items-center gap-3 px-3 py-2.5 rounded-xl w-full transition-colors hover:opacity-80',
-              !sidebarOpen && 'justify-center',
-            )}
-            style={{ color: 'var(--color-text-muted)' }}
-          >
-            {theme === 'dark' ? <Sun className="w-5 h-5 shrink-0" /> : <Moon className="w-5 h-5 shrink-0" />}
-            {sidebarOpen && (
-              <span className="text-sm">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
-            )}
-          </button>
+        {/* System Settings */}
+        <div className="p-4 pt-0 space-y-2">
+           <div className={cn(
+              "flex items-center gap-1",
+              !sidebarOpen ? "flex-col" : "justify-between"
+           )}>
+              <button
+                onClick={toggleTheme}
+                className="p-3 rounded-2xl text-primary/40 hover:text-primary hover:bg-primary/5 transition-all group flex-1"
+                title="Toggle Theme"
+              >
+                {theme === 'dark' ? <Sun className="w-4 h-4 mx-auto" /> : <Moon className="w-4 h-4 mx-auto" />}
+              </button>
+              
+              <button
+                onClick={handleLogout}
+                className="p-3 rounded-2xl text-primary/40 hover:text-red-500 hover:bg-red-50 transition-all group flex-1"
+                title="Logout"
+              >
+                <LogOut className="w-4 h-4 mx-auto" />
+              </button>
 
-          <button
-            onClick={handleLogout}
-            className={cn(
-              'flex items-center gap-3 px-3 py-2.5 rounded-xl w-full transition-colors hover:opacity-80',
-              !sidebarOpen && 'justify-center',
-            )}
-            style={{ color: 'var(--color-text-muted)' }}
-          >
-            <LogOut className="w-5 h-5 shrink-0" />
-            {sidebarOpen && <span className="text-sm">Sign Out</span>}
-          </button>
+              {!sidebarOpen && (
+                 <button onClick={toggleSidebar} className="p-3 rounded-2xl text-primary/40 hover:text-primary hover:bg-primary/5 transition-all">
+                   <Menu className="w-4 h-4 mx-auto" />
+                 </button>
+              )}
+           </div>
         </div>
 
-        {/* Online indicator */}
-        <div
-          className={cn('px-4 py-3 border-t', !sidebarOpen && 'flex justify-center')}
-          style={{ borderColor: 'var(--color-border)' }}
-        >
-          <div className="flex items-center gap-2 text-xs" style={{ color: 'var(--color-emerald)' }}>
-            <span className="w-2 h-2 rounded-full bg-green-500 shrink-0 animate-pulse" />
-            {sidebarOpen && <span>Connected to Quran.com</span>}
-          </div>
+        {/* Connectivity Status */}
+        <div className="p-6 pt-0 border-t border-primary/5 mt-2">
+           <div className={cn("flex items-center gap-3", !sidebarOpen && "justify-center")}>
+              <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+              {sidebarOpen && (
+                <span className="font-label text-[9px] tracking-[0.2em] uppercase text-primary/30 font-bold whitespace-nowrap">
+                  Quran.com Active
+                </span>
+              )}
+           </div>
         </div>
       </aside>
     </>
+  );
+}
+
+function ArrowLeftIcon({ className }: { className?: string }) {
+  return (
+    <svg 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2.5" 
+      strokeLinecap="round" 
+      strokeLinejoin="round" 
+      className={className}
+    >
+      <path d="M19 12H5" />
+      <path d="M12 19l-7-7 7-7" />
+    </svg>
   );
 }

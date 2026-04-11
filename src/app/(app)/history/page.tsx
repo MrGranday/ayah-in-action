@@ -6,6 +6,8 @@ import { parseNoteBody, isAyahInActionNote } from '@/lib/utils';
 import { HistoryClient } from '@/components/HistoryClient';
 import { EmptyState } from '@/components/EmptyState';
 import { Metadata } from 'next';
+import { ScrollText } from 'lucide-react';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'My Quran Journal',
@@ -56,18 +58,32 @@ export default async function HistoryPage() {
 
   if (appNotes.length === 0) {
     return (
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-2xl font-bold mb-8" style={{ color: 'var(--color-text-primary)' }}>
-          My Journal
-        </h1>
-        <div
-          className="parchment p-12"
-          style={{ border: '1px solid var(--color-border)' }}
-        >
-          <EmptyState
-            title="No applications yet…"
-            description="The first one always feels special. Head to the Dashboard and log today's ayah."
-          />
+      <div className="max-w-3xl mx-auto py-12">
+        <div className="space-y-2 mb-12">
+          <span className="font-label text-xs tracking-[0.3em] uppercase text-primary/40 font-bold">Chronology of Wisdom</span>
+          <h1 className="font-serif text-5xl text-primary">The Archive</h1>
+        </div>
+        
+        <div className="bg-white rounded-[2.5rem] p-12 md:p-20 border border-outline-variant/10 editorial-shadow parchment-texture text-center space-y-8">
+          <div className="w-20 h-20 rounded-full bg-primary/5 flex items-center justify-center mx-auto ring-1 ring-primary/10">
+             <ScrollText className="w-8 h-8 text-primary/20" />
+          </div>
+          
+          <div className="space-y-4 max-w-sm mx-auto">
+            <h2 className="font-serif text-3xl text-primary">The first entry awaits.</h2>
+            <p className="font-body text-on-surface-variant leading-relaxed">
+              Every legacy begins with a single reflection. Return to the Sanctuary to preserve your first moment of transcendence.
+            </p>
+          </div>
+
+          <div className="pt-4">
+            <Link 
+              href="/dashboard"
+              className="inline-flex items-center gap-3 px-8 h-14 rounded-2xl silk-gradient text-white font-label text-xs tracking-[0.2em] uppercase font-bold editorial-shadow hover:scale-[1.02] transition-transform"
+            >
+              Return to Sanctuary
+            </Link>
+          </div>
         </div>
       </div>
     );

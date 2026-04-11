@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Flame, Tag, Trophy } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Flame, Tag, Trophy, Sparkles, Star, Target, BookOpen } from 'lucide-react';
 import { StreakHeatmap } from './StreakHeatmap';
 import { ImpactStats } from './ImpactStats';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { EmptyState } from './EmptyState';
 import { computeAppStreak, parseNoteBody, isAyahInActionNote } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 interface Note {
   id: string;
@@ -87,7 +87,6 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
       longestStreak = Math.max(longestStreak, tempStreak);
     }
     
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStats({
       totalLogs: appNotes.length,
       currentStreak: streak,
@@ -114,74 +113,119 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
 
   if (appNotesCount === 0) {
     return (
-      <div className="parchment p-12">
+      <div className="bg-surface-container-low rounded-[3rem] p-16 md:p-24 border border-outline-variant/10 text-center parchment-texture">
         <EmptyState 
-          title="Start logging to see your journey take shape." 
-          description="Your impact, streaks, and reflections will appear here as soon as you record your first action."
+          title="The Archive Awaits Your Legacy" 
+          description="Your spiritual growth and consistency will be visualized here as you begin preserving your daily reflections."
         />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="parchment p-6">
-        <div className="flex items-center gap-3 mb-2">
-          <Flame className="w-8 h-8 text-gold" />
-          <div>
-            <h2 className="text-2xl font-semibold">
-              {stats.currentStreak} day{stats.currentStreak !== 1 ? 's' : ''} streak
-            </h2>
-            <p className="text-text-muted">
-              You&apos;ve applied the Quran {stats.monthlyLogs} times this month
-            </p>
+    <div className="space-y-12 max-w-5xl mx-auto">
+      {/* ── Header ── */}
+      <div className="text-center space-y-4">
+        <span className="font-label text-[10px] tracking-[0.4em] uppercase text-primary/60 block">Spiritual Momentum</span>
+        <h1 className="font-serif text-5xl text-primary">The Influence of Wisdom</h1>
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-8">
+        {/* Streak Main Card */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="lg:col-span-2 bg-surface-container-low rounded-[2rem] p-10 border border-outline-variant/10 editorial-shadow parchment-texture relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 p-8 text-primary/5">
+             <Flame className="w-24 h-24 stroke-[1px]" />
           </div>
+          
+          <div className="relative z-10">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-14 h-14 rounded-full silk-gradient flex items-center justify-center text-white editorial-shadow">
+                <Flame className="w-6 h-6 fill-current" />
+              </div>
+              <div>
+                <h2 className="font-serif text-4xl text-primary">
+                  {stats.currentStreak} Day Streak
+                </h2>
+                <p className="font-body text-on-surface-variant italic">
+                  Consistent reflection builds the character of the believer.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex justify-between items-end">
+                <span className="font-label text-[10px] tracking-widest uppercase text-on-surface-variant font-bold">Monthly Commitment</span>
+                <span className="font-serif text-xl text-primary">{stats.monthlyLogs} <span className="text-sm text-on-surface-variant/50">/ 60</span></span>
+              </div>
+              <div className="w-full bg-white/50 border border-outline-variant/10 rounded-full h-3 overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.min((stats.monthlyLogs / 60) * 100, 100)}%` }}
+                  transition={{ duration: 1.5, ease: "easeOut" }}
+                  className="silk-gradient h-full rounded-full"
+                />
+              </div>
+              <p className="text-[10px] font-label tracking-widest uppercase text-on-surface-variant/40 italic">
+                {stats.monthlyLogs >= 60 ? 'MashaAllah, you have reached your monthly pinnacle.' : `Maintain your pace to reach the goal of 60 reflections.`}
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Small Stats Grid */}
+        <div className="grid gap-6">
+          {[
+            { label: 'Total Legacy', value: stats.totalLogs, icon: <BookOpen className="w-4 h-4" />, color: 'bg-primary/5 text-primary' },
+            { label: 'Prime Virtue', value: stats.topCategory, icon: <Trophy className="w-4 h-4" />, color: 'bg-gold/10 text-gold' },
+            { label: 'Peak Consistency', value: `${stats.longestStreak} Days`, icon: <Star className="w-4 h-4" />, color: 'bg-tertiary-fixed text-on-tertiary-fixed' },
+          ].map((item, i) => (
+            <motion.div
+              key={item.label}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="bg-white rounded-2xl p-6 border border-outline-variant/10 editorial-shadow flex flex-col justify-between h-full"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <span className="font-label text-[9px] tracking-[0.2em] uppercase text-on-surface-variant font-bold">{item.label}</span>
+                <div className={`p-2 rounded-lg ${item.color}`}>
+                  {item.icon}
+                </div>
+              </div>
+              <div className="font-serif text-2xl text-on-surface truncate">
+                {item.value}
+              </div>
+            </motion.div>
+          ))}
         </div>
-        <div className="w-full bg-surface rounded-full h-2 mt-4">
-          <div
-            className="bg-emerald h-2 rounded-full transition-all"
-            style={{ width: `${Math.min((stats.monthlyLogs / 60) * 100, 100)}%` }}
-          />
-        </div>
-        <p className="text-xs text-text-muted mt-1">{stats.monthlyLogs}/60 monthly goal</p>
       </div>
 
-      <div className="parchment p-6">
-        <h3 className="text-lg font-semibold mb-4">Activity Heatmap</h3>
+      {/* Heatmap Section */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="bg-surface-container-low rounded-[2rem] p-10 border border-outline-variant/10 editorial-shadow parchment-texture"
+      >
+        <div className="flex items-center gap-3 mb-10">
+          <Target className="text-primary w-5 h-5" />
+          <h3 className="font-serif text-2xl text-primary">The Tapestry of Action</h3>
+        </div>
         <StreakHeatmap values={heatmapValues} />
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Logs</CardTitle>
-            <Tag className="h-4 w-4 text-text-muted" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalLogs}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Top Category</CardTitle>
-            <Trophy className="h-4 w-4 text-gold" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.topCategory}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Longest Streak</CardTitle>
-            <Flame className="h-4 w-4 text-gold" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.longestStreak} days</div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <ImpactStats notes={notes} />
+      {/* Impact Stats Detail */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        <ImpactStats notes={notes} />
+      </motion.div>
     </div>
   );
 }

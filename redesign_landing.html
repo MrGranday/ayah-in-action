@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ayah in Action | Your Digital Heirloom</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#bec9c3",
+                        "on-tertiary-container": "#e9cda7",
+                        "background": "#fafaf3",
+                        "tertiary-fixed": "#fbdeb8",
+                        "on-surface": "#1b1c18",
+                        "surface-container": "#efeee7",
+                        "on-primary-fixed-variant": "#00513f",
+                        "on-primary-container": "#93e1c5",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed-dim": "#f6be39",
+                        "on-primary-fixed": "#002117",
+                        "surface-variant": "#e3e3dc",
+                        "surface-dim": "#dbdad4",
+                        "tertiary-fixed-dim": "#dec29d",
+                        "secondary-container": "#ffc641",
+                        "on-tertiary-fixed": "#271903",
+                        "on-tertiary-fixed-variant": "#574427",
+                        "inverse-surface": "#30312c",
+                        "primary-container": "#0a6650",
+                        "on-secondary-container": "#715300",
+                        "primary-fixed-dim": "#88d6ba",
+                        "on-surface-variant": "#3f4944",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#ffdfa0",
+                        "inverse-primary": "#88d6ba",
+                        "error": "#ba1a1a",
+                        "outline": "#6f7974",
+                        "surface-tint": "#146b54",
+                        "surface-container-low": "#f5f4ed",
+                        "tertiary": "#523f23",
+                        "on-secondary-fixed": "#261a00",
+                        "on-primary": "#ffffff",
+                        "secondary": "#795900",
+                        "primary-fixed": "#a3f2d6",
+                        "surface-bright": "#fafaf3",
+                        "tertiary-container": "#6b5638",
+                        "primary": "#004c3b",
+                        "on-secondary-fixed-variant": "#5c4300",
+                        "inverse-on-surface": "#f2f1ea",
+                        "on-background": "#1b1c18",
+                        "surface-container-highest": "#e3e3dc",
+                        "error-container": "#ffdad6",
+                        "surface": "#fafaf3",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e9e8e2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Newsreader"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .parchment-texture {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+        .silk-gradient {
+            background: linear-gradient(135deg, #004c3b 0%, #0a6650 100%);
+        }
+        .editorial-shadow {
+            box-shadow: 0 12px 32px rgba(27, 28, 24, 0.06);
+        }
+        .stagger-1 { margin-top: 2rem; }
+        .stagger-2 { margin-top: -1rem; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface parchment-texture font-body selection:bg-tertiary-fixed selection:text-on-tertiary-fixed">
+<!-- TopNavBar -->
+<header class="bg-[#fafaf3] dark:bg-[#1b1c18] sticky top-0 z-50">
+<nav class="flex justify-between items-center px-8 py-6 w-full max-w-7xl mx-auto">
+<div class="text-2xl font-serif italic text-[#004c3b] dark:text-[#fbdeb8]">
+                Ayah in Action
+            </div>
+<div class="hidden md:flex items-center space-x-12">
+<a class="font-serif font-light tracking-tight text-[#004c3b] dark:text-[#fbdeb8] border-b border-[#004c3b] dark:border-[#fbdeb8] pb-1 hover:opacity-80 transition-opacity duration-300" href="#">Journal</a>
+<a class="font-serif font-light tracking-tight text-[#3f4944] dark:text-[#e3e3dc] hover:opacity-80 transition-opacity duration-300" href="#">Reflection</a>
+<a class="font-serif font-light tracking-tight text-[#3f4944] dark:text-[#e3e3dc] hover:opacity-80 transition-opacity duration-300" href="#">Community</a>
+</div>
+<button class="silk-gradient text-on-primary px-6 py-2.5 rounded-lg font-medium text-sm tracking-wide hover:scale-105 transition-transform duration-500 editorial-shadow">
+                Start Writing
+            </button>
+</nav>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative overflow-hidden py-24 md:py-40 px-6">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="z-10">
+<span class="font-label text-xs tracking-[0.2em] uppercase text-on-surface-variant block mb-4">A Digital Sanctuary</span>
+<h1 class="font-headline text-5xl md:text-7xl lg:text-8xl text-primary leading-[1.1] mb-8">
+                        Your Spiritual <span class="italic font-light">Legacy</span>, 
+                        Written for Eternity.
+                    </h1>
+<p class="font-body text-lg md:text-xl text-on-surface-variant max-w-lg leading-relaxed mb-12">
+                        More than a journal—a digital heirloom of your soul's dialogue with the Divine. Capture every insight, preserve every prayer, and build a lasting testament of faith.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-6">
+<button class="silk-gradient text-on-primary px-8 py-4 rounded-xl font-medium tracking-wide scale-100 hover:scale-105 transition-all editorial-shadow flex items-center justify-center gap-2">
+                            Begin Your Archive
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+<button class="bg-surface-container-lowest text-primary px-8 py-4 rounded-xl font-medium tracking-wide border border-outline-variant border-opacity-20 hover:bg-surface-container-low transition-colors">
+                            Explore Philosophy
+                        </button>
+</div>
+</div>
+<div class="relative flex justify-center">
+<!-- Abstract Spiritual Iconography -->
+<div class="relative w-full aspect-square max-w-md">
+<div class="absolute inset-0 bg-tertiary-fixed opacity-20 rounded-full blur-3xl"></div>
+<div class="relative z-10 w-full h-full border border-tertiary-fixed border-opacity-30 rounded-full flex items-center justify-center animate-pulse">
+<div class="w-4/5 h-4/5 border border-primary border-opacity-10 rounded-full flex items-center justify-center">
+<div class="w-3/5 h-3/5 silk-gradient rounded-full opacity-5 flex items-center justify-center"></div>
+</div>
+</div>
+<!-- Floating Elements -->
+<div class="absolute top-10 right-10 text-secondary opacity-40">
+<span class="material-symbols-outlined" style="font-size: 48px; font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="absolute bottom-20 left-10 text-primary opacity-30">
+<span class="material-symbols-outlined" style="font-size: 64px;">dark_mode</span>
+</div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+<span class="material-symbols-outlined text-primary" style="font-size: 120px; font-variation-settings: 'wght' 100;">ink_pen</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Daily Anchor Section -->
+<section class="bg-surface-container-low py-32 px-6">
+<div class="max-w-7xl mx-auto text-center mb-24">
+<span class="font-label text-xs tracking-[0.2em] uppercase text-on-surface-variant block mb-4">The Ritual</span>
+<h2 class="font-headline text-4xl md:text-5xl text-on-surface mb-6">The Daily Anchor</h2>
+<p class="font-body text-on-surface-variant max-w-2xl mx-auto leading-relaxed">
+                    A curated path for your morning and evening reflections. We provide the vessel; you provide the soul.
+                </p>
+</div>
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+<!-- Step 1 -->
+<div class="bg-surface-container-lowest p-10 rounded-xl editorial-shadow group hover:-translate-y-2 transition-transform duration-500">
+<div class="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<h3 class="font-headline text-2xl mb-4">Divine Prompting</h3>
+<p class="font-body text-on-surface-variant text-sm leading-relaxed">
+                        Every day begins with a selected Ayah that acts as a mirror to your current state, inviting deep contemplation.
+                    </p>
+</div>
+<!-- Step 2 -->
+<div class="bg-surface-container-lowest p-10 rounded-xl editorial-shadow group hover:-translate-y-2 transition-transform duration-500 stagger-1">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">stylus_note</span>
+</div>
+<h3 class="font-headline text-2xl mb-4">Living Reflection</h3>
+<p class="font-body text-on-surface-variant text-sm leading-relaxed">
+                        Space to write freely, capturing the whispers of your heart as they align with the sacred text.
+                    </p>
+</div>
+<!-- Step 3 -->
+<div class="bg-surface-container-lowest p-10 rounded-xl editorial-shadow group hover:-translate-y-2 transition-transform duration-500">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">history_edu</span>
+</div>
+<h3 class="font-headline text-2xl mb-4">Sacred Storage</h3>
+<p class="font-body text-on-surface-variant text-sm leading-relaxed">
+                        Each entry is woven into your digital heirloom, timestamped and stored for your future self and lineage.
+                    </p>
+</div>
+</div>
+</section>
+<!-- Ayah Focus Block -->
+<section class="py-24 px-6 overflow-hidden">
+<div class="max-w-4xl mx-auto text-center relative">
+<div class="absolute -top-10 -left-10 opacity-5">
+<span class="material-symbols-outlined" style="font-size: 200px;">format_quote</span>
+</div>
+<div class="inline-block relative">
+<div class="absolute inset-0 bg-tertiary-fixed opacity-30 -rotate-1 -mx-4"></div>
+<blockquote class="font-headline italic text-2xl md:text-4xl text-on-surface relative py-4">
+                        "And He is with you wherever you are."
+                    </blockquote>
+</div>
+<cite class="block mt-8 font-label text-xs tracking-widest text-on-surface-variant uppercase">— Surah Al-Hadid, 4</cite>
+</div>
+</section>
+<!-- Consistency & Growth Section -->
+<section class="py-32 px-6">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+<div class="order-2 lg:order-1 relative">
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container rounded-xl p-4 stagger-1 editorial-shadow">
+<div class="h-40 silk-gradient rounded-lg opacity-80 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary scale-150">calendar_month</span>
+</div>
+<div class="mt-4 p-2">
+<div class="h-2 w-1/2 bg-outline-variant opacity-30 rounded mb-2"></div>
+<div class="h-2 w-full bg-outline-variant opacity-20 rounded"></div>
+</div>
+</div>
+<div class="bg-surface-container rounded-xl p-4 editorial-shadow">
+<div class="h-56 bg-tertiary-container rounded-lg opacity-80 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary-fixed scale-150">collections_bookmark</span>
+</div>
+<div class="mt-4 p-2">
+<div class="h-2 w-2/3 bg-outline-variant opacity-30 rounded mb-2"></div>
+<div class="h-2 w-1/2 bg-outline-variant opacity-20 rounded"></div>
+</div>
+</div>
+<div class="bg-surface-container rounded-xl p-4 -mt-12 editorial-shadow col-start-2">
+<div class="h-32 bg-primary rounded-lg opacity-80 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary scale-150">insights</span>
+</div>
+<div class="mt-4 p-2">
+<div class="h-2 w-3/4 bg-outline-variant opacity-30 rounded mb-2"></div>
+<div class="h-2 w-full bg-outline-variant opacity-20 rounded"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="order-1 lg:order-2">
+<span class="font-label text-xs tracking-[0.2em] uppercase text-on-surface-variant block mb-4">The Archive</span>
+<h2 class="font-headline text-4xl md:text-6xl text-primary leading-tight mb-8">Consistency is the <span class="italic">Thread</span> of Growth.</h2>
+<p class="font-body text-on-surface-variant text-lg leading-relaxed mb-10">
+                        Our platform doesn't just track days; it tracks your spiritual evolution. Watch as your fleeting thoughts transform into a coherent narrative of faith. Your archive becomes a map of where you've been and a lighthouse for where you're going.
+                    </p>
+<ul class="space-y-6">
+<li class="flex items-start gap-4">
+<div class="mt-1 text-secondary">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div>
+<h4 class="font-label text-sm font-semibold uppercase tracking-wider mb-1">Visual Lineage</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">Elegant data visualizations that honor your dedication without the clinical feel of standard apps.</p>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<div class="mt-1 text-secondary">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div>
+<h4 class="font-label text-sm font-semibold uppercase tracking-wider mb-1">Searchable Insights</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">Instantly recall how you felt during Ramadan or after a specific ayah reached you.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- Begin Your Journey CTA -->
+<section class="py-32 px-6">
+<div class="max-w-5xl mx-auto silk-gradient rounded-[2rem] p-12 md:p-24 text-center relative overflow-hidden editorial-shadow">
+<!-- Abstract BG patterns -->
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<circle cx="0" cy="0" fill="white" r="40"></circle>
+<circle cx="100" cy="100" fill="white" r="30"></circle>
+</svg>
+</div>
+<div class="relative z-10">
+<h2 class="font-headline text-4xl md:text-6xl text-on-primary mb-8">Begin Your Spiritual <span class="italic font-light">Artifact</span> Today.</h2>
+<p class="font-body text-on-primary-container text-lg md:text-xl max-w-2xl mx-auto mb-12 opacity-90 leading-relaxed">
+                        Join a community of seekers dedicated to preserving their most precious resource: their spiritual clarity.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+<button class="bg-tertiary-fixed text-on-tertiary-fixed px-10 py-5 rounded-xl font-bold tracking-wide hover:bg-secondary-fixed transition-all editorial-shadow scale-100 hover:scale-105">
+                            Create Your Journal
+                        </button>
+<p class="text-on-primary text-xs opacity-70 mt-4 sm:mt-0 font-label tracking-widest uppercase sm:ml-4">Start for free</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#f5f4ed] dark:bg-[#1b1c18] border-t border-[#e3e3dc] dark:border-[#3f4944] border-opacity-10 py-12 px-8">
+<div class="flex flex-col md:flex-row justify-between items-center w-full max-w-7xl mx-auto space-y-4 md:space-y-0">
+<div class="font-serif italic text-lg text-[#004c3b] dark:text-[#fbdeb8]">
+                Ayah in Action
+            </div>
+<div class="flex items-center space-x-8">
+<a class="font-sans text-xs tracking-widest uppercase text-[#3f4944] dark:text-[#e3e3dc] opacity-70 hover:text-[#004c3b] dark:hover:text-[#fbdeb8] transition-colors" href="#">Privacy Policy</a>
+<a class="font-sans text-xs tracking-widest uppercase text-[#3f4944] dark:text-[#e3e3dc] opacity-70 hover:text-[#004c3b] dark:hover:text-[#fbdeb8] transition-colors" href="#">Terms of Service</a>
+<a class="font-sans text-xs tracking-widest uppercase text-[#3f4944] dark:text-[#e3e3dc] opacity-70 hover:text-[#004c3b] dark:hover:text-[#fbdeb8] transition-colors" href="#">Our Philosophy</a>
+</div>
+<div class="font-sans text-xs tracking-widest uppercase text-[#3f4944] dark:text-[#e3e3dc]">
+                © 2024 Ayah in Action. A Digital Heirloom.
+            </div>
+</div>
+</footer>
+</body></html>

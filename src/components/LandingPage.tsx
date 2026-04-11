@@ -18,15 +18,15 @@ function ParticleCanvas() {
     let height = (canvas.height = window.innerHeight);
 
     const particles: { x: number; y: number; r: number; dx: number; dy: number; alpha: number; dAlpha: number }[] = [];
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 40; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        r: Math.random() * 1.5 + 0.5,
-        dx: (Math.random() - 0.5) * 0.3,
-        dy: -Math.random() * 0.4 - 0.1,
+        r: Math.random() * 2 + 0.5,
+        dx: (Math.random() - 0.5) * 0.2,
+        dy: -Math.random() * 0.3 - 0.1,
         alpha: Math.random(),
-        dAlpha: (Math.random() - 0.5) * 0.005,
+        dAlpha: (Math.random() - 0.5) * 0.003,
       });
     }
 
@@ -36,14 +36,14 @@ function ParticleCanvas() {
       particles.forEach((p) => {
         p.x += p.dx;
         p.y += p.dy;
-        p.alpha = Math.max(0.05, Math.min(1, p.alpha + p.dAlpha));
-        if (p.alpha <= 0.05 || p.alpha >= 1) p.dAlpha *= -1;
+        p.alpha = Math.max(0.1, Math.min(0.8, p.alpha + p.dAlpha));
+        if (p.alpha <= 0.1 || p.alpha >= 0.8) p.dAlpha *= -1;
         if (p.y < -10) { p.y = height + 10; p.x = Math.random() * width; }
         if (p.x < -10) { p.x = width + 10; }
         if (p.x > width + 10) { p.x = -10; }
         ctx!.beginPath();
         ctx!.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx!.fillStyle = `rgba(212,160,23,${p.alpha * 0.4})`;
+        ctx!.fillStyle = `rgba(0, 76, 59, ${p.alpha * 0.15})`; // Deep Emerald particles
         ctx!.fill();
       });
       raf = requestAnimationFrame(draw);
@@ -58,7 +58,7 @@ function ParticleCanvas() {
     return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); };
   }, []);
 
-  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" style={{ opacity: 0.6 }} />;
+  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />;
 }
 
 /* ─── Animated counter ──────────────────────────────────────────────── */
@@ -71,12 +71,12 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !started.current) {
         started.current = true;
-        const duration = 1800;
+        const duration = 2000;
         const start = Date.now();
         const tick = () => {
           const elapsed = Date.now() - start;
           const progress = Math.min(elapsed / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3);
+          const eased = 1 - Math.pow(1 - progress, 4);
           setCount(Math.round(eased * target));
           if (progress < 1) requestAnimationFrame(tick);
         };
@@ -98,7 +98,7 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) { setVisible(true); observer.disconnect(); }
-    }, { threshold: 0.15 });
+    }, { threshold: 0.1 });
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
@@ -109,8 +109,8 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
       className={className}
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(32px)',
-        transition: `opacity 0.7s ease ${delay}ms, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
+        transform: visible ? 'translateY(0)' : 'translateY(40px)',
+        transition: `opacity 1s ease ${delay}ms, transform 1s cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,
       }}
     >
       {children}
@@ -123,539 +123,319 @@ export function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const features = [
     {
-      icon: <BookOpen className="w-6 h-6" />,
-      title: 'Daily Ayah',
-      description: 'A handpicked verse every day to anchor your heart and focus your spiritual energy.',
-      color: 'from-emerald-500/20 to-teal-500/10',
-      border: 'border-emerald-500/20',
-      iconBg: 'bg-emerald-500/10 text-[#0a6650]',
+      icon: <BookOpen className="w-5 h-5" />,
+      title: 'Divine Prompting',
+      description: 'Every day begins with a selected Ayah that acts as a mirror to your state.',
     },
     {
-      icon: <Mic className="w-6 h-6" />,
-      title: 'Voice Journaling',
-      description: 'Record your moments of clarity naturally. Speak your reflection, transcribed automatically.',
-      color: 'from-gold/20 to-amber-500/10',
-      border: 'border-amber-500/20',
-      iconBg: 'bg-amber-500/10 text-[#d4a017]',
+      icon: <Mic className="w-5 h-5" />,
+      title: 'Voice Journals',
+      description: 'Capture the whispers of your heart naturally. Transcribed into your archive.',
     },
     {
-      icon: <LineChart className="w-6 h-6" />,
-      title: 'Growth Tracking',
-      description: 'Visualize your spiritual consistency. Watch your streaks build and your character evolve.',
-      color: 'from-purple-500/20 to-violet-500/10',
-      border: 'border-purple-500/20',
-      iconBg: 'bg-purple-500/10 text-purple-600',
+      icon: <LineChart className="w-5 h-5" />,
+      title: 'Visual Lineage',
+      description: 'Watch your consistency grow through elegant, editorial-style data views.',
     },
     {
-      icon: <Shield className="w-6 h-6" />,
-      title: 'Quran.com Sync',
-      description: 'Your reflections are stored in your Quran.com account — private, secure, always yours.',
-      color: 'from-blue-500/20 to-sky-500/10',
-      border: 'border-blue-500/20',
-      iconBg: 'bg-blue-500/10 text-blue-600',
+      icon: <Shield className="w-5 h-5" />,
+      title: 'Sacred Privacy',
+      description: 'Synced with Quran.com—private, secure, and eternally yours.',
     },
     {
-      icon: <Heart className="w-6 h-6" />,
-      title: 'Category Insights',
-      description: 'Tag by Patience, Gratitude, Family and more. Discover which virtues you practice most.',
-      color: 'from-rose-500/20 to-pink-500/10',
-      border: 'border-rose-500/20',
-      iconBg: 'bg-rose-500/10 text-rose-600',
+      icon: <Heart className="w-5 h-5" />,
+      title: 'Virtue Tagging',
+      description: 'Organize by Patience, Gratitude, or Sabr to see your spiritual themes.',
     },
     {
-      icon: <Zap className="w-6 h-6" />,
-      title: 'PDF Export',
-      description: 'Export your entire spiritual journal as a beautiful PDF — a keepsake of your growth.',
-      color: 'from-orange-500/20 to-yellow-500/10',
-      border: 'border-orange-500/20',
-      iconBg: 'bg-orange-500/10 text-orange-600',
+      icon: <Zap className="w-5 h-5" />,
+      title: 'Export Legacy',
+      description: 'Transform your digital archive into a beautiful PDF keepsake.',
     },
-  ];
-
-  const testimonials = [
-    { text: 'This app changed how I connect with the Quran daily. I can literally see my growth.', name: 'Fatima A.', role: 'Student' },
-    { text: 'SubhanAllah. I never thought I could turn my reflections into something this meaningful.', name: 'Ibrahim K.', role: 'Engineer' },
-    { text: 'The voice journaling feature is incredible for capturing reflections on the go.', name: 'Aisha M.', role: 'Doctor' },
   ];
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ background: 'var(--color-bg)', color: 'var(--color-text-primary)' }}>
+    <div className="min-h-screen parchment-texture bg-surface text-on-surface font-body selection:bg-tertiary-fixed selection:text-on-surface">
       <ParticleCanvas />
 
       {/* ── Navbar ─────────────────────────────────────────────────── */}
       <header
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
-        style={{
-          background: scrolled ? 'rgba(248,241,227,0.85)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(20px)' : 'none',
-          borderBottom: scrolled ? '1px solid var(--color-border)' : '1px solid transparent',
-        }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
+          scrolled ? 'py-4 glass-morphism border-b border-outline-variant/10 shadow-sm' : 'py-8 bg-transparent'
+        }`}
       >
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icons/icon-192.png" alt="Ayah in Action Logo" className="w-9 h-9 rounded-full shadow-lg shrink-0 object-cover" />
-            <span className="text-lg font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Ayah in Action</span>
+        <div className="container mx-auto px-8 flex justify-between items-center">
+          <div className="flex items-center gap-3 group cursor-pointer">
+            <span className="font-serif italic text-2xl text-primary tracking-tight transition-all">
+              Ayah in Action
+            </span>
           </div>
-          {/* Nav links */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>
-            <a href="#features" className="hover:text-[#0a6650] transition-colors">Features</a>
-            <a href="#how-it-works" className="hover:text-[#0a6650] transition-colors">How It Works</a>
-            <a href="#stats" className="hover:text-[#0a6650] transition-colors">Impact</a>
+          
+          <nav className="hidden md:flex items-center gap-10">
+            {['Journal', 'Reflection', 'Community'].map((item) => (
+              <a 
+                key={item}
+                href="#" 
+                className="font-serif font-light text-primary/80 hover:text-primary transition-colors relative group"
+              >
+                {item}
+                <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary transition-all group-hover:w-full opacity-30" />
+              </a>
+            ))}
           </nav>
+
           <Link
             href="/login"
-            className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:shadow-lg"
-            style={{
-              background: 'var(--color-emerald)',
-              color: '#fff',
-              boxShadow: '0 4px 14px rgba(10,102,80,0.25)',
-            }}
+            className="silk-gradient text-white px-8 py-2.5 rounded-lg font-medium text-sm tracking-wide hover:scale-105 transition-all duration-500 editorial-shadow"
           >
-            Sign In
+            Start Writing
           </Link>
         </div>
       </header>
 
       {/* ── Hero ────────────────────────────────────────────────────── */}
-      <section className="relative min-h-screen flex items-center pt-24 pb-16 z-10">
-        {/* Radial glow top */}
-        <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] pointer-events-none"
-          style={{
-            background: 'radial-gradient(ellipse at center, rgba(10,102,80,0.08) 0%, transparent 70%)',
-          }}
-        />
+      <section className="relative min-h-screen flex items-center pt-32 pb-20 z-10">
+        <div className="container mx-auto px-8">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            <div className="max-w-xl">
+              <Reveal delay={100}>
+                <span className="font-label text-xs tracking-[0.3em] uppercase text-on-surface-variant/70 block mb-6">
+                  A Digital Sanctuary
+                </span>
+              </Reveal>
+              
+              <Reveal delay={200}>
+                <h1 className="font-serif text-6xl md:text-8xl text-primary leading-[1.05] mb-8">
+                  Your Spiritual <span className="italic font-light">Legacy</span>, 
+                  <br />Written for Eternity.
+                </h1>
+              </Reveal>
 
-        <div className="container mx-auto px-6">
-          <div className="max-w-5xl mx-auto">
-            {/* Pill badge */}
-            <div className="landing-hero-animate flex justify-center mb-8" style={{ '--delay': '0ms' } as React.CSSProperties}>
-              <span
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase"
-                style={{
-                  background: 'rgba(10,102,80,0.1)',
-                  color: 'var(--color-emerald)',
-                  border: '1px solid rgba(10,102,80,0.2)',
-                }}
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                Quran Foundation Hackathon 2025
-              </span>
-            </div>
+              <Reveal delay={300}>
+                <p className="text-lg md:text-xl text-on-surface-variant leading-relaxed mb-12 max-w-lg">
+                  More than a journal—a digital heirloom of your soul&apos;s dialogue with the Divine. Capture every insight and build a lasting testament of faith.
+                </p>
+              </Reveal>
 
-            {/* Headline */}
-            <div className="landing-hero-animate text-center space-y-4 mb-8" style={{ '--delay': '100ms' } as React.CSSProperties}>
-              <h1
-                className="font-amiri font-bold leading-none tracking-tight"
-                style={{ fontSize: 'clamp(3rem, 8vw, 6.5rem)', lineHeight: 1.05 }}
-              >
-                Turn Every Ayah
-                <br />
-                <span style={{ color: 'var(--color-emerald)' }}>Into Action.</span>
-              </h1>
-
-              {/* Arabic subtitle */}
-              <p
-                className="font-amiri text-2xl md:text-3xl"
-                dir="rtl"
-                style={{ color: 'var(--color-gold)' }}
-              >
-                ٱلْقُرْآنُ مَنْهَجُ حَيَاةٍ
-              </p>
-
-              <p
-                className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
-                style={{ color: 'var(--color-text-muted)' }}
-              >
-                A spiritual journaling companion that helps you track how the Words of Allah transform your daily walk — from reflection to real change.
-              </p>
-            </div>
-
-            {/* CTA buttons */}
-            <div className="landing-hero-animate flex flex-col sm:flex-row gap-4 justify-center mb-16" style={{ '--delay': '200ms' } as React.CSSProperties}>
-              <a
-                href="/api/auth/login"
-                className="group flex items-center justify-center gap-3 px-10 py-4 rounded-2xl font-bold text-white transition-all hover:-translate-y-1 hover:shadow-2xl"
-                style={{
-                  background: 'linear-gradient(135deg, var(--color-emerald) 0%, #0d8c6c 100%)',
-                  boxShadow: '0 8px 32px rgba(10,102,80,0.3)',
-                }}
-              >
-                Begin Your Journey
-                <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-              </a>
-              <a
-                href="#features"
-                className="flex items-center justify-center gap-2 px-10 py-4 rounded-2xl font-semibold transition-all hover:-translate-y-0.5"
-                style={{
-                  background: 'var(--color-surface)',
-                  border: '1px solid var(--color-border)',
-                  color: 'var(--color-text-primary)',
-                }}
-              >
-                Explore Features
-              </a>
-            </div>
-
-            {/* Hero Card Demo */}
-            <div className="landing-hero-animate" style={{ '--delay': '300ms' } as React.CSSProperties}>
-              <div className="relative max-w-4xl mx-auto">
-                {/* Glow */}
-                <div
-                  className="absolute -inset-6 rounded-[40px] pointer-events-none"
-                  style={{
-                    background: 'radial-gradient(ellipse at center, rgba(10,102,80,0.12) 0%, transparent 70%)',
-                  }}
-                />
-                {/* Card */}
-                <div
-                  className="relative rounded-3xl overflow-hidden"
-                  style={{
-                    background: 'var(--color-parchment)',
-                    border: '1px solid var(--color-border)',
-                    boxShadow: 'inset 0 0 80px rgba(138,77,15,0.06), 0 32px 80px rgba(0,0,0,0.1)',
-                  }}
+              <Reveal delay={400} className="flex flex-col sm:flex-row gap-6">
+                <Link
+                  href="/login"
+                  className="silk-gradient text-white px-10 py-5 rounded-2xl font-bold tracking-wide hover:scale-105 transition-all editorial-shadow flex items-center justify-center gap-2 group"
                 >
-                  {/* Mock browser bar */}
-                  <div
-                    className="flex items-center gap-2 px-5 py-3.5"
-                    style={{ background: 'rgba(0,0,0,0.04)', borderBottom: '1px solid var(--color-border)' }}
-                  >
-                    <div className="w-3 h-3 rounded-full bg-red-400/60" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-400/60" />
-                    <div className="w-3 h-3 rounded-full bg-green-400/60" />
-                    <div
-                      className="ml-4 flex-1 max-w-xs h-6 rounded-md flex items-center px-3 text-xs"
-                      style={{ background: 'rgba(0,0,0,0.06)', color: 'var(--color-text-muted)' }}
-                    >
-                      ayahinaction.app/dashboard
-                    </div>
-                  </div>
+                  Begin Your Archive
+                  <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                </Link>
+                <a
+                  href="#philosophy"
+                  className="bg-white/50 backdrop-blur-sm text-primary px-10 py-5 rounded-2xl font-semibold tracking-wide border border-outline-variant/20 hover:bg-white transition-all text-center"
+                >
+                  Our Philosophy
+                </a>
+              </Reveal>
+            </div>
 
-                  {/* Content */}
-                  <div className="p-8 md:p-12">
-                    {/* Ayah display */}
-                    <div className="text-center mb-8">
-                      <div
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-6"
-                        style={{ background: 'rgba(212,160,23,0.15)', color: 'var(--color-gold)' }}
-                      >
-                        <Star className="w-3 h-3" fill="currentColor" /> Surah Ash-Sharh • 94:6
-                      </div>
-                      <p
-                        className="font-amiri text-4xl md:text-5xl leading-relaxed mb-4"
-                        dir="rtl"
-                        style={{ color: 'var(--color-emerald)' }}
-                      >
-                        إِنَّ مَعَ الْعُسْرِ يُسْرًا
-                      </p>
-                      <p
-                        className="text-lg italic"
-                        style={{ color: 'var(--color-text-muted)' }}
-                      >
-                        &ldquo;Verily, with hardship comes ease.&rdquo;
-                      </p>
-                    </div>
-
-                    {/* Reflection preview */}
-                    <div
-                      className="max-w-2xl mx-auto rounded-2xl p-6"
-                      style={{
-                        background: 'rgba(255,255,255,0.5)',
-                        border: '1px dashed var(--color-border)',
-                      }}
-                    >
-                      <div className="flex justify-between items-start mb-4">
-                        <span className="text-sm font-bold" style={{ color: 'var(--color-emerald)' }}>
-                          Today&apos;s Reflection
-                        </span>
-                        <span className="text-xs italic" style={{ color: 'var(--color-text-muted)' }}>
-                          Apr 9, 2026
-                        </span>
-                      </div>
-                      <p className="italic leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
-                        &ldquo;Today I felt overwhelmed with my workload, but reading this ayah reminded me that ease is not just after hardship — it&apos;s <em>with</em> it. I found calm in small wins.&rdquo;
-                      </p>
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {['Patience', 'Gratitude', 'Work'].map((tag) => (
-                          <span
-                            key={tag}
-                            className="text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider"
-                            style={{
-                              background: 'rgba(10,102,80,0.1)',
-                              color: 'var(--color-emerald)',
-                            }}
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
+            {/* Visual Column */}
+            <Reveal delay={500} className="relative hidden lg:flex justify-center">
+              <div className="relative w-full aspect-square max-w-md">
+                <div className="absolute inset-0 bg-tertiary-fixed opacity-30 rounded-full blur-[100px] animate-pulse" />
+                <div className="relative z-10 w-full h-full border border-primary/5 rounded-full flex items-center justify-center">
+                  <div className="w-5/6 h-5/6 border border-primary/10 rounded-full flex items-center justify-center">
+                    <div className="w-4/6 h-4/6 silk-gradient rounded-full opacity-5 flex items-center justify-center shadow-inner" />
                   </div>
                 </div>
+                {/* Floating Elements */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-primary/80">
+                  <Mic className="w-24 h-24 stroke-[1px] opacity-20" />
+                </div>
+                <div className="absolute top-10 right-10 text-gold/40 animate-bounce transition-all duration-[3000ms]">
+                  <Star className="w-8 h-8 fill-current" />
+                </div>
+                <div className="absolute bottom-20 left-10 text-primary/30">
+                  <Sparkles className="w-12 h-12" />
+                </div>
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
-      {/* ── Stats Bar ────────────────────────────────────────────────── */}
-      <section id="stats" className="relative z-10 py-16" style={{ background: 'var(--color-emerald)' }}>
-        <Reveal className="container mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
-            {[
-              { value: 12000, suffix: '+', label: 'Reflections Logged' },
-              { value: 47, suffix: ' days', label: 'Avg. Streak Record' },
-              { value: 5000, suffix: '+', label: 'Users Journaling' },
-              { value: 10, suffix: '', label: 'Spiritual Categories' },
-            ].map((stat, i) => (
-              <div key={i}>
-                <div className="text-4xl md:text-5xl font-bold font-amiri mb-2">
-                  <AnimatedCounter target={stat.value} suffix={stat.suffix} />
-                </div>
-                <div className="text-sm text-white/70 font-medium uppercase tracking-widest">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-      </section>
-
-      {/* ── Features ─────────────────────────────────────────────────── */}
-      <section id="features" className="relative z-10 py-28">
-        <div className="container mx-auto px-6">
-          <Reveal className="text-center mb-16">
-            <span
-              className="text-xs font-bold uppercase tracking-widest mb-4 block"
-              style={{ color: 'var(--color-emerald)' }}
-            >
-              Everything you need
-            </span>
-            <h2
-              className="font-amiri font-bold mb-4"
-              style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: 'var(--color-text-primary)' }}
-            >
-              Built for the sincere Muslim.
-            </h2>
-            <p className="text-lg max-w-2xl mx-auto" style={{ color: 'var(--color-text-muted)' }}>
-              Every feature crafted to help you move from reading to living the Quran.
+      {/* ── Ritual Section ─────────────────────────────────────────── */}
+      <section className="bg-surface-container-low py-32 px-8 relative z-10">
+        <div className="container mx-auto">
+          <Reveal className="text-center mb-24 max-w-2xl mx-auto">
+            <span className="font-label text-xs tracking-[0.3em] uppercase text-on-surface-variant block mb-4">The Ritual</span>
+            <h2 className="font-serif text-4xl md:text-5xl text-on-surface mb-8">The Daily Anchor</h2>
+            <p className="text-on-surface-variant leading-relaxed text-lg">
+              A curated path for your morning and evening reflections. We provide the vessel; you provide the soul.
             </p>
           </Reveal>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((f, i) => (
-              <Reveal key={i} delay={i * 80}>
-                <div
-                  className="group h-full rounded-2xl p-6 transition-all hover:-translate-y-1 hover:shadow-xl"
-                  style={{
-                    background: `linear-gradient(135deg, var(--color-surface) 0%, var(--color-parchment) 100%)`,
-                    border: '1px solid var(--color-border)',
-                  }}
-                >
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110"
-                    style={{ background: 'var(--color-surface)', color: 'var(--color-emerald)', border: '1px solid var(--color-border)' }}
-                  >
-                    {f.icon}
-                  </div>
-                  <h3 className="text-lg font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>{f.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>{f.description}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── How It Works ─────────────────────────────────────────────── */}
-      <section
-        id="how-it-works"
-        className="relative z-10 py-28"
-        style={{ background: 'var(--color-surface)' }}
-      >
-        <div className="container mx-auto px-6">
-          <Reveal className="text-center mb-16">
-            <span
-              className="text-xs font-bold uppercase tracking-widest mb-4 block"
-              style={{ color: 'var(--color-gold)' }}
-            >
-              Simple by design
-            </span>
-            <h2
-              className="font-amiri font-bold"
-              style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: 'var(--color-text-primary)' }}
-            >
-              Your daily ritual in 3 steps.
-            </h2>
-          </Reveal>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-12">
             {[
-              {
-                step: '01',
-                title: 'Receive Your Ayah',
-                desc: 'Every morning a fresh verse greets you — drawn from the eternal wisdom of the Quran.',
-                emoji: '📖',
-              },
-              {
-                step: '02',
-                title: 'Live & Reflect',
-                desc: 'Throughout your day, notice how the verse speaks to your moments. Type or speak your reflection.',
-                emoji: '✍️',
-              },
-              {
-                step: '03',
-                title: 'Watch Your Growth',
-                desc: 'Your streak builds. Your heatmap fills. Your spiritual character becomes visible.',
-                emoji: '📈',
-              },
+              { icon: <Sparkles className="text-gold" />, title: 'Divine Prompting', desc: 'Every day begins with a selected Ayah that acts as a mirror to your current state, inviting deep contemplation.' },
+              { icon: <Mic className="text-primary" />, title: 'Living Reflection', desc: 'Space to write or speak freely, capturing the whispers of your heart as they align with the sacred text.', stagger: true },
+              { icon: <BookOpen className="text-gold" />, title: 'Sacred Storage', desc: 'Each entry is woven into your digital heirloom, timestamped and stored for your future self.' }
             ].map((step, i) => (
-              <Reveal key={i} delay={i * 120} className="relative">
-                {/* Connector line */}
-                {i < 2 && (
-                  <div
-                    className="hidden md:block absolute top-8 left-full w-full h-px z-0"
-                    style={{
-                      background: 'linear-gradient(90deg, var(--color-border) 0%, transparent 100%)',
-                      transform: 'translateX(-50%)',
-                      width: '50%',
-                    }}
-                  />
-                )}
-                <div className="relative z-10 text-center p-6">
-                  <div className="text-4xl mb-4">{step.emoji}</div>
-                  <div
-                    className="text-xs font-black uppercase tracking-widest mb-3"
-                    style={{ color: 'var(--color-gold)' }}
-                  >
-                    Step {step.step}
-                  </div>
-                  <h3 className="text-xl font-bold mb-3" style={{ color: 'var(--color-text-primary)' }}>{step.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>{step.desc}</p>
+              <Reveal key={i} delay={i * 200} className={`bg-white p-12 rounded-3xl editorial-shadow group hover:-translate-y-2 transition-all duration-500 ${step.stagger ? 'md:mt-12' : ''}`}>
+                <div className="w-14 h-14 rounded-full bg-surface-container flex items-center justify-center mb-10 group-hover:scale-110 transition-transform">
+                  {step.icon}
                 </div>
+                <h3 className="font-serif text-2xl mb-4 text-primary">{step.title}</h3>
+                <p className="text-on-surface-variant text-sm leading-relaxed">{step.desc}</p>
               </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Testimonials ─────────────────────────────────────────────── */}
-      <section className="relative z-10 py-28">
-        <div className="container mx-auto px-6">
-          <Reveal className="text-center mb-16">
-            <h2
-              className="font-amiri font-bold" 
-              style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: 'var(--color-text-primary)' }}
-            >
-              From the community.
-            </h2>
+      {/* ── Quote Block ────────────────────────────────────────────── */}
+      <section className="py-32 px-8 overflow-hidden z-10 relative">
+        <div className="container mx-auto">
+          <Reveal className="max-w-4xl mx-auto text-center relative">
+            <span className="font-serif italic text-8xl text-primary/5 absolute -top-12 -left-8 pointer-events-none select-none">
+              &ldquo;
+            </span>
+            <div className="inline-block relative">
+              <div className="absolute inset-x-0 -bottom-2 h-8 bg-tertiary-fixed/30 -rotate-1 skew-x-12" />
+              <blockquote className="font-serif italic text-3xl md:text-5xl text-on-surface relative leading-snug">
+                &ldquo;And He is with you wherever you are.&rdquo;
+              </blockquote>
+            </div>
+            <cite className="block mt-12 font-label text-xs tracking-[0.4em] text-on-surface-variant uppercase not-italic">
+              — Surah Al-Hadid, 4
+            </cite>
           </Reveal>
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {testimonials.map((t, i) => (
-              <Reveal key={i} delay={i * 100}>
-                <div
-                  className="rounded-2xl p-6 h-full"
-                  style={{
-                    background: 'var(--color-surface)',
-                    border: '1px solid var(--color-border)',
-                  }}
-                >
-                  <div className="flex gap-0.5 mb-4">
-                    {[...Array(5)].map((_, idx) => (
-                      <Star key={idx} className="w-4 h-4 fill-[#d4a017] text-[#d4a017]" />
-                    ))}
-                  </div>
-                  <p className="text-sm leading-relaxed italic mb-6" style={{ color: 'var(--color-text-primary)' }}>
-                    &ldquo;{t.text}&rdquo;
-                  </p>
-                  <div>
-                    <div className="font-bold text-sm" style={{ color: 'var(--color-text-primary)' }}>{t.name}</div>
-                    <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.role}</div>
+        </div>
+      </section>
+
+      {/* ── Archive stats ─────────────────────────────────────────── */}
+      <section className="py-32 px-8 overflow-hidden z-10 relative">
+        <div className="container mx-auto">
+          <div className="grid lg:grid-cols-2 gap-24 items-center">
+            <Reveal className="order-2 lg:order-1 relative">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="bg-surface-container rounded-[2rem] p-4 mt-12 editorial-shadow">
+                  <div className="h-48 silk-gradient rounded-2xl opacity-80 flex items-center justify-center p-8">
+                    <LineChart className="w-full h-full text-white/50" />
                   </div>
                 </div>
+                <div className="bg-white rounded-[2rem] p-4 editorial-shadow border border-outline-variant/10">
+                  <div className="h-64 bg-tertiary-fixed/40 rounded-2xl flex items-center justify-center p-8">
+                    <Star className="w-full h-full text-gold/30 fill-current" />
+                  </div>
+                </div>
+                <div className="bg-surface-container rounded-[2rem] p-4 -mt-16 col-start-2 editorial-shadow">
+                  <div className="h-40 bg-primary/90 rounded-2xl flex items-center justify-center p-8">
+                     <div className="flex gap-2 items-end">
+                      {[4, 7, 5, 8, 6].map((h, i) => (
+                        <div key={i} className="w-2 bg-white/30 rounded-full" style={{ height: h * 4 }} />
+                      ))}
+                     </div>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+
+            <div className="order-1 lg:order-2">
+              <Reveal delay={100}>
+                <span className="font-label text-xs tracking-[0.3em] uppercase text-on-surface-variant block mb-6">The Archive</span>
+                <h2 className="font-serif text-5xl md:text-7xl text-primary leading-tight mb-8">
+                  Consistency is the <span className="italic">Thread</span> of Growth.
+                </h2>
+                <p className="text-on-surface-variant text-lg leading-relaxed mb-12">
+                  Our platform doesn&apos;t just track days; it tracks your spiritual evolution. Watch as your fleeting thoughts transform into a coherent narrative of faith.
+                </p>
+                <div className="space-y-8">
+                  {[
+                    { title: 'Visual Lineage', desc: 'Elegant data visualizations that honor your dedication without the clinical feel of standard apps.' },
+                    { title: 'Searchable Insights', desc: 'Instantly recall how you felt during Ramadan or after a specific ayah reached you.' }
+                  ].map((item, i) => (
+                    <div key={i} className="flex gap-6">
+                      <div className="mt-1 text-gold">
+                        <Star className="w-5 h-5 fill-current" />
+                      </div>
+                      <div>
+                        <h4 className="font-label text-sm font-bold uppercase tracking-[0.2em] mb-2">{item.title}</h4>
+                        <p className="text-on-surface-variant text-sm leading-relaxed">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </Reveal>
-            ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* ── Final CTA ────────────────────────────────────────────────── */}
-      <section
-        className="relative z-10 py-32 overflow-hidden"
-        style={{ background: 'var(--color-emerald)' }}
-      >
-        {/* Pattern overlay */}
-        <div className="absolute inset-0 opacity-5 pointer-events-none" style={{
-          backgroundImage: 'repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)',
-          backgroundSize: '20px 20px',
-        }} />
-
-        <Reveal className="container mx-auto px-6 text-center relative z-10">
-          <p className="font-amiri text-4xl text-white/80 mb-4" dir="rtl">
-            وَتِلْكَ الْأَمْثَالُ نَضْرِبُهَا لِلنَّاسِ
-          </p>
-          <h2 className="font-amiri font-bold text-white mb-4" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}>
-            The Quran as a Methodology of Life.
-          </h2>
-          <p className="text-white/70 text-lg mb-12 max-w-xl mx-auto">
-            Join thousands of believers tracking the Quran&apos;s impact on their daily lives. Your journey starts with one ayah.
-          </p>
-          <a
-            href="/api/auth/login"
-            className="group inline-flex items-center gap-3 bg-white font-bold px-12 py-5 rounded-2xl text-lg transition-all hover:scale-105 hover:shadow-2xl"
-            style={{ color: 'var(--color-emerald)' }}
-          >
-            Connect with Quran.com
-            <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-          </a>
-          <p className="mt-6 text-white/50 text-sm">Secure. Private. Soulful.</p>
-        </Reveal>
+      <section className="py-32 px-8 relative z-10">
+        <div className="container mx-auto">
+          <Reveal className="silk-gradient rounded-[3rem] p-16 md:p-32 text-center relative overflow-hidden editorial-shadow">
+            {/* Geometric patterns */}
+            <div className="absolute inset-0 opacity-5 pointer-events-none">
+              <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                 <circle cx="10%" cy="10%" r="20" fill="white" />
+                 <circle cx="90%" cy="90%" r="30" fill="white" />
+              </svg>
+            </div>
+            
+            <div className="relative z-10">
+              <h2 className="font-serif text-5xl md:text-7xl text-white mb-10 leading-tight">
+                Begin Your Spiritual <span className="italic font-light">Artifact</span> Today.
+              </h2>
+              <p className="text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-16 leading-relaxed">
+                Join a community of seekers dedicated to preserving their most precious resource: their spiritual clarity.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                <Link
+                  href="/login"
+                  className="bg-tertiary-fixed text-on-surface px-12 py-5 rounded-2xl font-bold tracking-wide hover:bg-secondary-fixed transition-all editorial-shadow"
+                >
+                  Create Your Journal
+                </Link>
+                <span className="text-white/70 text-xs font-label uppercase tracking-[0.3em]">
+                  Start for free
+                </span>
+              </div>
+            </div>
+          </Reveal>
+        </div>
       </section>
 
       {/* ── Footer ───────────────────────────────────────────────────── */}
-      <footer
-        className="relative z-10 py-12"
-        style={{ borderTop: '1px solid var(--color-border)' }}
-      >
-        <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icons/icon-192.png" alt="Ayah in Action Logo" className="w-8 h-8 rounded-full shrink-0 object-cover" />
-            <span className="font-bold" style={{ color: 'var(--color-text-primary)' }}>Ayah in Action</span>
+      <footer className="bg-surface-container-low/50 py-20 px-8 border-t border-outline-variant/10 relative z-10">
+        <div className="container mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-12">
+            <div className="font-serif italic text-2xl text-primary">
+              Ayah in Action
+            </div>
+            
+            <nav className="flex flex-wrap justify-center gap-10">
+              {['Privacy Policy', 'Terms of Service', 'Our Philosophy'].map((item) => (
+                <a 
+                  key={item}
+                  href="#" 
+                  className="font-label text-[10px] tracking-[0.3em] uppercase text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  {item}
+                </a>
+              ))}
+            </nav>
+            
+            <div className="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface-variant/60">
+              © {new Date().getFullYear()} Ayah in Action. A Digital Heirloom.
+            </div>
           </div>
-          <div className="flex gap-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>
-            <a href="#" className="hover:text-[#0a6650] transition-colors">Privacy</a>
-            <a href="#" className="hover:text-[#0a6650] transition-colors">Terms</a>
-            <a href="https://quran.foundation" target="_blank" rel="noopener noreferrer" className="hover:text-[#0a6650] transition-colors">
-              Powered by Quran Foundation
-            </a>
-          </div>
-          <p className="text-xs" style={{ color: 'var(--color-text-muted)', opacity: 0.6 }}>
-            © {new Date().getFullYear()} Ayah in Action
-          </p>
         </div>
       </footer>
-
-      {/* ── Hero animation keyframes ─────────────────────────────────── */}
-      <style>{`
-        .landing-hero-animate {
-          opacity: 0;
-          transform: translateY(28px);
-          animation: landingReveal 0.8s cubic-bezier(0.22,1,0.36,1) forwards;
-          animation-delay: var(--delay, 0ms);
-        }
-        @keyframes landingReveal {
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 }

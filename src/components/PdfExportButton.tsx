@@ -1,9 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { FileDown, Loader2 } from 'lucide-react';
+import { FileDown, Loader2, Sparkles } from 'lucide-react';
 import { format } from 'date-fns';
-import { Button } from '@/components/ui/button';
 import { parseNoteBody } from '@/lib/utils';
 
 interface Note {
@@ -29,38 +28,48 @@ export function PdfExportButton({ notes }: { notes: Note[] }) {
       container.style.left = '-9999px';
       container.style.top = '-9999px';
       container.style.width = '800px';
-      container.style.padding = '40px';
-      container.style.backgroundColor = '#f8f1e3';
-      container.style.color = '#1c160f';
-      container.style.fontFamily = 'system-ui, sans-serif';
+      container.style.padding = '60px';
+      container.style.backgroundColor = '#fafaf3'; // Heirloom background
+      container.style.color = '#1b1c18';
+      container.style.fontFamily = "'Inter', sans-serif";
 
       const appNotes = notes.filter(n => n.body.includes('<!--aia'));
       
       let html = `
-        <div style="text-align: center; margin-bottom: 40px;">
-          <h1 style="font-family: 'Amiri', serif; font-size: 36px; color: #0a6650; margin: 0;">My Quran Journal</h1>
-          <p style="color: #7a6a50; margin-top: 8px;">Exported on ${format(new Date(), 'MMMM d, yyyy')}</p>
+        <div style="text-align: center; margin-bottom: 60px; padding-bottom: 40px; border-bottom: 1px solid rgba(0, 76, 59, 0.1);">
+          <div style="font-family: serif; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: #004c3b; opacity: 0.6; margin-bottom: 16px;">The Digital Heirloom</div>
+          <h1 style="font-family: serif; font-size: 48px; color: #004c3b; margin: 0; font-style: italic;">My Quranic Archive</h1>
+          <p style="color: #3f4944; margin-top: 12px; font-size: 14px; letter-spacing: 0.05em;">Curated reflections exported on ${format(new Date(), 'MMMM d, yyyy')}</p>
         </div>
       `;
 
-      html += '<div style="display: flex; flex-direction: column; gap: 32px;">';
+      html += '<div style="display: flex; flex-direction: column; gap: 48px;">';
       
       appNotes.forEach(note => {
         const { logText, metadata } = parseNoteBody(note.body);
         const categories = metadata?.categories || [];
-        const dateStr = format(new Date(note.createdAt), 'EEEE, d MMMM yyyy');
-        const verseKey = metadata?.verseKey || 'Unknown Verse';
+        const dateStr = format(new Date(note.createdAt), 'EEEE, MMMM do, yyyy');
+        const verseKey = metadata?.verseKey || 'Reflection';
         
         html += `
-          <div style="border: 1px solid #dcd0b0; padding: 24px; border-radius: 12px; background: #fff;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 16px; align-items: baseline;">
-              <div style="font-weight: bold; color: #0a6650;">${verseKey}</div>
-              <div style="color: #7a6a50; font-style: italic; font-size: 14px; opacity: 0.8; transform: rotate(-1deg);">${dateStr}</div>
+          <div style="position: relative; padding-left: 24px; border-left: 2px solid #d4a017;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px; align-items: center;">
+              <div>
+                <span style="font-size: 10px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; color: #d4a017; display: block; margin-bottom: 4px;">Entry Asset</span>
+                <div style="font-family: serif; font-size: 24px; color: #004c3b;">Verse ${verseKey}</div>
+              </div>
+              <div style="text-align: right;">
+                 <div style="font-family: serif; font-size: 14px; color: #3f4944; font-style: italic;">${dateStr}</div>
+              </div>
             </div>
-            <p style="line-height: 1.6; white-space: pre-wrap;">${logText}</p>
+            
+            <div style="font-size: 16px; line-height: 1.8; color: #1b1c18; background: white; padding: 32px; border-radius: 24px; border: 1px solid rgba(0, 76, 59, 0.05); box-shadow: 0 4px 20px rgba(0,0,0,0.02); margin-bottom: 20px;">
+              ${logText}
+            </div>
+
             ${categories.length > 0 ? `
-              <div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap;">
-                ${categories.map((c: string) => `<span style="background: #efe8d6; padding: 4px 10px; border-radius: 16px; font-size: 12px; color: #7a6a50;">${c}</span>`).join('')}
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                ${categories.map((c: string) => `<span style="background: rgba(0, 76, 59, 0.05); padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase; color: #004c3b;">${c}</span>`).join('')}
               </div>
             ` : ''}
           </div>
@@ -68,21 +77,23 @@ export function PdfExportButton({ notes }: { notes: Note[] }) {
       });
 
       if (appNotes.length === 0) {
-        html += `<p style="text-align: center; color: #7a6a50; font-style: italic;">No journal entries yet.</p>`;
+        html += `<div style="text-align: center; padding: 100px 0; border: 1px dashed rgba(0, 76, 59, 0.1); border-radius: 40px;">
+          <p style="color: #3f4944; font-style: italic; font-family: serif; font-size: 18px;">The pages of your journal remain unwritten.</p>
+        </div>`;
       }
 
       html += '</div>';
       
       html += `
-        <div style="margin-top: 40px; text-align: center; font-size: 12px; color: #7a6a50;">
-          Generated by Ayah in Action — ayahinaction.app
+        <div style="margin-top: 80px; text-align: center; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #004c3b; opacity: 0.3; border-top: 1px solid rgba(0, 76, 59, 0.05); padding-top: 40px;">
+          Preserved via Ayah in Action &bull; Digital Sanctuary Archive
         </div>
       `;
 
       container.innerHTML = html;
       document.body.appendChild(container);
 
-      const canvas = await html2canvas(container, { scale: 2, useCORS: true });
+      const canvas = await html2canvas(container, { scale: 2, useCORS: true, backgroundColor: '#fafaf3' });
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
       
@@ -111,9 +122,27 @@ export function PdfExportButton({ notes }: { notes: Note[] }) {
   };
 
   return (
-    <Button onClick={handleExport} disabled={isExporting} variant="outline" className="gap-2">
-      {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileDown className="w-4 h-4" />}
-      <span>{isExporting ? 'Exporting...' : 'Export My Quran Journal'}</span>
-    </Button>
+    <button 
+      onClick={handleExport} 
+      disabled={isExporting} 
+      className="group relative flex items-center justify-center gap-3 px-6 h-12 rounded-2xl transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:scale-100 overflow-hidden"
+    >
+      <div className="absolute inset-0 silk-gradient opacity-90 group-hover:opacity-100 transition-opacity" />
+      <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity blur-xl" />
+      
+      <div className="relative flex items-center gap-3 text-white">
+        {isExporting ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <>
+            <FileDown className="w-4.5 h-4.5 group-hover:translate-y-0.5 transition-transform" />
+            <Sparkles className="w-3.5 h-3.5 opacity-40" />
+          </>
+        )}
+        <span className="font-label text-xs font-bold tracking-[0.2em] uppercase">
+          {isExporting ? 'Curating...' : 'Export Archive'}
+        </span>
+      </div>
+    </button>
   );
 }
