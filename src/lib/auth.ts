@@ -23,9 +23,9 @@ export function getAuthUrl(codeChallenge: string, state: string, nonce: string) 
     response_type: 'code',
     client_id: qfConfig.clientId,
     redirect_uri: qfConfig.callbackUrl,
-    // Note: 'notes' and 'collections' are required for full app functionality.
-    // If you get 'invalid_scope', verify your Client ID permissions in the Quran Foundation portal.
-    scope: 'openid offline_access profile notes collections',
+    // Note: Requesting minimal scopes to allow login success while portal setup is pending.
+    // Restoration of 'notes' and 'collections' will happen once portal permissions are granted.
+    scope: 'openid offline_access profile',
     prompt: 'consent',
     state,
     nonce,
