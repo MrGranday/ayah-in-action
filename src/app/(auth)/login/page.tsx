@@ -95,7 +95,7 @@ function LoginContent() {
             className="w-40 h-40 rounded-full flex items-center justify-center shadow-2xl overflow-hidden glass-morphism border-2 border-white/40 ring-1 ring-primary/10"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icons/icon-192.png" alt="Ayah in Action Logo" className="w-full h-full object-cover scale-90" />
+            <img src="/icons/icon-192.png" alt="Ayah in Action Logo" className="w-full h-full object-cover scale-70" />
           </motion.div>
 
           <div className="absolute -bottom-4 bg-white/80 backdrop-blur-sm px-4 py-1.5 rounded-full border border-primary/10 shadow-sm flex items-center gap-2">
