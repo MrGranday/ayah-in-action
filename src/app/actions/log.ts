@@ -69,11 +69,12 @@ export async function saveApplicationLog(formData: {
       await postActivityDay(accessToken, {
         type: 'QURAN',
         seconds: 60,
-        mushafId: 1,
+        mushafId: 4, // 4 = Hafs (required by QF spec)
         ranges: [range],
       });
-    } catch {
-      // Silent ignore - streak bonus is best-effort
+    } catch (activityErr) {
+      // Best-effort — do not block note save if activity day fails
+      console.warn('[Action] postActivityDay failed (non-blocking):', activityErr);
     }
 
     revalidatePath('/dashboard');

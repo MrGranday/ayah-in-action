@@ -18,14 +18,17 @@ export function generateRandomBytes(length: number): string {
   return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
 }
 
+// Full scope list required by Quran Foundation for production approval.
+// Includes: user profile, notes (read+write), and activity day tracking.
+export const REQUIRED_SCOPES =
+  'openid offline_access user note note.read activity_day activity_day.create';
+
 export function getAuthUrl(codeChallenge: string, state: string, nonce: string) {
   const params = new URLSearchParams({
     response_type: 'code',
     client_id: qfConfig.clientId,
     redirect_uri: qfConfig.callbackUrl,
-    // Note: Requesting minimal scopes to allow login success while portal setup is pending.
-    // Restoration of 'notes' and 'collections' will happen once portal permissions are granted.
-    scope: 'openid offline_access profile',
+    scope: REQUIRED_SCOPES,
     prompt: 'consent',
     state,
     nonce,
@@ -34,6 +37,7 @@ export function getAuthUrl(codeChallenge: string, state: string, nonce: string) 
   });
 
   const url = `${qfConfig.authBaseUrl}/oauth2/auth?${params.toString()}`;
+  console.log('[Auth] Auth URL constructed with scopes:', REQUIRED_SCOPES);
   return url;
 }
 
