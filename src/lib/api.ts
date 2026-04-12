@@ -103,8 +103,11 @@ export async function getAllNotes(
   cursor?: string,
   limit = 20
 ): Promise<{ data: Note[] }> {
-  const params = new URLSearchParams({ first: String(limit) });
-  if (cursor) params.set('after', cursor);
+  // QF API params: `limit` (1-50, default 20) and `cursor` (for pagination).
+  // The old `first`/`after` params (GraphQL-style) caused 422 on the QF REST API.
+  const cappedLimit = Math.min(limit, 50); // API max is 50
+  const params = new URLSearchParams({ limit: String(cappedLimit) });
+  if (cursor) params.set('cursor', cursor);
   return userApiFetch(`/notes?${params}`, accessToken) as Promise<{ data: Note[] }>;
 }
 

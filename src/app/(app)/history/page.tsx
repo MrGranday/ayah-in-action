@@ -69,7 +69,8 @@ export default async function HistoryPage() {
         id: note.id,
         logText,
         metadata,
-        date: new Date(note.createdAt || note.created_at || 0),
+        // ISO string, not Date object — Date is non-serializable across RSC boundary (React #130)
+        date: new Date(note.createdAt || note.created_at || 0).toISOString(),
       };
     });
 

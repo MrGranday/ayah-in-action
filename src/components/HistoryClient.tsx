@@ -23,7 +23,8 @@ interface ParsedNote {
     voiceTranscript?: string | null;
     date?: string;
   } | null;
-  date: Date;
+  // ISO string — Date objects cannot cross the RSC Server→Client boundary (React #130)
+  date: string;
 }
 interface HistoryClientProps {
   notes: ParsedNote[];
@@ -164,7 +165,8 @@ export function HistoryClient({ notes }: HistoryClientProps) {
         ) : (
           <div className="space-y-12">
             {filtered.map((note, index) => {
-              const formattedDate = note.date.toLocaleDateString('en-US', {
+              const noteDate = new Date(note.date); // parse ISO string client-side
+              const formattedDate = noteDate.toLocaleDateString('en-US', {
                 month: 'short', day: 'numeric', year: 'numeric',
               });
               const isEven = index % 2 === 0;
@@ -181,7 +183,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                     <div className={`hidden md:block h-px flex-1 bg-gradient-to-r ${isEven ? 'from-transparent to-primary/20' : 'from-primary/20 to-transparent'}`} />
                     <div className="text-center px-6">
                       <span className="font-label text-[10px] tracking-[0.3em] uppercase text-primary/40 block mb-1">
-                        {note.date.toLocaleDateString('en-US', { weekday: 'short' })}
+                        {noteDate.toLocaleDateString('en-US', { weekday: 'short' })}
                       </span>
                       <span className="font-serif text-lg text-primary">{formattedDate}</span>
                     </div>
@@ -260,7 +262,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                         <div className="flex items-center gap-2 text-on-surface-variant/70">
                           <Calendar className="w-3.5 h-3.5" />
                           <span className="font-label text-[10px] tracking-widest uppercase">
-                            {selectedNote.date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+                            {new Date(selectedNote.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
                           </span>
                         </div>
                       </div>
