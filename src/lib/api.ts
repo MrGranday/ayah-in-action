@@ -22,7 +22,7 @@ async function userApiFetch(
   options: RequestInit = {}
 ) {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 second max timeout
+  const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second max timeout
 
   try {
     const res = await fetch(`${qfConfig.apiBaseUrl}/auth/v1${path}`, {
@@ -75,11 +75,7 @@ async function userApiFetch(
 export interface NotePayload {
   body: string;
   ranges: string[];
-  attachedEntities?: Array<{
-    entityId: string;
-    entityType: string;
-    entityMetadata?: Record<string, unknown>;
-  }>;
+
   saveToQR?: boolean;
 }
 

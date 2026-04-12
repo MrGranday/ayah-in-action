@@ -51,18 +51,6 @@ export async function saveApplicationLog(formData: {
     const result = await addApplicationNote(accessToken, {
       body: noteBody,
       ranges: [range],
-      attachedEntities: [
-        {
-          entityId: verseKey,
-          entityType: 'reflection',
-          entityMetadata: {
-            categories,
-            voiceTranscript: voiceTranscript ?? null,
-            verseKey,
-            appVersion: '1.0',
-          },
-        },
-      ],
     });
 
     try {
