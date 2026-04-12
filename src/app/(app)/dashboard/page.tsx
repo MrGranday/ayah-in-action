@@ -3,7 +3,6 @@ import { cookies } from 'next/headers';
 import { getTypedSession } from '@/lib/session';
 import { getAllNotes } from '@/lib/api';
 import { hasLoggedOnDate, toLocalDate, parseNoteBody } from '@/lib/utils';
-import { getQuranClient, getRandomChapter, getRandomVerse } from '@/lib/quran-sdk';
 import { DailyGreeting } from '@/components/DailyGreeting';
 import { AyahCard } from '@/components/AyahCard';
 import { LogForm } from '@/components/LogForm';
@@ -34,30 +33,50 @@ import { ApiError } from '@/lib/api';
 
 async function getRandomAyah() {
   try {
-    const client = getQuranClient();
-    const chapterId = getRandomChapter();
-    const chapter = await client.chapters.findById(chapterId as any);
-    const versesCount = chapter.versesCount;
-    const verseNum = getRandomVerse(chapterId, versesCount);
+    /* 
+     * [FIX: API 404 & React Error #130]
+     * Why we are using native `fetch` instead of `@quranjs/api` SDK:
+     * 1. The `@quranjs/api` SDK was attempting to authenticate with our `prelive-oauth2` server 
+     *    using a client_credentials flow for this endpoint.
+     * 2. Since `api.quran.com/api/v4` is a public API, sending an authenticated pre-live token 
+     *    caused a 404/403 internal SDK error ("Token request failed: Not Found").
+     * 3. This 404 error destabilized the Next.js SSR build on Vercel, returning a 500 error 
+     *    payload to the browser during redirect.
+     * 4. The browser router crashed trying to parse the 500 error payload into React components,
+     *    resulting in the vague `Minified React error #130` on the client.
+     * 
+     * By using direct fetch(), we sidestep the OAuth SDK completely and reliably fetch 
+     * the static public data without crashing the server.
+     */
+    const chapterId = Math.floor(Math.random() * 114) + 1;
     
-    const verse = await client.verses.findByKey(`${chapterId}:${verseNum}` as any, {
-      translations: [131],
-      audio: 1
-    } as any);
+    // Fetch chapter info for verse count
+    const chapRes = await fetch(`https://api.quran.com/api/v4/chapters/${chapterId}`);
+    if (!chapRes.ok) throw new Error("Chapters API failed");
+    const chapData = await chapRes.json();
+    const versesCount = chapData.chapter.verses_count;
     
+    const verseNum = Math.floor(Math.random() * versesCount) + 1;
+    
+    // Translation 131 is Clear Quran English, Audio 1 is Mishari Alafasy
+    const verseRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${chapterId}:${verseNum}?translations=131&audio=1&fields=text_uthmani,text_uthmani_simple`);
+    if (!verseRes.ok) throw new Error("Verses API failed");
+    const verseData = await verseRes.json();
+    const verse = verseData.verse;
+
     return {
-      verse_key: String(verse.verseKey || ''),
-      chapter_id: Number(chapterId),
-      verse_number: Number(verseNum),
-      text_uthmani: String(verse.textUthmani || verse.textUthmaniSimple || ''),
+      verse_key: verse.verse_key,
+      chapter_id: chapterId,
+      verse_number: verseNum,
+      text_uthmani: String(verse.text_uthmani || verse.text_uthmani_simple || ''),
       translation: String(verse.translations?.[0]?.text || 'No translation available'),
       tafsir_snippet: 'Reflect on this verse and consider how it applies to your daily life.',
-      audio_url: String(verse.audio?.url || ''),
-      chapter_name_arabic: String(chapter.nameArabic || ''),
-      chapter_name_english: String(chapter.nameSimple || ''),
+      audio_url: verse.audio?.url ? (verse.audio.url.startsWith('http') ? verse.audio.url : `https://verses.quran.com/${verse.audio.url}`) : '',
+      chapter_name_arabic: String(chapData.chapter.name_arabic || ''),
+      chapter_name_english: String(chapData.chapter.name_simple || ''),
     };
   } catch (err) {
-    console.error('Failed to fetch ayah:', err);
+    console.error('Failed to fetch ayah natively:', err);
     return FALLBACK_AYAH;
   }
 }
