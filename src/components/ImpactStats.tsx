@@ -126,11 +126,11 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div className="bg-surface-container-lowest rounded-[2rem] p-8 md:p-10 border border-outline-variant/10 editorial-shadow parchment-texture">
-        <span className="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface-variant font-bold mb-6 block">Virtue Distribution</span>
-        <h3 className="font-serif text-2xl text-primary mb-8">Dominant Moral Themes</h3>
-        <div className="h-72">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="bg-surface-container-lowest rounded-3xl p-6 border border-outline-variant/10 editorial-shadow parchment-texture">
+        <span className="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface-variant font-bold mb-4 block">Virtue Distribution</span>
+        <h3 className="font-serif text-lg text-primary mb-6">Dominant Moral Themes</h3>
+        <div className="h-60">
           {topCategories.length > 0 ? (
             <Doughnut
               data={doughnutData}
@@ -145,10 +145,10 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
         </div>
       </div>
 
-      <div className="bg-surface-container-lowest rounded-[2rem] p-8 md:p-10 border border-outline-variant/10 editorial-shadow parchment-texture">
-        <span className="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface-variant font-bold mb-6 block">Activity Velocity</span>
-        <h3 className="font-serif text-2xl text-primary mb-8">Weekly Transcendence</h3>
-        <div className="h-72">
+      <div className="bg-surface-container-lowest rounded-3xl p-6 border border-outline-variant/10 editorial-shadow parchment-texture">
+        <span className="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface-variant font-bold mb-4 block">Activity Velocity</span>
+        <h3 className="font-serif text-lg text-primary mb-6">Weekly Transcendence</h3>
+        <div className="h-60">
           {sortedWeeks.length > 0 ? (
             <Bar
               data={barData}

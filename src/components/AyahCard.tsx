@@ -48,12 +48,12 @@ export function AyahCard({ ayah }: AyahCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className="relative overflow-hidden bg-surface-container-low rounded-[2rem] border border-outline-variant/10 editorial-shadow p-8 md:p-12 parchment-texture"
+      className="relative overflow-hidden bg-surface-container-low rounded-[2rem] border border-outline-variant/10 editorial-shadow p-6 md:p-8 parchment-texture"
     >
       {/* Decorative Corner */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-tertiary-fixed opacity-5 blur-3xl pointer-events-none" />
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
             <span className="font-serif italic text-primary text-xl">{ayah.chapter_id}</span>
@@ -73,38 +73,38 @@ export function AyahCard({ ayah }: AyahCardProps) {
         </Badge>
       </div>
 
-      <div className="relative mb-12">
+      <div className="relative mb-8">
         <span className="absolute -top-6 -left-4 text-primary/5 select-none pointer-events-none">
           <Quote className="w-16 h-16 fill-current" />
         </span>
         <p
-          className="font-serif text-4xl md:text-6xl text-primary leading-[1.4] md:leading-[1.6] text-center mb-10"
+          className="font-serif text-3xl md:text-5xl text-primary leading-[1.4] md:leading-[1.6] text-center mb-6"
           dir="rtl"
         >
           {ayah.text_uthmani}
         </p>
       </div>
 
-      <div className="max-w-2xl mx-auto text-center mb-12">
-        <p className="font-body text-lg md:text-xl text-on-surface leading-relaxed italic">
+      <div className="max-w-2xl mx-auto text-center mb-8">
+        <p className="font-body text-base md:text-lg text-on-surface leading-relaxed italic">
           &ldquo;{ayah.translation}&rdquo;
         </p>
       </div>
 
       {ayah.tafsir_snippet && (
-        <div className="max-w-3xl mx-auto bg-surface-container-lowest/40 backdrop-blur-sm rounded-2xl p-6 border border-outline-variant/5 mb-12">
-          <div className="flex gap-4 items-start">
+        <div className="max-w-3xl mx-auto bg-surface-container-lowest/40 backdrop-blur-sm rounded-xl p-4 border border-outline-variant/10 mb-8">
+          <div className="flex gap-3 items-start">
             <div className="mt-1">
               <div className="w-1.5 h-1.5 rounded-full bg-gold" />
             </div>
-            <p className="font-body text-sm text-on-surface-variant leading-relaxed italic">
+            <p className="font-body text-xs text-on-surface-variant leading-relaxed italic">
               {ayah.tafsir_snippet}
             </p>
           </div>
         </div>
       )}
 
-      <div className="flex items-center justify-center gap-8 border-t border-outline-variant/5 pt-10">
+      <div className="flex items-center justify-center gap-6 border-t border-outline-variant/10 pt-8">
         {audio && (
           <button
             onClick={toggleAudio}

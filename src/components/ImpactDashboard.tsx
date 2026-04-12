@@ -123,11 +123,11 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
   }
 
   return (
-    <div className="space-y-12 max-w-5xl mx-auto">
+    <div className="space-y-8 max-w-6xl mx-auto pb-12">
       {/* ── Header ── */}
-      <div className="text-center space-y-4">
+      <div className="text-center space-y-2">
         <span className="font-label text-[10px] tracking-[0.4em] uppercase text-primary/60 block">Spiritual Momentum</span>
-        <h1 className="font-serif text-5xl text-primary">The Influence of Wisdom</h1>
+        <h1 className="font-serif text-3xl md:text-4xl text-primary">The Influence of Wisdom</h1>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
@@ -135,19 +135,19 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="lg:col-span-2 bg-surface-container-low rounded-[2rem] p-10 border border-outline-variant/10 editorial-shadow parchment-texture relative overflow-hidden"
+          className="lg:col-span-2 bg-surface-container-low rounded-3xl p-8 border border-outline-variant/10 editorial-shadow parchment-texture relative overflow-hidden"
         >
-          <div className="absolute top-0 right-0 p-8 text-primary/5">
-             <Flame className="w-24 h-24 stroke-[1px]" />
+          <div className="absolute top-0 right-0 p-6 text-primary/5">
+             <Flame className="w-20 h-20 stroke-[1px]" />
           </div>
           
           <div className="relative z-10">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-14 h-14 rounded-full silk-gradient flex items-center justify-center text-white editorial-shadow">
-                <Flame className="w-6 h-6 fill-current" />
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-12 rounded-full silk-gradient flex items-center justify-center text-white editorial-shadow">
+                <Flame className="w-5 h-5 fill-current" />
               </div>
               <div>
-                <h2 className="font-serif text-4xl text-primary">
+                <h2 className="font-serif text-3xl text-primary">
                   {stats.currentStreak} Day Streak
                 </h2>
                 <p className="font-body text-on-surface-variant italic">
@@ -209,11 +209,11 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="bg-surface-container-low rounded-[2rem] p-6 md:p-10 border border-outline-variant/10 editorial-shadow parchment-texture"
+        className="bg-surface-container-low rounded-3xl p-6 border border-outline-variant/10 editorial-shadow parchment-texture"
       >
-        <div className="flex items-center gap-3 mb-8">
-          <Target className="text-primary w-4 h-4 md:w-5 md:h-5" />
-          <h3 className="font-serif text-xl md:text-2xl text-primary">The Tapestry of Action</h3>
+        <div className="flex items-center gap-2 mb-4">
+          <Target className="text-primary w-4 h-4" />
+          <h3 className="font-serif text-lg md:text-xl text-primary">The Tapestry of Action</h3>
         </div>
         <StreakHeatmap values={heatmapValues} />
       </motion.div>

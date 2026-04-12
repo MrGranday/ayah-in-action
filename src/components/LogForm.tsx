@@ -87,7 +87,7 @@ export function LogForm({
 
   if (hasLoggedToday && !isEditing) {
     return (
-      <div className="relative overflow-hidden bg-surface-container-high rounded-[2rem] border border-primary/10 editorial-shadow p-8 md:p-10 parchment-texture">
+      <div className="relative overflow-hidden bg-surface-container-high rounded-[2rem] border border-primary/10 editorial-shadow p-6 md:p-8 parchment-texture">
         <div className="flex items-center gap-3 mb-6">
           <CheckCircle2 className="text-primary w-6 h-6" />
           <h3 className="font-serif text-2xl text-primary">Preserved Reflection</h3>
@@ -98,7 +98,7 @@ export function LogForm({
           <Badge className="bg-tertiary-fixed text-on-tertiary-fixed border-none px-3 py-1">{verseKey}</Badge>
         </div>
 
-        <p className="font-body text-lg text-on-surface leading-loose italic mb-8 border-l-2 border-primary/20 pl-6">
+        <p className="font-body text-base text-on-surface leading-loose italic mb-6 border-l-2 border-primary/20 pl-6">
           &ldquo;{existingLogText}&rdquo;
         </p>
 
@@ -111,8 +111,8 @@ export function LogForm({
         </div>
 
         <div className="flex items-center justify-between pt-6 border-t border-outline-variant/10">
-          <p className="text-xs text-on-surface-variant/70 italic">
-            Your legacy for today is secure. MashaAllah.
+          <p className="text-[10px] text-on-surface-variant/70 italic uppercase tracking-widest">
+            Your legacy is secure.
           </p>
           <button
             onClick={() => setIsEditing(true)}
@@ -127,22 +127,22 @@ export function LogForm({
   }
 
   return (
-    <div className="bg-surface-container-low rounded-[2rem] border border-outline-variant/10 editorial-shadow p-8 md:p-10 parchment-texture">
-      <div className="flex items-center gap-3 mb-8">
-        <Sparkles className="text-primary w-5 h-5" />
-        <h3 className="font-serif text-2xl text-primary">Capture the Insight</h3>
+    <div className="bg-surface-container-low rounded-[2rem] border border-outline-variant/10 editorial-shadow p-6 md:p-8 parchment-texture">
+      <div className="flex items-center gap-3 mb-6">
+        <Sparkles className="text-primary w-4 h-4" />
+        <h3 className="font-serif text-xl text-primary">Capture the Insight</h3>
       </div>
 
-      <div className="mb-8 group">
-        <span className="font-label text-[10px] tracking-widest text-on-surface-variant uppercase mb-3 block group-focus-within:text-primary transition-colors">
+      <div className="mb-6 group">
+        <span className="font-label text-[10px] tracking-widest text-on-surface-variant uppercase mb-2 block group-focus-within:text-primary transition-colors">
           The Living Experience
         </span>
         <Textarea
           value={logText}
           onChange={(e) => setLogText(e.target.value)}
-          placeholder="How did these words manifest in your day today?"
+          placeholder="Manifested here..."
           maxLength={maxChars}
-          className="min-h-[160px] bg-surface-container-lowest/50 border-outline-variant/20 rounded-2xl p-5 text-lg font-body leading-relaxed focus:bg-surface-container-lowest focus:border-primary/30 transition-all placeholder:italic placeholder:text-on-surface-variant/40"
+          className="min-h-[120px] bg-surface-container-lowest/50 border-outline-variant/20 rounded-2xl p-4 text-base font-body leading-relaxed focus:bg-surface-container-lowest focus:border-primary/30 transition-all placeholder:italic placeholder:text-on-surface-variant/40"
         />
         <div className="flex justify-end mt-2">
           <span className="font-label text-[10px] tracking-widest text-on-surface-variant/50">
@@ -151,16 +151,16 @@ export function LogForm({
         </div>
       </div>
 
-      <div className="mb-10">
-        <span className="font-label text-[10px] tracking-widest text-on-surface-variant uppercase mb-4 block">Manifested Virtues</span>
-        <div className="flex flex-wrap gap-3">
+      <div className="mb-6">
+        <span className="font-label text-[10px] tracking-widest text-on-surface-variant uppercase mb-3 block">Manifested Virtues</span>
+        <div className="flex flex-wrap gap-2">
           {CATEGORIES.map((category) => {
             const isSelected = selectedCategories.includes(category);
             return (
               <button
                 key={category}
                 onClick={() => toggleCategory(category)}
-                className={`px-5 py-2 rounded-full text-[10px] font-bold tracking-[0.15em] uppercase transition-all duration-500 border ${isSelected
+                className={`px-4 py-1.5 rounded-full text-[9px] font-bold tracking-[0.1em] uppercase transition-all duration-500 border ${isSelected
                     ? 'silk-gradient text-white border-transparent editorial-shadow scale-105'
                     : 'bg-surface-container-lowest border-outline-variant/10 text-on-surface-variant hover:border-primary/30'
                   }`}
@@ -172,7 +172,7 @@ export function LogForm({
         </div>
       </div>
 
-      <div className="mb-12">
+      <div className="mb-8">
         <VoiceRecorder
           onTranscriptChange={setVoiceTranscript}
           transcript={voiceTranscript}

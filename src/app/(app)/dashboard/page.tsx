@@ -172,24 +172,31 @@ export default async function DashboardPage() {
     const user = session.user;
 
     return (
-      <div className="max-w-3xl mx-auto">
-        <DailyGreeting user={user || null} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <div className="mb-10">
+          <DailyGreeting user={user || null} />
+        </div>
         
-        {ayah && (
-          <div className="mt-6 mb-2">
-            <ShuffleAyahButton />
-            <AyahCard ayah={ayah} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          {/* Left Column: Divine Wisdom (Ayah) */}
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+               <span className="font-label text-[10px] tracking-[0.4em] uppercase text-primary/40 block">Today&apos;s Sanctuary</span>
+               <ShuffleAyahButton />
+            </div>
+            {ayah && <AyahCard ayah={ayah} />}
           </div>
-        )}
-        
-        <div className="mt-8">
-          <LogForm
-            hasLoggedToday={hasLoggedThisAyah}
-            verseKey={ayah?.verse_key || '1:1'}
-            existingLogText={existingLogText}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            existingCategories={existingCategories as any}
-          />
+
+          {/* Right Column: Capture & Archive */}
+          <div className="lg:pt-10">
+            <LogForm
+              hasLoggedToday={hasLoggedThisAyah}
+              verseKey={ayah?.verse_key || '1:1'}
+              existingLogText={existingLogText}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              existingCategories={existingCategories as any}
+            />
+          </div>
         </div>
       </div>
     );
