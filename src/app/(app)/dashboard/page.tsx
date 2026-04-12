@@ -52,7 +52,7 @@ async function getRandomAyah() {
     const chapterId = Math.floor(Math.random() * 114) + 1;
     
     // Fetch chapter info for verse count
-    const chapRes = await fetch(`https://api.quran.com/api/v4/chapters/${chapterId}`);
+    const chapRes = await fetch(`https://api.quran.com/api/v4/chapters/${chapterId}`, { cache: 'no-store' });
     if (!chapRes.ok) throw new Error("Chapters API failed");
     const chapData = await chapRes.json();
     const versesCount = chapData.chapter.verses_count;
@@ -60,7 +60,7 @@ async function getRandomAyah() {
     const verseNum = Math.floor(Math.random() * versesCount) + 1;
     
     // Translation 131 is Clear Quran English, 20 is Sahih International (fallback). Audio 1 is Mishari Alafasy.
-    const verseRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${chapterId}:${verseNum}?translations=131,20&audio=1&fields=text_uthmani,text_uthmani_simple`);
+    const verseRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${chapterId}:${verseNum}?translations=131,20&audio=1&fields=text_uthmani,text_uthmani_simple`, { cache: 'no-store' });
     if (!verseRes.ok) throw new Error("Verses API failed");
     const verseData = await verseRes.json();
     const verse = verseData.verse;

@@ -23,6 +23,7 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const transcriptRef = useRef<string>('');
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   useEffect(() => {
     return () => {
@@ -31,6 +32,9 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
       }
       if (timerRef.current) {
         clearInterval(timerRef.current);
+      }
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
       }
     };
   }, []);
@@ -58,18 +62,18 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
 
       const recognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-      let recognition: SpeechRecognition | null = null;
       if (recognitionClass) {
-        recognition = new recognitionClass();
+        const recognition = new recognitionClass();
+        recognitionRef.current = recognition;
         recognition.continuous = true;
         recognition.interimResults = false;
         recognition.lang = 'en-US';
         recognition.onresult = (e: SpeechRecognitionEvent) => {
-          let transcripts = '';
-          for (let i = e.resultIndex; i < e.results.length; i++) {
-            transcripts += e.results[i][0].transcript;
+          let fullTranscript = '';
+          for (let i = 0; i < e.results.length; i++) {
+            fullTranscript += e.results[i][0].transcript;
           }
-          transcriptRef.current = transcripts;
+          transcriptRef.current = fullTranscript;
         };
       }
 
@@ -85,7 +89,7 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
         setAudioUrl(url);
         setState('done');
 
-        if (recognition) {
+        if (recognitionRef.current) {
           setState('transcribing');
           setTimeout(() => {
             onTranscriptChange(transcriptRef.current);
@@ -96,8 +100,8 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
         }
       };
 
-      if (recognition) {
-        recognition.start();
+      if (recognitionRef.current) {
+        recognitionRef.current.start();
       }
 
       mediaRecorder.start();
@@ -126,6 +130,9 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
   };
 
   const stopRecording = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
       mediaRecorderRef.current.stop();
     }
