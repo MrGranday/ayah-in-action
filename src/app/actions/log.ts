@@ -42,7 +42,7 @@ export async function saveApplicationLog(formData: {
     date: new Date().toLocaleDateString('en-CA'),
   });
 
-  const noteBody = `${logText}\n<!--aia\n${meta}\naia-->`;
+  const noteBody = `${logText}\n\n--- \n*Ayah in Action Archive* \n\`\`\`json\n${meta}\n\`\`\``;
 
   const [chapter, ayahNum] = verseKey.split(':');
   const range = `${chapter}:${ayahNum}-${chapter}:${ayahNum}`;

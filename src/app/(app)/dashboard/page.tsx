@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { getTypedSession } from '@/lib/session';
 import { getAllNotes } from '@/lib/api';
-import { hasLoggedOnDate, toLocalDate, parseNoteBody } from '@/lib/utils';
+import { hasLoggedOnDate, toLocalDate, parseNoteBody, isAyahInActionNote } from '@/lib/utils';
 import { DailyGreeting } from '@/components/DailyGreeting';
 import { AyahCard } from '@/components/AyahCard';
 import { LogForm } from '@/components/LogForm';
@@ -156,7 +156,7 @@ export default async function DashboardPage() {
     if (hasLogged) {
       const todayNote = notes.find((n: any) => {
         const date = n.createdAt || n.created_at ? new Date(n.createdAt || n.created_at).toLocaleDateString('en-CA') : 'Invalid Date';
-        return date === today && n.body?.includes('<!--aia');
+        return date === today && isAyahInActionNote(n);
       });
       if (todayNote && typeof todayNote.body === 'string') {
         const { logText, metadata } = parseNoteBody(todayNote.body);

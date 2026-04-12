@@ -43,7 +43,7 @@ export function base64UrlEncode(str: string): string {
 
 export function isAyahInActionNote(note: { body: string }): boolean {
   if (!note || !note.body) return false;
-  return note.body.includes('<!--aia');
+  return note.body.includes('<!--aia') || note.body.includes('*Ayah in Action Archive*');
 }
 
 import type { NoteMetadata } from '@/types/log';
@@ -53,10 +53,19 @@ export function parseNoteBody(body: string): {
   metadata: NoteMetadata | null;
 } {
   try {
-    const match = body.match(/<!--aia\n({.*?})\naia-->/s);
-    if (match) {
-      const metadata = JSON.parse(match[1]);
+    // 1. Try old HTML comment syntax (backward compat)
+    const matchOld = body.match(/<!--aia\n({.*?})\naia-->/s);
+    if (matchOld) {
+      const metadata = JSON.parse(matchOld[1]);
       const logText = body.split('\n<!--aia')[0].trim();
+      return { logText, metadata };
+    }
+
+    // 2. Try new Markdown footer syntax
+    const matchNew = body.match(/--- \n\*Ayah in Action Archive\* \n```json\n({.*?})\n```/s);
+    if (matchNew) {
+      const metadata = JSON.parse(matchNew[1]);
+      const logText = body.split('\n--- \n*Ayah')[0].trim();
       return { logText, metadata };
     }
   } catch {
