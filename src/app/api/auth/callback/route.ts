@@ -160,9 +160,11 @@ export async function GET(request: NextRequest) {
   }
 
   // ── 7. Persist session ─────────────────────────────────────────────────────
+  // NOTE: idToken is intentionally NOT stored in session — it's a large JWT that
+  // pushes the iron-session cookie over the 4096-byte browser limit.
+  // User info has already been extracted from it above.
   session.accessToken = tokens.access_token as string;
   session.refreshToken = tokens.refresh_token as string | undefined;
-  session.idToken = idToken;
   session.expiresAt = Math.floor(Date.now() / 1000) + (tokens.expires_in as number || 3600);
 
   if (userSub) {
@@ -170,7 +172,8 @@ export async function GET(request: NextRequest) {
       sub: userSub,
       name: userName || 'Quran.com User',
       email: userEmail || '',
-      picture: userPicture,
+      // Cap picture URL length — long CDN URLs can bloat the cookie
+      picture: userPicture ? userPicture.slice(0, 200) : undefined,
     };
     console.log('[Auth/Callback] User saved to session — sub:', userSub, '| name:', userName);
   } else {

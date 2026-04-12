@@ -6,7 +6,6 @@ export async function POST(request: NextRequest) {
   const session = await getTypedSession(await cookies());
   session.accessToken = undefined;
   session.refreshToken = undefined;
-  session.idToken = undefined;
   session.expiresAt = undefined;
   session.user = undefined;
   
