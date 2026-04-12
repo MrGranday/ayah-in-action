@@ -6,6 +6,7 @@ import { hasLoggedOnDate, toLocalDate, parseNoteBody, isAyahInActionNote } from 
 import { DailyGreeting } from '@/components/DailyGreeting';
 import { AyahCard } from '@/components/AyahCard';
 import { LogForm } from '@/components/LogForm';
+import { ShuffleAyahButton } from '@/components/ShuffleAyahButton';
 import { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
@@ -147,23 +148,25 @@ export default async function DashboardPage() {
     }
 
     const today = toLocalDate(new Date());
-    const hasLogged = hasLoggedOnDate(notes, today);
 
     let existingLogText = '';
     let existingCategories: string[] = [];
     let existingLogId = '';
 
-    if (hasLogged) {
-      const todayNote = notes.find((n: any) => {
-        const date = n.createdAt || n.created_at ? new Date(n.createdAt || n.created_at).toLocaleDateString('en-CA') : 'Invalid Date';
-        return date === today && isAyahInActionNote(n);
-      });
-      if (todayNote && typeof todayNote.body === 'string') {
-        const { logText, metadata } = parseNoteBody(todayNote.body);
-        existingLogText = logText;
-        existingCategories = (metadata?.categories as string[]) || [];
-        existingLogId = todayNote.id;
-      }
+    const todayNote = notes.find((n: any) => {
+      const date = n.createdAt || n.created_at ? new Date(n.createdAt || n.created_at).toLocaleDateString('en-CA') : 'Invalid Date';
+      if (date !== today || !isAyahInActionNote(n)) return false;
+      const { metadata } = parseNoteBody(n.body);
+      return metadata?.verseKey === ayah?.verse_key;
+    });
+
+    const hasLoggedThisAyah = !!todayNote;
+
+    if (hasLoggedThisAyah && todayNote && typeof todayNote.body === 'string') {
+      const { logText, metadata } = parseNoteBody(todayNote.body);
+      existingLogText = logText;
+      existingCategories = (metadata?.categories as string[]) || [];
+      existingLogId = todayNote.id;
     }
 
     const user = session.user;
@@ -172,11 +175,16 @@ export default async function DashboardPage() {
       <div className="max-w-3xl mx-auto">
         <DailyGreeting user={user || null} />
         
-        {ayah && <AyahCard ayah={ayah} />}
+        {ayah && (
+          <div className="mt-6 mb-2">
+            <ShuffleAyahButton />
+            <AyahCard ayah={ayah} />
+          </div>
+        )}
         
         <div className="mt-8">
           <LogForm
-            hasLoggedToday={hasLogged}
+            hasLoggedToday={hasLoggedThisAyah}
             verseKey={ayah?.verse_key || '1:1'}
             existingLogText={existingLogText}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

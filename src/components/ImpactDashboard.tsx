@@ -209,11 +209,11 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="bg-surface-container-low rounded-[2rem] p-10 border border-outline-variant/10 editorial-shadow parchment-texture"
+        className="bg-surface-container-low rounded-[2rem] p-6 md:p-10 border border-outline-variant/10 editorial-shadow parchment-texture"
       >
-        <div className="flex items-center gap-3 mb-10">
-          <Target className="text-primary w-5 h-5" />
-          <h3 className="font-serif text-2xl text-primary">The Tapestry of Action</h3>
+        <div className="flex items-center gap-3 mb-8">
+          <Target className="text-primary w-4 h-4 md:w-5 md:h-5" />
+          <h3 className="font-serif text-xl md:text-2xl text-primary">The Tapestry of Action</h3>
         </div>
         <StreakHeatmap values={heatmapValues} />
       </motion.div>

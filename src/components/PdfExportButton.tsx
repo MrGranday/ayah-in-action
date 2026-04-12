@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { FileDown, Loader2, Sparkles } from 'lucide-react';
 import { format } from 'date-fns';
-import { parseNoteBody } from '@/lib/utils';
+import { parseNoteBody, isAyahInActionNote } from '@/lib/utils';
 
 interface Note {
   id: string;
@@ -33,7 +33,7 @@ export function PdfExportButton({ notes }: { notes: Note[] }) {
       container.style.color = '#1b1c18';
       container.style.fontFamily = "'Inter', sans-serif";
 
-      const appNotes = notes.filter(n => n.body.includes('<!--aia'));
+      const appNotes = notes.filter(n => isAyahInActionNote(n));
       
       let html = `
         <div style="text-align: center; margin-bottom: 60px; padding-bottom: 40px; border-bottom: 1px solid rgba(0, 76, 59, 0.1);">
