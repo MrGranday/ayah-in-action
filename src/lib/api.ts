@@ -80,6 +80,7 @@ export interface NotePayload {
     entityType: string;
     entityMetadata?: Record<string, unknown>;
   }>;
+  saveToQR?: boolean;
 }
 
 export interface NoteResponse {
@@ -92,9 +93,11 @@ export async function addApplicationNote(
   accessToken: string,
   payload: NotePayload
 ): Promise<NoteResponse> {
+  // Quran Foundation Notes API requirement
+  const payloadWithSaveToQR = { ...payload, saveToQR: false };
   return userApiFetch('/notes', accessToken, {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payloadWithSaveToQR),
   });
 }
 
