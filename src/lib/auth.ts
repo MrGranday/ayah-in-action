@@ -18,10 +18,17 @@ export function generateRandomBytes(length: number): string {
   return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
 }
 
-// Full scope list required by Quran Foundation for production approval.
-// Includes: user profile, notes (read+write), and activity day tracking.
+// Scopes based on official QF scope table (api-docs.quran.foundation/docs/user_related_apis_versioned/scopes)
+//
+// Parent scopes give FULL management access (read + create + update + delete).
+// We use parents only — granular children (e.g. note.read, activity_day.create)
+// are subsets of the parent and were causing `invalid_scope` on the pre-live client.
+//
+//   note          → Manage your notes (read, create, update, delete)
+//   activity_day  → Manage your activity days (read, create, estimate, update, delete)
+//   user          → Manage your user profile data
 export const REQUIRED_SCOPES =
-  'openid offline_access user note note.read activity_day activity_day.create';
+  'openid offline_access user note activity_day';
 
 export function getAuthUrl(codeChallenge: string, state: string, nonce: string) {
   const params = new URLSearchParams({
