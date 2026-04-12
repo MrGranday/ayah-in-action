@@ -5,11 +5,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Loader2, AlertCircle, ArrowLeft, ShieldCheck, Sparkles, Star, BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTheme } from 'next-themes';
 
 /* ─── Orbiting Arabic letters (Refined for Heirloom V2) ──────────────────── */
 const ARABIC_LETTERS = ['ب', 'س', 'م', 'ا', 'ل', 'ل', 'ه'];
 
-function OrbitRing({ radius, duration, letters, opacity = 0.3 }: { radius: number; duration: number; letters: string[]; opacity?: number }) {
+function OrbitRing({ radius, duration, letters, isDark, opacity = 0.3 }: { radius: number; duration: number; letters: string[]; isDark: boolean; opacity?: number }) {
   return (
     <div
       className="absolute inset-0 pointer-events-none"
@@ -24,7 +25,7 @@ function OrbitRing({ radius, duration, letters, opacity = 0.3 }: { radius: numbe
             style={{
               top: '50%',
               left: '50%',
-              color: `rgba(0, 76, 59, ${opacity})`,
+              color: isDark ? `rgba(163, 242, 214, ${opacity})` : `rgba(0, 76, 59, ${opacity})`,
               transform: `rotate(${angle}deg) translateY(-${radius}px) rotate(-${angle}deg)`,
               marginTop: '-0.5em',
               marginLeft: '-0.5em',
@@ -41,6 +42,8 @@ function OrbitRing({ radius, duration, letters, opacity = 0.3 }: { radius: numbe
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -85,20 +88,20 @@ function LoginContent() {
 
         {/* Central visual core */}
         <div className="relative w-80 h-80 flex items-center justify-center z-10 mb-16">
-          <OrbitRing radius={140} duration={40} letters={ARABIC_LETTERS} opacity={0.15} />
-          <OrbitRing radius={100} duration={30} letters={['ا', 'ل', 'ق', 'ر', 'آ', 'ن']} opacity={0.2} />
+          <OrbitRing radius={140} duration={40} letters={ARABIC_LETTERS} isDark={isDark} opacity={0.15} />
+          <OrbitRing radius={100} duration={30} letters={['ا', 'ل', 'ق', 'ر', 'آ', 'ن']} isDark={isDark} opacity={0.2} />
 
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1, ease: "easeOut" }}
-            className="w-40 h-40 rounded-full flex items-center justify-center shadow-2xl overflow-hidden glass-morphism border-2 border-white/40 ring-1 ring-primary/10"
+            className="w-40 h-40 rounded-full flex items-center justify-center shadow-2xl overflow-hidden glass-morphism ring-1 ring-primary/10"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/icons/icon-192.png" alt="Ayah in Action Logo" className="w-full h-full object-cover scale-100" />
           </motion.div>
 
-          <div className="absolute -bottom-4 bg-white/80 backdrop-blur-sm px-4 py-1.5 rounded-full border border-primary/10 shadow-sm flex items-center gap-2">
+          <div className="absolute -bottom-4 bg-surface-container-highest/80 backdrop-blur-sm px-4 py-1.5 rounded-full border border-primary/10 shadow-sm flex items-center gap-2">
             <Sparkles className="w-3.5 h-3.5 text-gold" />
             <span className="font-label text-[10px] tracking-widest uppercase text-primary font-bold">Divine Wisdom</span>
           </div>
@@ -171,7 +174,7 @@ function LoginContent() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-start gap-3 p-5 rounded-2xl bg-red-50/50 border border-red-100 text-red-600 text-sm"
+              className="flex items-start gap-3 p-5 rounded-2xl bg-destructive/10 border border-destructive/20 text-destructive text-sm"
             >
               <AlertCircle className="w-5 h-5 shrink-0" />
               <span>{errorMessage}</span>
@@ -179,7 +182,7 @@ function LoginContent() {
           )}
 
           {/* Main Card */}
-          <div className="bg-white rounded-[2.5rem] p-10 space-y-8 editorial-shadow border border-outline-variant/10 relative overflow-hidden">
+          <div className="bg-surface-container-low rounded-[2.5rem] p-10 space-y-8 editorial-shadow border border-outline-variant/10 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 silk-gradient" />
 
             <div className="space-y-2">

@@ -79,7 +79,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
           className={`flex items-center gap-3 px-6 py-3 rounded-2xl font-label text-[10px] tracking-widest uppercase transition-all duration-500 border ${
             showFilters 
               ? 'silk-gradient text-white border-transparent editorial-shadow' 
-              : 'bg-white border-outline-variant/10 text-on-surface-variant hover:border-primary/30'
+              : 'bg-surface-container-lowest border-outline-variant/10 text-on-surface-variant hover:border-primary/30'
           }`}
         >
           <Filter className="w-3.5 h-3.5" />
@@ -101,7 +101,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
           placeholder="Search reflections, citations, or virtues..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-14 pr-6 py-5 rounded-2xl bg-white border border-outline-variant/10 text-lg font-body outline-none focus:border-primary/30 transition-all placeholder:italic placeholder:text-on-surface-variant/30 editorial-shadow"
+          className="w-full pl-14 pr-6 py-5 rounded-2xl bg-surface-container-lowest border border-outline-variant/10 text-lg font-body outline-none focus:border-primary/30 transition-all placeholder:italic placeholder:text-on-surface-variant/30 editorial-shadow"
         />
         {search && (
           <button
@@ -141,7 +141,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                       className={`px-4 py-2 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all duration-300 border ${
                         active 
                           ? 'silk-gradient text-white border-transparent' 
-                          : 'bg-white border-outline-variant/10 text-on-surface-variant hover:border-primary/30'
+                          : 'bg-surface-container-lowest border-outline-variant/10 text-on-surface-variant hover:border-primary/30'
                       }`}
                     >
                       {cat}
@@ -196,7 +196,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                    <div className="md:w-1/2 w-full">
                     <button
                       onClick={() => setSelectedNote(note)}
-                      className="w-full text-left bg-white rounded-3xl p-8 border border-outline-variant/10 transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 group relative overflow-hidden"
+                      className="w-full text-left bg-surface-container-lowest rounded-3xl p-8 border border-outline-variant/10 transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 group relative overflow-hidden"
                     >
                       <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity">
                         <ArrowRight className="w-5 h-5 text-primary" />
@@ -272,7 +272,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                 </div>
                 <button 
                   onClick={() => setSelectedNote(null)}
-                  className="w-12 h-12 rounded-full border border-outline-variant/10 flex items-center justify-center text-on-surface-variant hover:bg-white transition-all"
+                  className="w-12 h-12 rounded-full border border-outline-variant/10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-lowest transition-all"
                 >
                   <X className="w-5 h-5" />
                 </button>

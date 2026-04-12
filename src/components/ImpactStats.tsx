@@ -6,7 +6,11 @@ import { Doughnut, Bar } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
+import { useTheme } from 'next-themes';
+import { isAyahInActionNote, parseNoteBody } from '@/lib/utils';
+
 interface Note {
+  id: string;
   body: string;
   createdAt: string;
 }
@@ -17,6 +21,8 @@ interface ImpactStatsProps {
 
 export function ImpactStats({ notes }: ImpactStatsProps) {
   const [mounted, setMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
 
   useEffect(() => {
     setMounted(true);
@@ -24,22 +30,17 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
 
   if (!mounted) return null;
 
-  const appNotes = notes.filter(n => n.body.includes('<!--aia'));
+  const appNotes = notes.filter(n => isAyahInActionNote(n));
 
   const categoryCount: Record<string, number> = {};
   const weeklyData: Record<string, number> = {};
 
   appNotes.forEach(note => {
-    const match = note.body.match(/<!--aia\n({.*?})\naia-->/s);
-    if (match) {
-      try {
-        const metadata = JSON.parse(match[1]);
-        if (metadata.categories) {
-          metadata.categories.forEach((cat: string) => {
-            categoryCount[cat] = (categoryCount[cat] || 0) + 1;
-          });
-        }
-      } catch {}
+    const { metadata } = parseNoteBody(note.body);
+    if (metadata && metadata.categories) {
+      metadata.categories.forEach((cat: string) => {
+        categoryCount[cat] = (categoryCount[cat] || 0) + 1;
+      });
     }
 
     const noteDate = new Date(note.createdAt);
@@ -53,13 +54,9 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5);
 
-  const heirloomColors = [
-    '#004c3b', // Primary
-    '#d4a017', // Gold
-    '#8b5c16', // Bronze
-    '#006b54', // Emerald-ish
-    '#a67c00', // Ochre
-  ];
+  const heirloomColors = isDark 
+    ? ['#a3f2d6', '#e6c16d', '#ffcc80', '#56d6b1', '#d4a017']
+    : ['#004c3b', '#d4a017', '#8b5c16', '#006b54', '#a67c00'];
 
   const doughnutData = {
     labels: topCategories.map(([cat]) => cat),
@@ -85,12 +82,16 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
       {
         label: 'Daily Reflections',
         data: sortedWeeks.map(w => weeklyData[w]),
-        backgroundColor: '#004c3b',
+        backgroundColor: isDark ? '#a3f2d6' : '#004c3b',
         borderRadius: 12,
         barThickness: 24,
       },
     ],
   };
+
+  const themeTextColor = isDark ? '#bec9c3' : '#004c3b80';
+  const themeTooltipBg = isDark ? '#30312c' : '#fafaf3';
+  const themeTooltipText = isDark ? '#e3e3dc' : '#004c3b';
 
   const chartOptions = {
     responsive: true,
@@ -107,14 +108,14 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
             size: 10,
             weight: 'bold' as any,
           },
-          color: '#004c3b80',
+          color: themeTextColor,
         },
       },
       tooltip: {
-        backgroundColor: '#fafaf3',
-        titleColor: '#004c3b',
-        bodyColor: '#004c3b',
-        borderColor: '#004c3b10',
+        backgroundColor: themeTooltipBg,
+        titleColor: themeTooltipText,
+        bodyColor: themeTooltipText,
+        borderColor: isDark ? '#a3f2d620' : '#004c3b10',
         borderWidth: 1,
         padding: 12,
         cornerRadius: 12,
@@ -126,7 +127,7 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div className="bg-white rounded-[2rem] p-8 md:p-10 border border-outline-variant/10 editorial-shadow parchment-texture">
+      <div className="bg-surface-container-lowest rounded-[2rem] p-8 md:p-10 border border-outline-variant/10 editorial-shadow parchment-texture">
         <span className="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface-variant font-bold mb-6 block">Virtue Distribution</span>
         <h3 className="font-serif text-2xl text-primary mb-8">Dominant Moral Themes</h3>
         <div className="h-72">
@@ -138,13 +139,13 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
           ) : (
             <div className="flex flex-col items-center justify-center h-full text-on-surface-variant/40 space-y-4">
               <div className="w-12 h-12 rounded-full border border-dashed border-outline-variant/30" />
-              <p className="font-body italic italic">The pattern of your virtues is still unfolding.</p>
+              <p className="font-body italic">The pattern of your virtues is still unfolding.</p>
             </div>
           )}
         </div>
       </div>
 
-      <div className="bg-white rounded-[2rem] p-8 md:p-10 border border-outline-variant/10 editorial-shadow parchment-texture">
+      <div className="bg-surface-container-lowest rounded-[2rem] p-8 md:p-10 border border-outline-variant/10 editorial-shadow parchment-texture">
         <span className="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface-variant font-bold mb-6 block">Activity Velocity</span>
         <h3 className="font-serif text-2xl text-primary mb-8">Weekly Transcendence</h3>
         <div className="h-72">
@@ -165,7 +166,7 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
                     ticks: {
                       stepSize: 1,
                       font: { family: "'Inter', sans-serif", size: 10 },
-                      color: '#004c3b40',
+                      color: themeTextColor,
                     },
                   },
                   x: {
@@ -173,7 +174,7 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
                     border: { display: false },
                     ticks: {
                       font: { family: "'Inter', sans-serif", size: 10 },
-                      color: '#004c3b40',
+                      color: themeTextColor,
                     },
                   },
                 },

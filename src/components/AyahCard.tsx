@@ -92,7 +92,7 @@ export function AyahCard({ ayah }: AyahCardProps) {
       </div>
 
       {ayah.tafsir_snippet && (
-        <div className="max-w-3xl mx-auto bg-white/40 backdrop-blur-sm rounded-2xl p-6 border border-outline-variant/5 mb-12">
+        <div className="max-w-3xl mx-auto bg-surface-container-lowest/40 backdrop-blur-sm rounded-2xl p-6 border border-outline-variant/5 mb-12">
           <div className="flex gap-4 items-start">
             <div className="mt-1">
               <div className="w-1.5 h-1.5 rounded-full bg-gold" />

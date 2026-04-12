@@ -52,17 +52,14 @@ export function NavSidebar() {
       <aside
         className={cn(
           'fixed left-0 top-0 h-full z-40 flex flex-col transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]',
-          'border-r bg-surface-container parchment-texture shadow-2xl',
+          'border-r bg-surface-container parchment-texture shadow-2xl border-outline-variant/5',
           sidebarOpen ? 'w-72' : 'w-20',
         )}
-        style={{
-          borderColor: 'rgba(0, 76, 59, 0.05)',
-        }}
       >
         {/* Header / Logo Section */}
         <div
-          className="flex items-center justify-between p-6 border-b"
-          style={{ borderColor: 'rgba(0, 76, 59, 0.05)', minHeight: 80 }}
+          className="flex items-center justify-between p-6 border-b border-outline-variant/5"
+          style={{ minHeight: 80 }}
         >
           <Link href="/dashboard" className="flex items-center gap-4 min-w-0 group">
             <div className="relative shrink-0">
@@ -135,10 +132,10 @@ export function NavSidebar() {
         {/* User Card */}
         {user && (
           <div className="p-4">
-             <div className={cn(
-                "bg-white/50 border border-outline-variant/10 rounded-3xl p-4 transition-all duration-700",
-                !sidebarOpen && "flex justify-center p-2"
-             )}>
+              <div className={cn(
+                 "bg-surface-container-lowest border border-outline-variant/10 rounded-3xl p-4 transition-all duration-700",
+                 !sidebarOpen && "flex justify-center p-2"
+              )}>
                 <div className="flex items-center gap-3">
                   <div className="relative shrink-0">
                     {user.picture ? (

@@ -104,7 +104,7 @@ export function LogForm({
 
         <div className="flex flex-wrap gap-2 mb-8">
           {existingCategories.map((cat) => (
-            <span key={cat} className="font-label text-[10px] tracking-widest uppercase px-3 py-1.5 rounded-full bg-white border border-outline-variant/10 text-on-surface-variant">
+            <span key={cat} className="font-label text-[10px] tracking-widest uppercase px-3 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant/10 text-on-surface-variant">
               {cat}
             </span>
           ))}
@@ -142,7 +142,7 @@ export function LogForm({
           onChange={(e) => setLogText(e.target.value)}
           placeholder="How did these words manifest in your day today?"
           maxLength={maxChars}
-          className="min-h-[160px] bg-white/50 border-outline-variant/20 rounded-2xl p-5 text-lg font-body leading-relaxed focus:bg-white focus:border-primary/30 transition-all placeholder:italic placeholder:text-on-surface-variant/40"
+          className="min-h-[160px] bg-surface-container-lowest/50 border-outline-variant/20 rounded-2xl p-5 text-lg font-body leading-relaxed focus:bg-surface-container-lowest focus:border-primary/30 transition-all placeholder:italic placeholder:text-on-surface-variant/40"
         />
         <div className="flex justify-end mt-2">
           <span className="font-label text-[10px] tracking-widest text-on-surface-variant/50">
@@ -162,7 +162,7 @@ export function LogForm({
                 onClick={() => toggleCategory(category)}
                 className={`px-5 py-2 rounded-full text-[10px] font-bold tracking-[0.15em] uppercase transition-all duration-500 border ${isSelected
                     ? 'silk-gradient text-white border-transparent editorial-shadow scale-105'
-                    : 'bg-white border-outline-variant/10 text-on-surface-variant hover:border-primary/30'
+                    : 'bg-surface-container-lowest border-outline-variant/10 text-on-surface-variant hover:border-primary/30'
                   }`}
               >
                 {category}

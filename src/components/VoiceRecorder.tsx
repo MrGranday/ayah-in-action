@@ -164,7 +164,7 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
             onClick={startRecording}
             className="flex items-center gap-3 px-5 py-2.5 rounded-full bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-all group"
           >
-            <div className="p-1.5 rounded-full bg-white editorial-shadow text-primary group-hover:scale-110 transition-transform">
+            <div className="p-1.5 rounded-full bg-surface-container-lowest editorial-shadow text-primary group-hover:scale-110 transition-transform">
               <Mic className="w-3.5 h-3.5" />
             </div>
             <span className="text-[10px] font-label tracking-[0.2em] uppercase font-bold text-primary/60">Archive Voice Reflection</span>
@@ -183,7 +183,7 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
             key="recording"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-2xl p-6 border border-red-100 flex items-center justify-between editorial-shadow"
+            className="bg-surface-container-lowest rounded-2xl p-6 border border-destructive/20 flex items-center justify-between editorial-shadow"
           >
             <div className="flex items-center gap-4">
               <div className="flex items-end gap-1 h-8">
@@ -210,7 +210,7 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
             </div>
             <button
               onClick={stopRecording}
-              className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center text-red-500 hover:bg-red-100 transition-colors"
+              className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center text-destructive hover:bg-destructive/20 transition-colors"
             >
               <Square className="w-5 h-5 fill-current" />
             </button>
@@ -227,9 +227,9 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
         {(state === 'error' || state === 'permission-denied') && (
           <motion.div 
             key="error"
-            className="p-4 rounded-xl bg-red-50 border border-red-100 space-y-3"
+            className="p-4 rounded-xl bg-destructive/5 border border-destructive/20 space-y-3"
           >
-            <p className="text-[10px] font-label tracking-widest uppercase text-red-600 font-bold">{errorMessage}</p>
+            <p className="text-[10px] font-label tracking-widest uppercase text-destructive font-bold">{errorMessage}</p>
             <button
               onClick={() => setState('idle')}
               className="text-[10px] font-bold tracking-widest uppercase text-primary hover:underline"
@@ -262,7 +262,7 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
               </div>
 
               {audioUrl && (
-                <div className="bg-white/50 p-2 rounded-xl backdrop-blur-sm border border-outline-variant/10">
+                <div className="bg-surface-container-highest/50 p-2 rounded-xl backdrop-blur-sm border border-outline-variant/10">
                    <audio src={audioUrl} controls className="w-full h-10" />
                 </div>
               )}
@@ -273,7 +273,7 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
                   value={transcript}
                   onChange={(e) => onTranscriptChange(e.target.value)}
                   placeholder="The spoken word manifests here..."
-                  className="w-full bg-white/40 border border-outline-variant/5 rounded-xl p-4 text-sm font-body italic text-on-surface-variant focus:bg-white focus:border-primary/20 transition-all outline-none min-h-[100px]"
+                  className="w-full bg-surface-container-lowest/40 border border-outline-variant/5 rounded-xl p-4 text-sm font-body italic text-on-surface-variant focus:bg-surface-container-lowest focus:border-primary/20 transition-all outline-none min-h-[100px]"
                 />
               </div>
             </div>

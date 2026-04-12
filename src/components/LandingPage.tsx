@@ -3,9 +3,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Mic, BookOpen, LineChart, ChevronRight, Sparkles, Star, Shield, Zap, Heart, ArrowRight } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
 /* ─── Floating particle canvas ─────────────────────────────────────── */
-function ParticleCanvas() {
+function ParticleCanvas({ isDark }: { isDark: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -43,7 +44,7 @@ function ParticleCanvas() {
         if (p.x > width + 10) { p.x = -10; }
         ctx!.beginPath();
         ctx!.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx!.fillStyle = `rgba(0, 76, 59, ${p.alpha * 0.15})`; // Deep Emerald particles
+        ctx!.fillStyle = isDark ? `rgba(163, 242, 214, ${p.alpha * 0.1})` : `rgba(0, 76, 59, ${p.alpha * 0.15})`; // Theme-aware particles
         ctx!.fill();
       });
       raf = requestAnimationFrame(draw);
@@ -121,7 +122,9 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
 /* ─── Main Component ────────────────────────────────────────────────── */
 export function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
-
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+  
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll);
@@ -163,11 +166,11 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen parchment-texture bg-surface text-on-surface font-body selection:bg-tertiary-fixed selection:text-on-surface">
-      <ParticleCanvas />
+      <ParticleCanvas isDark={isDark} />
 
       {/* ── Navbar (Floating Glass Island) ─────────────────────────── */}
       <header className="fixed top-8 left-1/2 -translate-x-1/2 z-[100] w-[92%] max-w-6xl">
-        <div className={`glass-morphism h-20 px-8 rounded-[2rem] flex items-center justify-between border border-white/40 shadow-2xl transition-all duration-700 ${
+        <div className={`glass-morphism h-20 px-8 rounded-[2rem] flex items-center justify-between shadow-2xl transition-all duration-700 ${
             scrolled ? 'scale-[0.98] shadow-primary/5' : 'scale-100'
         }`}>
           <div className="flex items-center gap-3">
@@ -239,7 +242,7 @@ export function LandingPage() {
                 </Link>
                 <a
                   href="#philosophy"
-                  className="bg-white/50 backdrop-blur-sm text-primary px-10 py-5 rounded-2xl font-semibold tracking-wide border border-outline-variant/20 hover:bg-white transition-all text-center"
+                  className="bg-surface-container-high/50 backdrop-blur-sm text-primary px-10 py-5 rounded-2xl font-semibold tracking-wide border border-outline-variant/20 hover:bg-surface-container-high transition-all text-center"
                 >
                   Our Philosophy
                 </a>
@@ -288,7 +291,7 @@ export function LandingPage() {
               { icon: <Mic className="text-primary" />, title: 'Living Reflection', desc: 'Space to write or speak freely, capturing the whispers of your heart as they align with the sacred text.', stagger: true },
               { icon: <BookOpen className="text-gold" />, title: 'Sacred Storage', desc: 'Each entry is woven into your digital heirloom, timestamped and stored for your future self.' }
             ].map((step, i) => (
-              <Reveal key={i} delay={i * 200} className={`bg-white p-12 rounded-3xl editorial-shadow group hover:-translate-y-2 transition-all duration-500 ${step.stagger ? 'md:mt-12' : ''}`}>
+              <Reveal key={i} delay={i * 200} className={`bg-surface-container-high p-12 rounded-3xl editorial-shadow group hover:-translate-y-2 transition-all duration-500 ${step.stagger ? 'md:mt-12' : ''}`}>
                 <div className="w-14 h-14 rounded-full bg-surface-container flex items-center justify-center mb-10 group-hover:scale-110 transition-transform">
                   {step.icon}
                 </div>
@@ -331,7 +334,7 @@ export function LandingPage() {
                     <LineChart className="w-full h-full text-white/50" />
                   </div>
                 </div>
-                <div className="bg-white rounded-[2rem] p-4 editorial-shadow border border-outline-variant/10">
+                <div className="bg-surface-container-highest rounded-[2rem] p-4 editorial-shadow border border-outline-variant/10">
                   <div className="h-64 bg-tertiary-fixed/40 rounded-2xl flex items-center justify-center p-8">
                     <Star className="w-full h-full text-gold/30 fill-current" />
                   </div>

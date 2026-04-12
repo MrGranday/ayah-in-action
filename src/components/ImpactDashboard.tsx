@@ -161,7 +161,7 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
                 <span className="font-label text-[10px] tracking-widest uppercase text-on-surface-variant font-bold">Monthly Commitment</span>
                 <span className="font-serif text-xl text-primary">{stats.monthlyLogs} <span className="text-sm text-on-surface-variant/50">/ 60</span></span>
               </div>
-              <div className="w-full bg-white/50 border border-outline-variant/10 rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-surface-container-highest/50 border border-outline-variant/10 rounded-full h-3 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${Math.min((stats.monthlyLogs / 60) * 100, 100)}%` }}
@@ -188,7 +188,7 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="bg-white rounded-2xl p-6 border border-outline-variant/10 editorial-shadow flex flex-col justify-between h-full"
+              className="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/10 editorial-shadow flex flex-col justify-between h-full"
             >
               <div className="flex items-center justify-between mb-4">
                 <span className="font-label text-[9px] tracking-[0.2em] uppercase text-on-surface-variant font-bold">{item.label}</span>
