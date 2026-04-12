@@ -170,7 +170,7 @@ export async function GET(request: NextRequest) {
   if (userSub) {
     session.user = {
       sub: userSub,
-      name: userName || 'Quran.com User',
+      name: userName || (userEmail ? userEmail.split('@')[0] : 'Quran.com User'),
       email: userEmail || '',
       // Cap picture URL length — long CDN URLs can bloat the cookie
       picture: userPicture ? userPicture.slice(0, 200) : undefined,

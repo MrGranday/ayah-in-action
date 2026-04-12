@@ -34,6 +34,28 @@ export function PdfExportButton({ notes }: { notes: Note[] }) {
       container.style.fontFamily = "'Inter', sans-serif";
 
       const appNotes = notes.filter(n => isAyahInActionNote(n));
+      const uniqueVerseKeys = [...new Set(appNotes.map(n => parseNoteBody(n.body).metadata?.verseKey).filter(Boolean))];
+      const fetchedVerses: Record<string, { arabic: string; translation: string }> = {};
+
+      if (uniqueVerseKeys.length > 0) {
+        await Promise.all(
+          uniqueVerseKeys.map(async (key) => {
+            try {
+              const res = await fetch(`https://api.quran.com/api/v4/verses/by_key/${key}?translations=131,20&fields=text_uthmani,text_uthmani_simple`);
+              if (res.ok) {
+                const data = await res.json();
+                const verse = data.verse;
+                fetchedVerses[key as string] = {
+                  arabic: String(verse.text_uthmani || verse.text_uthmani_simple || ''),
+                  translation: String(verse.translations?.[0]?.text || '').replace(/<[^>]*>?/gm, '')
+                };
+              }
+            } catch {
+              // fail silently for individual verse fetches
+            }
+          })
+        );
+      }
       
       let html = `
         <div style="text-align: center; margin-bottom: 60px; padding-bottom: 40px; border-bottom: 1px solid rgba(0, 76, 59, 0.1);">
@@ -50,6 +72,8 @@ export function PdfExportButton({ notes }: { notes: Note[] }) {
         const categories = metadata?.categories || [];
         const dateStr = format(new Date(note.createdAt), 'EEEE, MMMM do, yyyy');
         const verseKey = metadata?.verseKey || 'Reflection';
+        const verseSource = fetchedVerses[verseKey];
+        const voiceData = metadata?.voiceTranscript;
         
         html += `
           <div style="position: relative; padding-left: 24px; border-left: 2px solid #d4a017;">
@@ -63,9 +87,27 @@ export function PdfExportButton({ notes }: { notes: Note[] }) {
               </div>
             </div>
             
+            ${verseSource ? `
+              <div style="background: rgba(0, 76, 59, 0.03); padding: 24px; border-radius: 16px; margin-bottom: 24px; text-align: center; border: 1px solid rgba(0, 76, 59, 0.05);">
+                <div style="direction: rtl; font-family: sans-serif; font-size: 28px; line-height: 2; color: #004c3b; margin-bottom: 16px;">
+                  ${verseSource.arabic}
+                </div>
+                <div style="font-size: 13px; color: #3f4944; font-style: italic; line-height: 1.6; max-width: 80%; margin: 0 auto;">
+                  ${verseSource.translation}
+                </div>
+              </div>
+            ` : ''}
+            
             <div style="font-size: 16px; line-height: 1.8; color: #1b1c18; background: white; padding: 32px; border-radius: 24px; border: 1px solid rgba(0, 76, 59, 0.05); box-shadow: 0 4px 20px rgba(0,0,0,0.02); margin-bottom: 20px;">
               ${logText}
             </div>
+
+            ${voiceData ? `
+              <div style="background: rgba(0, 76, 59, 0.02); padding: 16px 24px; border-radius: 16px; margin-bottom: 20px; border-left: 3px solid #004c3b;">
+                <div style="font-size: 9px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; color: #004c3b; margin-bottom: 8px;">🎤 Voice Transcript</div>
+                <div style="font-size: 14px; color: #3f4944; font-style: italic; line-height: 1.6;">${voiceData}</div>
+              </div>
+            ` : ''}
 
             ${categories.length > 0 ? `
               <div style="display: flex; gap: 8px; flex-wrap: wrap;">
