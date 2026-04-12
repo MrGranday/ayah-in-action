@@ -54,7 +54,7 @@ export default async function HistoryPage() {
     );
   }
 
-  const appNotes = rawNotes
+  const appNotesRaw = rawNotes
     .filter((n: any) => isAyahInActionNote(n))
     .sort(
       (a: any, b: any) => {
@@ -69,10 +69,41 @@ export default async function HistoryPage() {
         id: note.id,
         logText,
         metadata,
-        // ISO string, not Date object — Date is non-serializable across RSC boundary (React #130)
         date: new Date(note.createdAt || note.created_at || 0).toISOString(),
       };
     });
+
+  const uniqueVerseKeys = [...new Set(appNotesRaw.map((n: any) => n.metadata?.verseKey).filter(Boolean))];
+  
+  const fetchedVerses: Record<string, { arabic: string; translation: string }> = {};
+
+  if (uniqueVerseKeys.length > 0) {
+    await Promise.all(
+      uniqueVerseKeys.map(async (key) => {
+        try {
+          const res = await fetch(`https://api.quran.com/api/v4/verses/by_key/${key}?translations=131,20&fields=text_uthmani,text_uthmani_simple`, {
+            next: { revalidate: 86400 } // Cache verse static text for 1 day
+          });
+          if (res.ok) {
+            const data = await res.json();
+            const verse = data.verse;
+            fetchedVerses[key as string] = {
+              arabic: String(verse.text_uthmani || verse.text_uthmani_simple || ''),
+              translation: String(verse.translations?.[0]?.text || '').replace(/<[^>]*>?/gm, '')
+            };
+          }
+        } catch {
+          // fail silently for individual verse fetches
+        }
+      })
+    );
+  }
+
+  const appNotes = appNotesRaw.map((note: any) => ({
+    ...note,
+    ayahTextArabic: note.metadata?.verseKey ? fetchedVerses[note.metadata.verseKey]?.arabic || null : null,
+    ayahTextTranslation: note.metadata?.verseKey ? fetchedVerses[note.metadata.verseKey]?.translation || null : null
+  }));
 
   if (appNotes.length === 0) {
     return (

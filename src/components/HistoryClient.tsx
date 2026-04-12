@@ -25,6 +25,8 @@ interface ParsedNote {
   } | null;
   // ISO string — Date objects cannot cross the RSC Server→Client boundary (React #130)
   date: string;
+  ayahTextArabic?: string | null;
+  ayahTextTranslation?: string | null;
 }
 interface HistoryClientProps {
   notes: ParsedNote[];
@@ -282,8 +284,26 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                   <span className="absolute -top-6 -left-4 text-primary/5 select-none opacity-50">
                     <Quote className="w-24 h-24 fill-current" />
                   </span>
+                  
+                  {selectedNote.ayahTextArabic && (
+                    <div className="mb-10 text-center space-y-4 px-4 bg-primary/5 py-8 rounded-3xl border border-primary/10 relative z-10">
+                      <p className="font-arabic text-3xl leading-[2.5] text-primary" dir="rtl">
+                        {selectedNote.ayahTextArabic}
+                      </p>
+                      {selectedNote.ayahTextTranslation && (
+                        <p className="font-body text-sm text-on-surface-variant italic leading-relaxed max-w-xl mx-auto">
+                          {selectedNote.ayahTextTranslation}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
                   <div className="p-1 w-full bg-gradient-to-b from-primary/10 to-transparent rounded-2xl mb-8 opacity-40" />
-                  <p className="font-body text-xl md:text-2xl text-on-surface leading-loose italic relative z-10">
+                  
+                  <span className="font-label text-[10px] tracking-widest text-on-surface-variant uppercase mb-4 block relative z-10">
+                    Preserved Insight
+                  </span>
+                  <p className="font-body text-xl md:text-2xl text-on-surface leading-loose italic relative z-10 pl-4 border-l-2 border-primary/20">
                     &ldquo;{selectedNote.logText}&rdquo;
                   </p>
                 </div>

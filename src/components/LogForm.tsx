@@ -92,7 +92,7 @@ export function LogForm({
           <CheckCircle2 className="text-primary w-6 h-6" />
           <h3 className="font-serif text-2xl text-primary">Preserved Reflection</h3>
         </div>
-        
+
         <div className="mb-6">
           <span className="font-label text-[10px] tracking-widest text-on-surface-variant uppercase mb-2 block">Source Ayah</span>
           <Badge className="bg-tertiary-fixed text-on-tertiary-fixed border-none px-3 py-1">{verseKey}</Badge>
@@ -160,11 +160,10 @@ export function LogForm({
               <button
                 key={category}
                 onClick={() => toggleCategory(category)}
-                className={`px-5 py-2 rounded-full text-[10px] font-bold tracking-[0.15em] uppercase transition-all duration-500 border ${
-                  isSelected 
-                    ? 'silk-gradient text-white border-transparent editorial-shadow scale-105' 
+                className={`px-5 py-2 rounded-full text-[10px] font-bold tracking-[0.15em] uppercase transition-all duration-500 border ${isSelected
+                    ? 'silk-gradient text-white border-transparent editorial-shadow scale-105'
                     : 'bg-white border-outline-variant/10 text-on-surface-variant hover:border-primary/30'
-                }`}
+                  }`}
               >
                 {category}
               </button>
@@ -183,11 +182,10 @@ export function LogForm({
       <Button
         onClick={handleSave}
         disabled={!isValid || isSaving}
-        className={`w-full h-16 rounded-2xl font-bold tracking-widest uppercase text-xs transition-all duration-700 ${
-          isValid && !isSaving 
-            ? 'silk-gradient text-white editorial-shadow hover:scale-[1.02]' 
+        className={`w-full h-16 rounded-2xl font-bold tracking-widest uppercase text-xs transition-all duration-700 ${isValid && !isSaving
+            ? 'silk-gradient text-white editorial-shadow hover:scale-[1.02]'
             : 'bg-surface-container-high text-on-surface-variant opacity-50'
-        }`}
+          }`}
       >
         {isSaving ? (
           <span className="flex items-center gap-3">
