@@ -1,6 +1,6 @@
 'use client';
 
-export function LoadingSkeleton() {
+export default function Loading() {
   return (
     <div className="animate-pulse space-y-6">
       <div className="text-center space-y-2">

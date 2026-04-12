@@ -58,8 +58,8 @@ async function getRandomAyah() {
     
     const verseNum = Math.floor(Math.random() * versesCount) + 1;
     
-    // Translation 131 is Clear Quran English, Audio 1 is Mishari Alafasy
-    const verseRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${chapterId}:${verseNum}?translations=131&audio=1&fields=text_uthmani,text_uthmani_simple`);
+    // Translation 131 is Clear Quran English, 20 is Sahih International (fallback). Audio 1 is Mishari Alafasy.
+    const verseRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${chapterId}:${verseNum}?translations=131,20&audio=1&fields=text_uthmani,text_uthmani_simple`);
     if (!verseRes.ok) throw new Error("Verses API failed");
     const verseData = await verseRes.json();
     const verse = verseData.verse;
@@ -69,7 +69,7 @@ async function getRandomAyah() {
       chapter_id: chapterId,
       verse_number: verseNum,
       text_uthmani: String(verse.text_uthmani || verse.text_uthmani_simple || ''),
-      translation: String(verse.translations?.[0]?.text || 'No translation available'),
+      translation: String(verse.translations?.[0]?.text || 'No translation available').replace(/<[^>]*>?/gm, ''),
       tafsir_snippet: 'Reflect on this verse and consider how it applies to your daily life.',
       audio_url: verse.audio?.url ? (verse.audio.url.startsWith('http') ? verse.audio.url : `https://verses.quran.com/${verse.audio.url}`) : '',
       chapter_name_arabic: String(chapData.chapter.name_arabic || ''),
