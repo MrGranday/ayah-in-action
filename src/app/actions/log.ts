@@ -19,6 +19,8 @@ export async function saveApplicationLog(formData: {
   logText: string;
   categories: Category[];
   voiceTranscript?: string;
+  type?: 'journal' | 'whisper';
+  challenge?: string;
 }) {
   const parsed = LogSchema.safeParse(formData);
   if (!parsed.success) {
@@ -26,6 +28,7 @@ export async function saveApplicationLog(formData: {
   }
 
   const { verseKey, logText, categories, voiceTranscript } = parsed.data;
+  const { type = 'journal', challenge } = formData;
   const session = await getTypedSession(await cookies());
 
   const accessToken = session.accessToken;
@@ -40,6 +43,8 @@ export async function saveApplicationLog(formData: {
     categories,
     voiceTranscript: voiceTranscript ?? null,
     date: new Date().toLocaleDateString('en-CA'),
+    type,
+    challenge
   });
 
   const noteBody = `${logText}\n\n--- \n*Ayah in Action Archive* \n\`\`\`json\n${meta}\n\`\`\``;

@@ -32,6 +32,8 @@ export interface NoteMetadata {
   voiceTranscript: string | null;
   date: string;
   appVersion?: string;
+  type?: 'journal' | 'whisper';
+  challenge?: string;
 }
 
 export interface ParsedNote {

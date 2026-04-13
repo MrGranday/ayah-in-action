@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { Search, Filter, X, BookOpen, Mic, Sparkles, Star, Calendar, ArrowRight, Quote } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 const CATEGORIES = [
   'Patience', 'Gratitude', 'Family', 'Work', 'Anger',
@@ -22,6 +23,8 @@ interface ParsedNote {
     categories?: string[];
     voiceTranscript?: string | null;
     date?: string;
+    type?: 'journal' | 'whisper';
+    challenge?: string;
   } | null;
   // ISO string — Date objects cannot cross the RSC Server→Client boundary (React #130)
   date: string;
@@ -37,6 +40,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
   const [selectedCats, setSelectedCats] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   const [selectedNote, setSelectedNote] = useState<ParsedNote | null>(null);
+  const [filterType, setFilterType] = useState<'all' | 'journal' | 'whisper'>('all');
 
   const filtered = useMemo(() => {
     return notes.filter((note) => {
@@ -49,9 +53,10 @@ export function HistoryClient({ notes }: HistoryClientProps) {
         selectedCats.every((cat) =>
           (note.metadata?.categories || []).includes(cat)
         );
-      return matchSearch && matchCats;
+      const matchType = filterType === 'all' || (note.metadata?.type || 'journal') === filterType;
+      return matchSearch && matchCats && matchType;
     });
-  }, [notes, search, selectedCats]);
+  }, [notes, search, selectedCats, filterType]);
 
   const toggleCat = (cat: string) => {
     setSelectedCats((prev) =>
@@ -123,6 +128,24 @@ export function HistoryClient({ notes }: HistoryClientProps) {
             className="overflow-hidden"
           >
             <div className="bg-surface-container-low rounded-3xl p-8 border border-outline-variant/5 parchment-texture">
+              <div className="flex items-center justify-between mb-6">
+                <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">Filter by Source</span>
+                <div className="flex gap-2">
+                   {(['all', 'journal', 'whisper'] as const).map(t => (
+                      <button
+                        key={t}
+                        onClick={() => setFilterType(t)}
+                        className={`px-4 py-2 rounded-xl text-[9px] font-bold tracking-widest uppercase transition-all ${
+                          filterType === t 
+                            ? 'bg-primary text-white' 
+                            : 'bg-surface-container-highest text-on-surface-variant/60 hover:text-primary'
+                        }`}
+                      >
+                        {t}
+                      </button>
+                   ))}
+                </div>
+              </div>
               <div className="flex items-center justify-between mb-6">
                 <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">Filter by Virtue</span>
                 {selectedCats.length > 0 && (
@@ -196,8 +219,17 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                    <div className="md:w-1/2 w-full">
                     <button
                       onClick={() => setSelectedNote(note)}
-                      className="w-full text-left bg-surface-container-lowest rounded-3xl p-8 border border-outline-variant/10 transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 group relative overflow-hidden"
+                      className={cn(
+                        "w-full text-left bg-surface-container-lowest rounded-3xl p-8 border transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 group relative overflow-hidden",
+                        note.metadata?.type === 'whisper' ? "border-tertiary/30 bg-tertiary-fixed/5" : "border-outline-variant/10"
+                      )}
                     >
+                      {note.metadata?.type === 'whisper' && (
+                        <div className="absolute top-4 right-4 text-tertiary">
+                           <Sparkles className="w-4 h-4 animate-pulse" />
+                        </div>
+                      )}
+                      
                       <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity">
                         <ArrowRight className="w-5 h-5 text-primary" />
                       </div>

@@ -56,7 +56,7 @@ export function parseNoteBody(body: string): {
     // 1. Try old HTML comment syntax (backward compat)
     const matchOld = body.match(/<!--aia\n({.*?})\naia-->/s);
     if (matchOld) {
-      const metadata = JSON.parse(matchOld[1]);
+      const metadata = JSON.parse(matchOld[1]) as NoteMetadata;
       const logText = body.split('\n<!--aia')[0].trim();
       return { logText, metadata };
     }

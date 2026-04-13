@@ -14,6 +14,9 @@ export interface SessionData {
   codeVerifier?: string;
   state?: string;
   nonce?: string;
+  claudeKey?: string;
+  openaiKey?: string;
+  preferredModel?: 'claude' | 'gpt4o';
 }
 
 export const sessionOptions: SessionOptions = {

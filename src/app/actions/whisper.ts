@@ -71,3 +71,36 @@ export async function suggestAyahFromChallenge(challenge: string): Promise<Proce
     return null;
   }
 }
+
+import { cookies } from 'next/headers';
+import { getTypedSession } from '@/lib/session';
+import { getAllNotes } from '@/lib/api';
+import { parseNoteBody, isAyahInActionNote } from '@/lib/utils';
+
+export async function getWhisperHistory() {
+  const session = await getTypedSession(await cookies());
+  const token = session.accessToken;
+  if (!token) return [];
+
+  try {
+    const res = await getAllNotes(token, undefined, 20);
+    const notes = res.data || [];
+    
+    return notes
+      .filter(n => isAyahInActionNote(n))
+      .map(n => {
+        const { logText, metadata } = parseNoteBody(n.body);
+        return {
+          id: n.id,
+          date: n.createdAt,
+          logText,
+          metadata
+        };
+      })
+      .filter(n => n.metadata?.type === 'whisper')
+      .slice(0, 5);
+  } catch (err) {
+    console.error('Failed to fetch whisper history:', err);
+    return [];
+  }
+}

@@ -15,8 +15,10 @@ export function NavSidebar() {
 
   const navItems = [
     { href: '/dashboard', label: 'Sanctuary', icon: Home },
+    { href: '/whisper', label: 'Life Whisper Guidance', icon: Sparkles },
     { href: '/history', label: 'The Archive', icon: ScrollText },
     { href: '/impact', label: 'The Influence', icon: BarChart3 },
+    { href: '/settings', label: 'The Atelier', icon: UserIcon },
   ];
 
   const handleLogout = async () => {
