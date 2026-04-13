@@ -7,6 +7,8 @@ import type { Category } from '@/types/log';
 
 interface AyahState {
   currentAyah: ProcessedVerse | null;
+  whisperAyah: ProcessedVerse | null;
+  isWhisperLoading: boolean;
   hasLoggedToday: boolean;
   todayLogText: string;
   todayLogId: string | null;
@@ -14,6 +16,8 @@ interface AyahState {
   voiceNoteBlob: Blob | null;
   voiceTranscript: string;
   setCurrentAyah: (ayah: ProcessedVerse) => void;
+  setWhisperAyah: (ayah: ProcessedVerse | null) => void;
+  setIsWhisperLoading: (loading: boolean) => void;
   setHasLoggedToday: (logged: boolean, logId?: string, logText?: string) => void;
   setSelectedCategories: (cats: Category[]) => void;
   setVoiceNote: (blob: Blob, transcript: string) => void;
@@ -24,6 +28,8 @@ export const useAyahStore = create<AyahState>()(
   persist(
     (set) => ({
       currentAyah: null,
+      whisperAyah: null,
+      isWhisperLoading: false,
       hasLoggedToday: false,
       todayLogText: '',
       todayLogId: null,
@@ -31,6 +37,8 @@ export const useAyahStore = create<AyahState>()(
       voiceNoteBlob: null,
       voiceTranscript: '',
       setCurrentAyah: (ayah) => set({ currentAyah: ayah }),
+      setWhisperAyah: (ayah) => set({ whisperAyah: ayah }),
+      setIsWhisperLoading: (loading) => set({ isWhisperLoading: loading }),
       setHasLoggedToday: (logged, logId, logText) =>
         set({
           hasLoggedToday: logged,

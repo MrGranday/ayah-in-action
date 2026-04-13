@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
@@ -10,6 +10,7 @@ import { saveApplicationLog } from '@/app/actions/log';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
 import { Sparkles, Edit3, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { useAyahStore } from '@/stores/useAyahStore';
 
 interface LogFormProps {
   hasLoggedToday: boolean;
@@ -26,11 +27,22 @@ export function LogForm({
   existingCategories = [],
   onSaveSuccess,
 }: LogFormProps) {
+  const { currentAyah, setHasLoggedToday } = useAyahStore();
+  const effectiveVerseKey = currentAyah?.verse_key || verseKey;
+
   const [logText, setLogText] = useState(existingLogText);
   const [selectedCategories, setSelectedCategories] = useState<Category[]>(existingCategories);
   const [voiceTranscript, setVoiceTranscript] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  // Sync with store if a new Ayah is applied via Whisper
+  React.useEffect(() => {
+    if (currentAyah && currentAyah.verse_key !== verseKey) {
+      // If we switch to a whisper ayah, we might want to reset the form or just update the key
+      // For now, just ensuring the key is correct for the save action
+    }
+  }, [currentAyah, verseKey]);
 
   const isValid = logText.trim().length > 0 && selectedCategories.length > 0;
   const charCount = logText.length;
@@ -50,7 +62,7 @@ export function LogForm({
     setIsSaving(true);
     try {
       const result = await saveApplicationLog({
-        verseKey,
+        verseKey: effectiveVerseKey,
         logText: logText.trim(),
         categories: selectedCategories,
         voiceTranscript: voiceTranscript.trim() || undefined,
@@ -95,7 +107,7 @@ export function LogForm({
 
         <div className="mb-6">
           <span className="font-label text-[10px] tracking-widest text-on-surface-variant uppercase mb-2 block">Source Ayah</span>
-          <Badge className="bg-tertiary-fixed text-on-tertiary-fixed border-none px-3 py-1">{verseKey}</Badge>
+          <Badge className="bg-tertiary-fixed text-on-tertiary-fixed border-none px-3 py-1">{effectiveVerseKey}</Badge>
         </div>
 
         <p className="font-body text-sm text-on-surface leading-loose italic mb-4 border-l-2 border-primary/20 pl-4">

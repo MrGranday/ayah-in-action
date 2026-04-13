@@ -7,6 +7,7 @@ import { DailyGreeting } from '@/components/DailyGreeting';
 import { AyahCard } from '@/components/AyahCard';
 import { LogForm } from '@/components/LogForm';
 import { ShuffleAyahButton } from '@/components/ShuffleAyahButton';
+import { LifeWhisper } from '@/components/LifeWhisper';
 import { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
@@ -198,6 +199,9 @@ export default async function DashboardPage() {
             />
           </div>
         </div>
+        
+        {/* Floating Life Whisper Guidance */}
+        <LifeWhisper />
       </div>
     );
   } catch (error: any) {
