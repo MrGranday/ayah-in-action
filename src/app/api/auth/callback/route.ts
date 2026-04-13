@@ -130,7 +130,7 @@ export async function GET(request: NextRequest) {
     const idPayload = parseJwtPayload(idToken);
     if (idPayload) {
       userSub = idPayload.sub as string | undefined;
-      userName = (idPayload.name ?? idPayload.given_name) as string | undefined;
+      userName = (idPayload.name ?? idPayload.given_name ?? idPayload.nickname ?? idPayload.preferred_username) as string | undefined;
       userEmail = idPayload.email as string | undefined;
       userPicture = idPayload.picture as string | undefined;
     }
@@ -148,7 +148,7 @@ export async function GET(request: NextRequest) {
         const userInfo = await userInfoResponse.json() as Record<string, unknown>;
         console.log('[Auth/Callback] /userinfo fields:', Object.keys(userInfo));
         userSub ??= userInfo.sub as string | undefined;
-        userName ??= (userInfo.name ?? userInfo.given_name) as string | undefined;
+        userName ??= (userInfo.name ?? userInfo.given_name ?? userInfo.nickname ?? userInfo.preferred_username) as string | undefined;
         userEmail ??= userInfo.email as string | undefined;
         userPicture ??= userInfo.picture as string | undefined;
       } else {

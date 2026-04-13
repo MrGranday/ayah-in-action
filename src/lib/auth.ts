@@ -36,7 +36,6 @@ export function getAuthUrl(codeChallenge: string, state: string, nonce: string) 
     client_id: qfConfig.clientId,
     redirect_uri: qfConfig.callbackUrl,
     scope: REQUIRED_SCOPES,
-    prompt: 'consent',
     state,
     nonce,
     code_challenge: codeChallenge,
