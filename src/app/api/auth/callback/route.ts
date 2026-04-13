@@ -136,26 +136,42 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Fallback: call /userinfo if name or email are missing
+  // Fallback: call the specific QF profile endpoint if name or email are missing
+  // We use the same pattern as 'note' and 'activity_day' scopes (x-auth-token + x-client-id)
   if ((!userName || !userEmail) && tokens.access_token) {
     try {
-      console.log('[Auth/Callback] Fetching /userinfo for missing profile fields');
-      const userInfoResponse = await fetch(`${qfConfig.authBaseUrl}/userinfo`, {
-        headers: { Authorization: `Bearer ${tokens.access_token}` },
+      console.log('[Auth/Callback] Fetching /auth/v1/me Profile for missing fields');
+      const profileResponse = await fetch(`${qfConfig.apiBaseUrl}/auth/v1/me`, {
+        headers: { 
+          'x-auth-token': tokens.access_token as string,
+          'x-client-id': qfConfig.clientId,
+        },
       });
 
-      if (userInfoResponse.ok) {
-        const userInfo = await userInfoResponse.json() as Record<string, unknown>;
-        console.log('[Auth/Callback] /userinfo fields:', Object.keys(userInfo));
-        userSub ??= userInfo.sub as string | undefined;
-        userName ??= (userInfo.name ?? userInfo.given_name ?? userInfo.nickname ?? userInfo.preferred_username) as string | undefined;
-        userEmail ??= userInfo.email as string | undefined;
-        userPicture ??= userInfo.picture as string | undefined;
+      if (profileResponse.ok) {
+        const profileData = await profileResponse.json() as Record<string, unknown>;
+        console.log('[Auth/Callback] Profile response fields:', Object.keys(profileData));
+        
+        // Map QF specific fields or standard OIDC fields if present
+        userSub ??= (profileData.id ?? profileData.sub) as string | undefined;
+        userName ??= (profileData.name ?? profileData.full_name ?? profileData.given_name) as string | undefined;
+        userEmail ??= profileData.email as string | undefined;
+        userPicture ??= (profileData.picture ?? profileData.profile_picture) as string | undefined;
       } else {
-        console.warn('[Auth/Callback] /userinfo returned:', userInfoResponse.status);
+        console.warn('[Auth/Callback] Profile request returned:', profileResponse.status);
+        // Secondary fallback to standard /userinfo if API /me fails
+        const uiRes = await fetch(`${qfConfig.authBaseUrl}/userinfo`, {
+          headers: { Authorization: `Bearer ${tokens.access_token}` },
+        });
+        if (uiRes.ok) {
+          const ui = await uiRes.json();
+          userSub ??= ui.sub;
+          userName ??= (ui.name ?? ui.given_name ?? ui.nickname);
+          userEmail ??= ui.email;
+        }
       }
-    } catch (uiErr) {
-      console.warn('[Auth/Callback] /userinfo fetch failed (non-critical):', uiErr);
+    } catch (err) {
+      console.warn('[Auth/Callback] Profile fetch failed (non-critical):', err);
     }
   }
 
