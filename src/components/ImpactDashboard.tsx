@@ -125,9 +125,9 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
   return (
     <div className="space-y-8 max-w-6xl mx-auto pb-12">
       {/* ── Header ── */}
-      <div className="text-center space-y-2">
-        <span className="font-label text-[10px] tracking-[0.4em] uppercase text-primary/60 block">Spiritual Momentum</span>
-        <h1 className="font-serif text-3xl md:text-4xl text-primary">The Influence of Wisdom</h1>
+      <div className="text-center space-y-1">
+        <span className="font-label text-[9px] tracking-[0.4em] uppercase text-primary/60 block">Spiritual Momentum</span>
+        <h1 className="font-serif text-2xl md:text-3xl text-primary">The Influence of Wisdom</h1>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
@@ -135,22 +135,22 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="lg:col-span-2 bg-surface-container-low rounded-3xl p-8 border border-outline-variant/10 editorial-shadow parchment-texture relative overflow-hidden"
+          className="lg:col-span-2 bg-surface-container-low rounded-2xl p-6 border border-outline-variant/10 editorial-shadow parchment-texture relative overflow-hidden"
         >
-          <div className="absolute top-0 right-0 p-6 text-primary/5">
-             <Flame className="w-20 h-20 stroke-[1px]" />
+          <div className="absolute top-0 right-0 p-4 text-primary/5">
+             <Flame className="w-16 h-16 stroke-[1px]" />
           </div>
           
           <div className="relative z-10">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-12 rounded-full silk-gradient flex items-center justify-center text-white editorial-shadow">
-                <Flame className="w-5 h-5 fill-current" />
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full silk-gradient flex items-center justify-center text-white editorial-shadow">
+                <Flame className="w-4 h-4 fill-current" />
               </div>
               <div>
-                <h2 className="font-serif text-3xl text-primary">
+                <h2 className="font-serif text-2xl text-primary">
                   {stats.currentStreak} Day Streak
                 </h2>
-                <p className="font-body text-on-surface-variant italic">
+                <p className="font-body text-xs text-on-surface-variant italic">
                   Consistent reflection builds the character of the believer.
                 </p>
               </div>
@@ -158,10 +158,10 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
 
             <div className="space-y-4">
               <div className="flex justify-between items-end">
-                <span className="font-label text-[10px] tracking-widest uppercase text-on-surface-variant font-bold">Monthly Commitment</span>
-                <span className="font-serif text-xl text-primary">{stats.monthlyLogs} <span className="text-sm text-on-surface-variant/50">/ 60</span></span>
+                <span className="font-label text-[9px] tracking-widest uppercase text-on-surface-variant font-bold">Monthly Commitment</span>
+                <span className="font-serif text-lg text-primary">{stats.monthlyLogs} <span className="text-sm text-on-surface-variant/50">/ 60</span></span>
               </div>
-              <div className="w-full bg-surface-container-highest/50 border border-outline-variant/10 rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-surface-container-highest/50 border border-outline-variant/10 rounded-full h-2 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${Math.min((stats.monthlyLogs / 60) * 100, 100)}%` }}
@@ -183,23 +183,23 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
             { label: 'Prime Virtue', value: stats.topCategory, icon: <Trophy className="w-4 h-4" />, color: 'bg-gold/10 text-gold' },
             { label: 'Peak Consistency', value: `${stats.longestStreak} Days`, icon: <Star className="w-4 h-4" />, color: 'bg-tertiary-fixed text-on-tertiary-fixed' },
           ].map((item, i) => (
-            <motion.div
-              key={item.label}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/10 editorial-shadow flex flex-col justify-between h-full"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <span className="font-label text-[9px] tracking-[0.2em] uppercase text-on-surface-variant font-bold">{item.label}</span>
-                <div className={`p-2 rounded-lg ${item.color}`}>
-                  {item.icon}
+              <motion.div
+                key={item.label}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-surface-container-lowest rounded-xl p-4 border border-outline-variant/10 editorial-shadow flex flex-col justify-between h-full"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="font-label text-[8px] tracking-[0.2em] uppercase text-on-surface-variant font-bold">{item.label}</span>
+                  <div className={`p-1.5 rounded-lg ${item.color}`}>
+                    {item.icon}
+                  </div>
                 </div>
-              </div>
-              <div className="font-serif text-2xl text-on-surface truncate">
-                {String(item.value)}
-              </div>
-            </motion.div>
+                <div className="font-serif text-xl text-on-surface truncate">
+                  {String(item.value)}
+                </div>
+              </motion.div>
           ))}
         </div>
       </div>
@@ -209,11 +209,11 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="bg-surface-container-low rounded-3xl p-6 border border-outline-variant/10 editorial-shadow parchment-texture"
+        className="bg-surface-container-low rounded-2xl p-5 border border-outline-variant/10 editorial-shadow parchment-texture"
       >
-        <div className="flex items-center gap-2 mb-4">
-          <Target className="text-primary w-4 h-4" />
-          <h3 className="font-serif text-lg md:text-xl text-primary">The Tapestry of Action</h3>
+        <div className="flex items-center gap-2 mb-3">
+          <Target className="text-primary w-3.5 h-3.5" />
+          <h3 className="font-serif text-base md:text-lg text-primary">The Tapestry of Action</h3>
         </div>
         <StreakHeatmap values={heatmapValues} />
       </motion.div>

@@ -48,7 +48,7 @@ export function AyahCard({ ayah }: AyahCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className="relative overflow-hidden bg-surface-container-low rounded-[2rem] border border-outline-variant/10 editorial-shadow p-6 md:p-8 parchment-texture"
+      className="relative overflow-hidden bg-surface-container-low rounded-2xl border border-outline-variant/10 editorial-shadow p-5 md:p-6 parchment-texture"
     >
       {/* Decorative Corner */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-tertiary-fixed opacity-5 blur-3xl pointer-events-none" />
@@ -59,7 +59,7 @@ export function AyahCard({ ayah }: AyahCardProps) {
             <span className="font-serif italic text-primary text-xl">{ayah.chapter_id}</span>
           </div>
           <div>
-            <h3 className="font-serif text-xl text-primary leading-none mb-1">
+            <h3 className="font-serif text-lg text-primary leading-none mb-1">
               {ayah.chapter_name_english}
             </h3>
             <span className="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface-variant">
@@ -78,15 +78,15 @@ export function AyahCard({ ayah }: AyahCardProps) {
           <Quote className="w-16 h-16 fill-current" />
         </span>
         <p
-          className="font-serif text-3xl md:text-5xl text-primary leading-[1.4] md:leading-[1.6] text-center mb-6"
+          className="font-serif text-2xl md:text-3xl text-primary leading-[1.4] md:leading-[1.6] text-center mb-4"
           dir="rtl"
         >
           {ayah.text_uthmani}
         </p>
       </div>
 
-      <div className="max-w-2xl mx-auto text-center mb-8">
-        <p className="font-body text-base md:text-lg text-on-surface leading-relaxed italic">
+      <div className="max-w-2xl mx-auto text-center mb-6">
+        <p className="font-body text-sm md:text-base text-on-surface leading-relaxed italic">
           &ldquo;{ayah.translation}&rdquo;
         </p>
       </div>
@@ -108,16 +108,16 @@ export function AyahCard({ ayah }: AyahCardProps) {
         {audio && (
           <button
             onClick={toggleAudio}
-            className="flex items-center gap-3 group transition-all"
+            className="flex items-center gap-2 group transition-all"
           >
-            <div className="w-12 h-12 rounded-full silk-gradient flex items-center justify-center text-white editorial-shadow group-hover:scale-110 transition-transform">
+            <div className="w-10 h-10 rounded-full silk-gradient flex items-center justify-center text-white editorial-shadow group-hover:scale-110 transition-transform">
               {isPlaying ? (
-                <Pause className="w-5 h-5 fill-current" />
+                <Pause className="w-4 h-4 fill-current" />
               ) : (
-                <Play className="w-5 h-5 fill-current ml-1" />
+                <Play className="w-4 h-4 fill-current ml-1" />
               )}
             </div>
-            <span className="font-label text-xs tracking-[0.2em] uppercase text-primary font-bold">
+            <span className="font-label text-[10px] tracking-[0.2em] uppercase text-primary font-bold">
               {isPlaying ? 'Listening...' : 'Listen'}
             </span>
           </button>
@@ -125,16 +125,16 @@ export function AyahCard({ ayah }: AyahCardProps) {
 
         <button
           onClick={handleCopy}
-          className="flex items-center gap-3 group transition-all"
+          className="flex items-center gap-2 group transition-all"
         >
-          <div className="w-12 h-12 rounded-full border border-outline-variant/20 flex items-center justify-center text-on-surface-variant group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all">
+          <div className="w-10 h-10 rounded-full border border-outline-variant/20 flex items-center justify-center text-on-surface-variant group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all">
             {copied ? (
-              <Check className="w-5 h-5" />
+              <Check className="w-4 h-4" />
             ) : (
-              <Copy className="w-5 h-5" />
+              <Copy className="w-4 h-4" />
             )}
           </div>
-          <span className="font-label text-xs tracking-[0.2em] uppercase text-on-surface-variant font-bold group-hover:text-primary transition-colors">
+          <span className="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface-variant font-bold group-hover:text-primary transition-colors">
             {copied ? 'Copied' : 'Preserve'}
           </span>
         </button>

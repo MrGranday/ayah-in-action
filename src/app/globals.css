@@ -220,9 +220,20 @@ body {
 }
 
 .react-calendar-heatmap rect {
-  rx: 4px;
+  rx: 2px;
   /* Rounded corners for heatmap tiles */
-  ry: 4px;
+  ry: 2px;
+}
+
+.react-calendar-heatmap-weekday-label {
+  font-size: 4px;
+  fill: var(--color-on-surface-variant);
+  opacity: 0.6;
+}
+
+.react-calendar-heatmap {
+  max-height: 120px;
+  width: 100%;
 }
 
 ::selection {

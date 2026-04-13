@@ -32,7 +32,7 @@ export function StreakHeatmap({ values }: StreakHeatmapProps) {
         values={values}
         classForValue={classForValue}
         showWeekdayLabels
-        gutterSize={2}
+        gutterSize={1}
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         tooltipDataAttrs={((value: any) => {
           if (!value || !value.date) return { 'data-tooltip-id': 'heatmap-tooltip' };

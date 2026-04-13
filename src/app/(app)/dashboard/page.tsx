@@ -172,12 +172,12 @@ export default async function DashboardPage() {
     const user = session.user;
 
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        <div className="mb-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <div className="mb-6">
           <DailyGreeting user={user || null} />
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
           {/* Left Column: Divine Wisdom (Ayah) */}
           <div className="space-y-6">
             <div className="flex items-center justify-between">

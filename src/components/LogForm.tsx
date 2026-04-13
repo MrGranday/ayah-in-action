@@ -87,10 +87,10 @@ export function LogForm({
 
   if (hasLoggedToday && !isEditing) {
     return (
-      <div className="relative overflow-hidden bg-surface-container-high rounded-[2rem] border border-primary/10 editorial-shadow p-6 md:p-8 parchment-texture">
-        <div className="flex items-center gap-3 mb-6">
-          <CheckCircle2 className="text-primary w-6 h-6" />
-          <h3 className="font-serif text-2xl text-primary">Preserved Reflection</h3>
+      <div className="relative overflow-hidden bg-surface-container-high rounded-2xl border border-primary/10 editorial-shadow p-5 md:p-6 parchment-texture">
+        <div className="flex items-center gap-2 mb-4">
+          <CheckCircle2 className="text-primary w-5 h-5" />
+          <h3 className="font-serif text-xl text-primary">Preserved Reflection</h3>
         </div>
 
         <div className="mb-6">
@@ -98,7 +98,7 @@ export function LogForm({
           <Badge className="bg-tertiary-fixed text-on-tertiary-fixed border-none px-3 py-1">{verseKey}</Badge>
         </div>
 
-        <p className="font-body text-base text-on-surface leading-loose italic mb-6 border-l-2 border-primary/20 pl-6">
+        <p className="font-body text-sm text-on-surface leading-loose italic mb-4 border-l-2 border-primary/20 pl-4">
           &ldquo;{existingLogText}&rdquo;
         </p>
 
@@ -127,10 +127,10 @@ export function LogForm({
   }
 
   return (
-    <div className="bg-surface-container-low rounded-[2rem] border border-outline-variant/10 editorial-shadow p-6 md:p-8 parchment-texture">
-      <div className="flex items-center gap-3 mb-6">
-        <Sparkles className="text-primary w-4 h-4" />
-        <h3 className="font-serif text-xl text-primary">Capture the Insight</h3>
+    <div className="bg-surface-container-low rounded-2xl border border-outline-variant/10 editorial-shadow p-5 md:p-6 parchment-texture">
+      <div className="flex items-center gap-2 mb-4">
+        <Sparkles className="text-primary w-3.5 h-3.5" />
+        <h3 className="font-serif text-lg text-primary">Capture the Insight</h3>
       </div>
 
       <div className="mb-6 group">
@@ -142,7 +142,7 @@ export function LogForm({
           onChange={(e) => setLogText(e.target.value)}
           placeholder="Manifested here..."
           maxLength={maxChars}
-          className="min-h-[120px] bg-surface-container-lowest/50 border-outline-variant/20 rounded-2xl p-4 text-base font-body leading-relaxed focus:bg-surface-container-lowest focus:border-primary/30 transition-all placeholder:italic placeholder:text-on-surface-variant/40"
+          className="min-h-[100px] bg-surface-container-lowest/50 border-outline-variant/20 rounded-xl p-3 text-sm font-body leading-relaxed focus:bg-surface-container-lowest focus:border-primary/30 transition-all placeholder:italic placeholder:text-on-surface-variant/40"
         />
         <div className="flex justify-end mt-2">
           <span className="font-label text-[10px] tracking-widest text-on-surface-variant/50">
@@ -160,7 +160,7 @@ export function LogForm({
               <button
                 key={category}
                 onClick={() => toggleCategory(category)}
-                className={`px-4 py-1.5 rounded-full text-[9px] font-bold tracking-[0.1em] uppercase transition-all duration-500 border ${isSelected
+                className={`px-3 py-1 rounded-full text-[8px] font-bold tracking-[0.1em] uppercase transition-all duration-500 border ${isSelected
                     ? 'silk-gradient text-white border-transparent editorial-shadow scale-105'
                     : 'bg-surface-container-lowest border-outline-variant/10 text-on-surface-variant hover:border-primary/30'
                   }`}
@@ -182,7 +182,7 @@ export function LogForm({
       <Button
         onClick={handleSave}
         disabled={!isValid || isSaving}
-        className={`w-full h-16 rounded-2xl font-bold tracking-widest uppercase text-xs transition-all duration-700 ${isValid && !isSaving
+        className={`w-full h-12 rounded-xl font-bold tracking-widest uppercase text-[10px] transition-all duration-700 ${isValid && !isSaving
             ? 'silk-gradient text-white editorial-shadow hover:scale-[1.02]'
             : 'bg-surface-container-high text-on-surface-variant opacity-50'
           }`}
