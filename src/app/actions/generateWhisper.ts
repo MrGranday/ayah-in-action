@@ -12,21 +12,30 @@ import { ProcessedVerse } from '@/types/quran';
  */
 
 async function searchQuran(query: string) {
-  const response = await fetch(`https://api.quran.com/api/v4/search?q=${encodeURIComponent(query)}&size=3`);
-  const data = await response.json();
-  return JSON.stringify(data.search?.results || []);
+  try {
+    const response = await fetch(`https://api.quran.com/api/v4/search?q=${encodeURIComponent(query)}&size=3`);
+    if (!response.ok) return '[]';
+    const data = await response.json();
+    return JSON.stringify(data.search?.results || []);
+  } catch { return '[]'; }
 }
 
 async function getVerseDetails(verseKey: string) {
-  const response = await fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?text_uthmani=true&translations=131&audio=7`);
-  const data = await response.json();
-  return JSON.stringify(data.verse || {});
+  try {
+    const response = await fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?text_uthmani=true&translations=131&audio=7`);
+    if (!response.ok) return '{}';
+    const data = await response.json();
+    return JSON.stringify(data.verse || {});
+  } catch { return '{}'; }
 }
 
 async function getTafsir(verseKey: string) {
-  const response = await fetch(`https://api.quran.com/api/v4/tafsirs/169/by_verse_key/${verseKey}`);
-  const data = await response.json();
-  return JSON.stringify(data.tafsir || {});
+  try {
+    const response = await fetch(`https://api.quran.com/api/v4/tafsirs/169/by_verse_key/${verseKey}`);
+    if (!response.ok) return '{}';
+    const data = await response.json();
+    return JSON.stringify(data.tafsir || {});
+  } catch { return '{}'; }
 }
 
 /** Dispatch a tool call by name and arguments */
@@ -50,20 +59,24 @@ async function fetchFullVerseDetails(verseKey: string): Promise<Partial<Processe
 
   if (!chapRes.ok || !verseRes.ok) return {};
 
-  const chapData = await chapRes.json();
-  const verseData = await verseRes.json();
-  const verse = verseData.verse;
+  try {
+    const chapData = await chapRes.json();
+    const verseData = await verseRes.json();
+    const verse = verseData.verse;
 
-  return {
-    verse_key: verseKey,
-    chapter_id: parseInt(chapterId),
-    verse_number: parseInt(verseNumber),
-    text_uthmani: verse.text_uthmani,
-    translation: verse.translations?.[0]?.text?.replace(/<[^>]*>?/gm, '') || '',
-    audio_url: verse.audio?.url ? (verse.audio.url.startsWith('http') ? verse.audio.url : `https://verses.quran.com/${verse.audio.url}`) : '',
-    chapter_name_arabic: chapData.chapter?.name_arabic || '',
-    chapter_name_english: chapData.chapter?.name_simple || '',
-  };
+    return {
+      verse_key: verseKey,
+      chapter_id: parseInt(chapterId),
+      verse_number: parseInt(verseNumber),
+      text_uthmani: verse.text_uthmani,
+      translation: verse.translations?.[0]?.text?.replace(/<[^>]*>?/gm, '') || '',
+      audio_url: verse.audio?.url ? (verse.audio.url.startsWith('http') ? verse.audio.url : `https://verses.quran.com/${verse.audio.url}`) : '',
+      chapter_name_arabic: chapData.chapter?.name_arabic || '',
+      chapter_name_english: chapData.chapter?.name_simple || '',
+    };
+  } catch {
+    return { verse_key: verseKey };
+  }
 }
 
 // ─── Anthropic-format tool definitions ──────────────────────────────────────
@@ -398,8 +411,10 @@ export async function generateWhisper(challenge: string) {
       errorMessage = 'Gemini free-tier quota exceeded (15 requests/minute). Tool-chaining uses multiple requests per generation. Please try again in 1 minute, or switch to Anthropic or OpenAI.';
     } else if (model === 'groq' && errorMessage.includes('429')) {
       errorMessage = 'Groq rate limit exceeded. Groq has strict tokens-per-minute limits for free tier. Please try again in a minute.';
-    } else if (model === 'hf' && (errorMessage.includes('503') || errorMessage.includes('loading'))) {
-      errorMessage = 'Hugging Face model is currently loading (cold start). It usually takes 10-20 seconds. Please try again!';
+    } else if (errorMessage.includes('loading') || errorMessage.includes('503')) {
+      errorMessage = 'The language model is currently loading (cold start) or overloaded. It usually takes 10-20 seconds. Please try again!';
+    } else if (errorMessage.includes('Unexpected token') || errorMessage.includes('<!DOCTYPE')) {
+      errorMessage = 'The API proxy or our Quran database temporarily went offline and returned an invalid response. Please try again.';
     } else if (errorMessage.includes('quota') || errorMessage.includes('429')) {
       errorMessage = 'API rate limit or quota exceeded for your selected model. Please wait a moment or check your billing plan.';
     }
