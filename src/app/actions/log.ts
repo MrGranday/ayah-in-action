@@ -21,6 +21,11 @@ export async function saveApplicationLog(formData: {
   voiceTranscript?: string;
   type?: 'journal' | 'whisper';
   challenge?: string;
+  // Extra metadata for whispers
+  arabic?: string;
+  translation?: string;
+  guidance?: string;
+  reflection?: string;
 }) {
   const parsed = LogSchema.safeParse(formData);
   if (!parsed.success) {
@@ -28,7 +33,14 @@ export async function saveApplicationLog(formData: {
   }
 
   const { verseKey, logText, categories, voiceTranscript } = parsed.data;
-  const { type = 'journal', challenge } = formData;
+  const { 
+    type = 'journal', 
+    challenge,
+    arabic,
+    translation,
+    guidance,
+    reflection
+  } = formData;
   const session = await getTypedSession(await cookies());
 
   const accessToken = session.accessToken;
@@ -39,12 +51,18 @@ export async function saveApplicationLog(formData: {
   const meta = JSON.stringify({
     v: 1,
     app: 'ayah-in-action',
-    verseKey,
+    verseKey,       // Legacy compat
+    verse_key: verseKey, 
     categories,
     voiceTranscript: voiceTranscript ?? null,
     date: new Date().toLocaleDateString('en-CA'),
     type,
-    challenge
+    challenge,
+    // Whisper specific
+    arabic,
+    translation,
+    guidance,
+    reflection
   });
 
   const noteBody = `${logText}\n\n--- \n*Ayah in Action Archive* \n\`\`\`json\n${meta}\n\`\`\``;
