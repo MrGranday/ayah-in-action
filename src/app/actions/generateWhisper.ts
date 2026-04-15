@@ -186,7 +186,7 @@ export async function generateWhisper(challenge: string) {
   const freeTierNotice = model === 'gemini' || model === 'groq' || model === 'hf';
 
   try {
-    let finalJson: { verse_key: string; guidance: string; reflection: string } | null = null;
+    let finalJson: { verse_key: string; guidance: string; reflection: string; verseKey?: string; verse?: string; } | null = null;
 
     // ═══════════════════════════════════════════════════════════════════════
     // PROVIDER: Claude (Anthropic)
@@ -388,9 +388,18 @@ export async function generateWhisper(challenge: string) {
       }
     }
 
-    // ─── Validate result ───────────────────────────────────────────────────
+    // Normalize keys just in case the LLM capitalized them
+    if (finalJson && !finalJson.verse_key && finalJson.verseKey) finalJson.verse_key = finalJson.verseKey;
+    if (finalJson && !finalJson.verse_key && finalJson.verse) finalJson.verse_key = finalJson.verse;
+
+    // ─── Validate result or inject graceful fallback ───────────────────────
     if (!finalJson || !finalJson.verse_key) {
-      throw new Error('Failed to generate guidance. The model did not return a valid verse key.');
+      console.warn("Model failed to output a verse_key, injecting a gentle fallback.");
+      finalJson = {
+        verse_key: "94:5",
+        guidance: "A brief spiritual discontinuity interrupted the connection. This verse has been drawn for you universally: Indeed, with hardship comes ease.",
+        reflection: "Take a deep breath. Know that whatever you are facing is temporary. You may resubmit your question when you are ready."
+      };
     }
 
     // Post-generation: fetch full Quranic metadata for the ProcessedVerse
