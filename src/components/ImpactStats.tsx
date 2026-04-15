@@ -73,16 +73,25 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
     ],
   };
 
-  const sortedWeeks = Object.keys(weeklyData).sort().slice(-6);
+  // Generate fixed buckets for the last 6 weeks
+  const today = new Date();
+  const last6WeeksLabels: string[] = [];
+  const last6WeeksCounts: number[] = [];
+
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - (d.getDay()) - (i * 7)); // Start of week (Sunday)
+    const weekKey = d.toLocaleDateString('en-CA');
+    last6WeeksLabels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+    last6WeeksCounts.push(weeklyData[weekKey] || 0);
+  }
+
   const barData = {
-    labels: sortedWeeks.map(w => {
-      const d = new Date(w);
-      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    }),
+    labels: last6WeeksLabels,
     datasets: [
       {
-        label: 'Daily Reflections',
-        data: sortedWeeks.map(w => weeklyData[w]),
+        label: 'Weekly Reflections',
+        data: last6WeeksCounts,
         backgroundColor: isDark ? '#a3f2d6' : '#004c3b',
         borderRadius: 12,
         barThickness: 24,
@@ -150,7 +159,7 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
         <span className="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface-variant font-bold mb-4 block">Activity Velocity</span>
         <h3 className="font-serif text-lg text-primary mb-6">Weekly Transcendence</h3>
         <div className="h-60">
-          {sortedWeeks.length > 0 ? (
+          {last6WeeksLabels.length > 0 ? (
             <Bar
               data={barData}
               options={{

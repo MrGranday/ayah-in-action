@@ -19,23 +19,22 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-async function getNotes(accessToken: string) {
-  try {
-    const result = await getAllNotes(accessToken, undefined, 100);
-    return { data: result.data || [], error: null };
-  } catch (error: any) {
-    console.error('[History] Failed to fetch notes:', error);
-    return { 
-      data: [], 
-      error: error instanceof ApiError ? { 
-        status: error.status, 
-        type: error.type 
-      } : { status: 500 }
-    };
-  }
-}
+export default async function HistoryPage({ 
+  searchParams 
+}: { 
+  searchParams: Promise<{ month?: string; year?: string; limit?: string }> 
+}) {
+  const params = await searchParams;
+  const month = params.month;
+  const year = params.year;
+  const limit = parseInt(params.limit || '20');
+  
+  // If we are filtering by month, the user expects to see ALL for that month.
+  // Since the API doesn't support date-range filtering yet, we fetch a larger 
+  // chunk (100) to ensure we find potential matches for that month within 
+  // the recent history.
+  const fetchLimit = month ? 100 : limit;
 
-export default async function HistoryPage() {
   const cookieStore = await cookies();
   const session = await getTypedSession(cookieStore);
 
@@ -44,7 +43,12 @@ export default async function HistoryPage() {
     redirect('/login');
   }
 
-  const { data: rawNotes, error: notesError } = await getNotes(accessToken || '');
+  const { data: rawNotes, error: notesError } = await getAllNotes(accessToken || '', undefined, fetchLimit)
+    .then(res => ({ data: res.data || [], error: null }))
+    .catch((error: any) => ({
+      data: [],
+      error: error instanceof ApiError ? { status: error.status, type: error.type } : { status: 500 }
+    }));
 
   if (notesError?.type === 'insufficient_scope' || notesError?.status === 403) {
     return (

@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Search, Filter, X, BookOpen, Mic, Sparkles, Star, Calendar, ArrowRight, Quote } from 'lucide-react';
+import { Search, Filter, X, BookOpen, Mic, Sparkles, Star, Calendar, ArrowRight, Quote, ChevronDown, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 const CATEGORIES = [
   'Patience', 'Gratitude', 'Family', 'Work', 'Anger',
@@ -42,11 +44,28 @@ interface HistoryClientProps {
 }
 
 export function HistoryClient({ notes }: HistoryClientProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
   const [search, setSearch] = useState('');
   const [selectedCats, setSelectedCats] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   const [selectedNote, setSelectedNote] = useState<ParsedNote | null>(null);
   const [filterType, setFilterType] = useState<'all' | 'journal' | 'whisper'>('all');
+  
+  // URL-driven filters
+  const selectedMonth = searchParams.get('month') || 'all';
+  const selectedYear = searchParams.get('year') || 'all';
+  const currentLimit = parseInt(searchParams.get('limit') || '20');
+
+  const updateParams = (newParams: Record<string, string | null>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    Object.entries(newParams).forEach(([key, value]) => {
+      if (value === 'all' || value === null) params.delete(key);
+      else params.set(key, value);
+    });
+    router.push(`/history?${params.toString()}`, { scroll: false });
+  };
 
   const filtered = useMemo(() => {
     return notes.filter((note) => {
@@ -60,9 +79,14 @@ export function HistoryClient({ notes }: HistoryClientProps) {
           (note.metadata?.categories || []).includes(cat)
         );
       const matchType = filterType === 'all' || (note.metadata?.type || 'journal') === filterType;
-      return matchSearch && matchCats && matchType;
+      
+      const noteDate = new Date(note.date);
+      const matchMonth = selectedMonth === 'all' || (noteDate.getMonth() + 1).toString() === selectedMonth;
+      const matchYear = selectedYear === 'all' || noteDate.getFullYear().toString() === selectedYear;
+
+      return matchSearch && matchCats && matchType && matchMonth && matchYear;
     });
-  }, [notes, search, selectedCats, filterType]);
+  }, [notes, search, selectedCats, filterType, selectedMonth, selectedYear]);
 
   const toggleCat = (cat: string) => {
     setSelectedCats((prev) =>
@@ -152,6 +176,42 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                    ))}
                 </div>
               </div>
+              
+              <div className="grid md:grid-cols-2 gap-8 mb-8 pt-4 border-t border-outline-variant/5">
+                <div className="space-y-4">
+                  <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">Archival Month</span>
+                  <div className="relative">
+                    <select 
+                      value={selectedMonth} 
+                      onChange={(e) => updateParams({ month: e.target.value })}
+                      className="w-full h-12 rounded-xl bg-surface-container-highest/20 border border-outline-variant/10 px-4 font-body text-sm appearance-none outline-none focus:border-primary/40 transition-all"
+                    >
+                      <option value="all">All Months</option>
+                      {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((m, i) => (
+                        <option key={m} value={(i + 1).toString()}>{m}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/30 pointer-events-none" />
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">Year</span>
+                  <div className="relative">
+                    <select 
+                      value={selectedYear} 
+                      onChange={(e) => updateParams({ year: e.target.value })}
+                      className="w-full h-12 rounded-xl bg-surface-container-highest/20 border border-outline-variant/10 px-4 font-body text-sm appearance-none outline-none focus:border-primary/40 transition-all"
+                    >
+                      <option value="all">Any Year</option>
+                      {[2024, 2025, 2026].map(y => (
+                        <option key={y} value={y.toString()}>{y}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/30 pointer-events-none" />
+                  </div>
+                </div>
+              </div>
+
               <div className="flex items-center justify-between mb-6">
                 <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">Filter by Virtue</span>
                 {selectedCats.length > 0 && (
@@ -268,6 +328,21 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                 </motion.div>
               );
             })}
+
+            {/* Load More Button */}
+            <div className="flex justify-center pt-16">
+               <button
+                 onClick={() => updateParams({ limit: (currentLimit + 20).toString() })}
+                 className="group flex flex-col items-center gap-4 transition-all"
+               >
+                 <div className="w-14 h-14 rounded-full border-2 border-dashed border-outline-variant/40 flex items-center justify-center text-primary/40 group-hover:border-primary group-hover:text-primary transition-all duration-500">
+                    <Plus className="w-6 h-6 group-hover:rotate-90 transition-transform duration-500" />
+                 </div>
+                 <span className="font-label text-[10px] tracking-[0.3em] uppercase text-primary/40 font-bold group-hover:text-primary transition-colors">
+                   Load Older Archives
+                 </span>
+               </button>
+            </div>
           </div>
         )}
       </div>
