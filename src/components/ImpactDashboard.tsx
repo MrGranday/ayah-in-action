@@ -13,7 +13,8 @@ import { motion } from 'framer-motion';
 interface Note {
   id: string;
   body: string;
-  createdAt: string;
+  createdAt?: string;
+  created_at?: string;
 }
 
 interface ImpactDashboardProps {
@@ -48,8 +49,8 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
         });
       }
       
-      const noteDate = new Date(note.createdAt);
-      if (noteDate >= startOfMonth) {
+      const noteDate = new Date(note.createdAt || note.created_at || 0);
+      if (noteDate.getTime() > 0 && noteDate >= startOfMonth) {
         const dateKey = noteDate.toLocaleDateString('en-CA');
         dateCount[dateKey] = (dateCount[dateKey] || 0) + 1;
       }
@@ -57,7 +58,7 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
     
     const topCategory = Object.entries(categoryCount).sort((a, b) => b[1] - a[1])[0]?.[0] || 'None';
     
-    const sortedDates = [...new Set(appNotes.map(n => new Date(n.createdAt).toLocaleDateString('en-CA')))].sort().reverse();
+    const sortedDates = [...new Set(appNotes.map(n => new Date(n.createdAt || n.created_at || 0).toLocaleDateString('en-CA')))].sort().reverse();
     let longestStreak = 0;
     
     if (sortedDates.length > 0) {
@@ -99,7 +100,7 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
   const heatmapValues = notes
     .filter(n => isAyahInActionNote(n))
     .reduce((acc: { date: string; count: number }[], note) => {
-      const date = new Date(note.createdAt).toLocaleDateString('en-CA');
+      const date = new Date(note.createdAt || note.created_at || 0).toLocaleDateString('en-CA');
       const existing = acc.find(x => x.date === date);
       if (existing) {
         existing.count++;

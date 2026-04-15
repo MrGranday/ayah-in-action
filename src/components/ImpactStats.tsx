@@ -12,7 +12,8 @@ import { isAyahInActionNote, parseNoteBody } from '@/lib/utils';
 interface Note {
   id: string;
   body: string;
-  createdAt: string;
+  createdAt?: string;
+  created_at?: string;
 }
 
 interface ImpactStatsProps {
@@ -43,7 +44,7 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
       });
     }
 
-    const noteDate = new Date(note.createdAt);
+    const noteDate = new Date(note.createdAt || note.created_at || 0);
     const weekStart = new Date(noteDate);
     weekStart.setDate(weekStart.getDate() - weekStart.getDay());
     const weekKey = weekStart.toLocaleDateString('en-CA');

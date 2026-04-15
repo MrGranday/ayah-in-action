@@ -18,8 +18,24 @@ export const runtime = 'nodejs';
 
 async function getNotes(accessToken: string) {
   try {
-    const result = await getAllNotes(accessToken, undefined, 100);
-    return { data: result.data || [], error: null };
+    // Stage 1: Fetch the first 50 notes
+    const result1 = await getAllNotes(accessToken, undefined, 50);
+    const notes = [...(result1.data || [])];
+    
+    // Stage 2: If we hit the limit, fetch the next 50 for better trend visualization
+    if (notes.length === 50) {
+      try {
+        // Find the cursor for the next page (assuming the last note's id or similar if the API doesn't provide a specific cursor)
+        // Note: The QF API typically uses the ID of the last element as the cursor for the next page.
+        const cursor = notes[notes.length - 1].id;
+        const result2 = await getAllNotes(accessToken, cursor, 50);
+        notes.push(...(result2.data || []));
+      } catch (pagiError) {
+        console.warn('[Impact] Pagination fetch failed (non-blocking):', pagiError);
+      }
+    }
+
+    return { data: notes, error: null };
   } catch (error: any) {
     console.error('[Impact] Failed to fetch notes:', error);
     return { 
