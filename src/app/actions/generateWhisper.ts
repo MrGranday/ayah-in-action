@@ -380,15 +380,17 @@ export async function generateWhisper(challenge: string) {
     }
 
     // Post-generation: fetch full Quranic metadata for the ProcessedVerse
-    const metadata = await fetchFullVerseDetails(finalJson.verse_key);
+    const cleanVerseKey = finalJson.verse_key.trim();
+    const metadata = await fetchFullVerseDetails(cleanVerseKey);
 
-    const finalVerse: ProcessedVerse = {
-      verse_key: finalJson.verse_key,
+    const finalVerse = {
+      verse_key: finalJson.verse_key.trim(),
       chapter_id: metadata.chapter_id || 0,
       verse_number: metadata.verse_number || 0,
-      text_uthmani: metadata.text_uthmani || '',
+      arabic: metadata.text_uthmani || '',
       translation: metadata.translation || '',
-      tafsir_snippet: finalJson.guidance,
+      guidance: finalJson.guidance || '',
+      reflection: finalJson.reflection || '',
       audio_url: metadata.audio_url || '',
       chapter_name_arabic: metadata.chapter_name_arabic || '',
       chapter_name_english: metadata.chapter_name_english || '',
