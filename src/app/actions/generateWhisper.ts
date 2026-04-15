@@ -340,8 +340,10 @@ export async function generateWhisper(challenge: string) {
     
     let errorMessage = error.message || 'Failed to generate guidance. Please check your API key.';
 
-    if (model === 'gemini' && errorMessage.includes('429 Too Many Requests')) {
-      errorMessage = 'Gemini free-tier quota exceeded (15 requests/minute). Tool-chaining uses multiple requests per generation to ground your result in the Quran. Please try again in 1 minute, or switch to Anthropic or OpenAI in Settings.';
+    if (model === 'gemini' && errorMessage.includes('limit: 0')) {
+      errorMessage = 'Gemini API Error: Your Free Tier quota limit is literally 0. This happens if you are in a region where Google disables the free tier (like EU/UK), or if your API key requires a billing account to activate. Please use an OpenAI or Anthropic key instead.';
+    } else if (model === 'gemini' && errorMessage.includes('429 Too Many Requests')) {
+      errorMessage = 'Gemini free-tier quota exceeded (15 requests/minute). Tool-chaining uses multiple requests per generation. Please try again in 1 minute, or switch to Anthropic or OpenAI.';
     } else if (errorMessage.includes('quota') || errorMessage.includes('429')) {
       errorMessage = 'API rate limit or quota exceeded for your selected model. Please wait a moment or check your billing plan.';
     }
