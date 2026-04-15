@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Send, Loader2, BookOpen, Quote, ChevronRight, History, AlertCircle, Bookmark } from 'lucide-react';
+import { Sparkles, Send, Loader2, BookOpen, Quote, ChevronRight, History, AlertCircle, Bookmark, Play, Pause, Volume2 } from 'lucide-react';
 import { generateWhisper } from '@/app/actions/generateWhisper';
 import { getApiKeyStatus } from '@/app/actions/keys';
 import { getWhisperHistory } from '@/app/actions/whisper';
@@ -22,11 +22,46 @@ export default function WhisperPage() {
   const [keysActive, setKeysActive] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [savingNote, setSavingNote] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     getApiKeyStatus().then(res => setKeysActive(res.hasClaude || res.hasOpenAI || res.hasGemini || res.hasGroq || res.hasHf));
     getWhisperHistory().then(setHistory);
   }, []);
+
+  // Clean up audio on unmount or result change
+  useEffect(() => {
+    return () => {
+      if (audio) {
+        audio.pause();
+        audio.src = '';
+      }
+    };
+  }, [audio]);
+
+  const toggleAudio = () => {
+    if (!result?.audio_url) {
+      toast.error("Audio not available for this verse");
+      return;
+    }
+    
+    if (audio) {
+      if (isPlaying) {
+        audio.pause();
+        setIsPlaying(false);
+      } else {
+        audio.play();
+        setIsPlaying(true);
+      }
+    } else {
+      const newAudio = new Audio(result.audio_url);
+      newAudio.onended = () => setIsPlaying(false);
+      newAudio.play().catch(() => toast.error("Common browser restriction: Please interact with the page again to play audio."));
+      setAudio(newAudio);
+      setIsPlaying(true);
+    }
+  };
 
   const handleGenerate = async () => {
     if (!challenge.trim()) return;
@@ -38,6 +73,18 @@ export default function WhisperPage() {
       else {
         setResult(res.data);
         setFreeTierNotice(!!res.freeTierNotice);
+        // Reset audio state for new result
+        if (audio) {
+          audio.pause();
+          setAudio(null);
+          setIsPlaying(false);
+        }
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#8B7355', '#D4AF37', '#F5F5DC']
+        });
       }
     } catch (err) {
       setError('The divine connection was interrupted. Please try again.');
@@ -235,6 +282,24 @@ export default function WhisperPage() {
                              <p className="font-arabic text-5xl leading-[2.5] text-primary text-right mb-10 drop-shadow-sm" dir="rtl">
                                 {result.arabic}
                              </p>
+
+                             {/* Audio Player Strip */}
+                             {result.audio_url && (
+                               <div className="flex justify-end mb-8 -mt-4">
+                                 <button
+                                   onClick={toggleAudio}
+                                   className="flex items-center gap-3 px-6 py-2 rounded-full bg-primary/5 hover:bg-primary/10 border border-primary/10 transition-all group"
+                                 >
+                                   <span className="font-label text-xs uppercase tracking-widest text-primary/60 group-hover:text-primary transition-colors">
+                                     {isPlaying ? 'Reciting...' : 'Listen to Ayah'}
+                                   </span>
+                                   <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-sm group-hover:scale-105 transition-transform">
+                                     {isPlaying ? <Pause size={14} fill="currentColor" /> : <Play size={14} className="ml-0.5" fill="currentColor" />}
+                                   </div>
+                                 </button>
+                               </div>
+                             )}
+
                              <div className="h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent w-full mb-10" />
                              {result.translation && (
                                <p className="font-body text-xl text-on-surface leading-loose italic text-left pl-8 border-l-3 border-primary/20">

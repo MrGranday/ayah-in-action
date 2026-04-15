@@ -48,33 +48,42 @@ async function dispatchTool(name: string, args: Record<string, string>): Promise
 
 /**
  * Helper to fetch full verse metadata for the final ProcessedVerse object.
+ * We use a multi-stage fetch here because the Quran.com API v4 sometimes
+ * strips text fields if audio/translation parameters are over-crowded.
  */
 async function fetchFullVerseDetails(verseKey: string): Promise<Partial<ProcessedVerse>> {
   const [chapterId, verseNumber] = verseKey.split(':');
   
-  const [chapRes, verseRes] = await Promise.all([
-    fetch(`https://api.quran.com/api/v4/chapters/${chapterId}?language=en`),
-    fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?translations=131&audio=7&language=en&text_uthmani=true`)
-  ]);
-
-  if (!chapRes.ok || !verseRes.ok) return {};
-
   try {
+    // Stage 1: Fetch General Metadata, Arabic Text, and Audio URL
+    const metaRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?audio=7&fields=text_uthmani,chapter_id`);
+    // Stage 2: Fetch specific English Translation (Mustafa Khattab - 131)
+    const transRes = await fetch(`https://api.quran.com/api/v4/quran/translations/131?verse_key=${verseKey}`);
+    // Stage 3: Fetch Chapter info (for names)
+    const chapRes = await fetch(`https://api.quran.com/api/v4/chapters/${chapterId}?language=en`);
+
+    if (!metaRes.ok || !transRes.ok || !chapRes.ok) throw new Error("API Connection Error");
+
+    const metaData = await metaRes.json();
+    const transData = await transRes.json();
     const chapData = await chapRes.json();
-    const verseData = await verseRes.json();
-    const verse = verseData.verse;
+
+    const verse = metaData.verse;
+    // Extract translation text safely from the array
+    const translationText = transData.translations?.[0]?.text || '';
 
     return {
       verse_key: verseKey,
       chapter_id: parseInt(chapterId),
       verse_number: parseInt(verseNumber),
-      text_uthmani: verse.text_uthmani,
-      translation: verse.translations?.[0]?.text?.replace(/<[^>]*>?/gm, '') || '',
+      text_uthmani: verse.text_uthmani || '',
+      translation: translationText.replace(/<[^>]*>?/gm, ''), // Strip HTML tags
       audio_url: verse.audio?.url ? (verse.audio.url.startsWith('http') ? verse.audio.url : `https://verses.quran.com/${verse.audio.url}`) : '',
       chapter_name_arabic: chapData.chapter?.name_arabic || '',
       chapter_name_english: chapData.chapter?.name_simple || '',
     };
-  } catch {
+  } catch (error) {
+    console.error("Metadata fetch cluster failed:", error);
     return { verse_key: verseKey };
   }
 }
