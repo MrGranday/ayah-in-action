@@ -337,6 +337,15 @@ export async function generateWhisper(challenge: string) {
 
   } catch (error: any) {
     console.error('Whisper generation failed:', error);
-    return { error: error.message || 'Failed to generate guidance. Please check your API key.' };
+    
+    let errorMessage = error.message || 'Failed to generate guidance. Please check your API key.';
+
+    if (model === 'gemini' && errorMessage.includes('429 Too Many Requests')) {
+      errorMessage = 'Gemini free-tier quota exceeded (15 requests/minute). Tool-chaining uses multiple requests per generation to ground your result in the Quran. Please try again in 1 minute, or switch to Anthropic or OpenAI in Settings.';
+    } else if (errorMessage.includes('quota') || errorMessage.includes('429')) {
+      errorMessage = 'API rate limit or quota exceeded for your selected model. Please wait a moment or check your billing plan.';
+    }
+
+    return { error: errorMessage };
   }
 }
