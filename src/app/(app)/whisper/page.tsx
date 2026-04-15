@@ -17,13 +17,14 @@ export default function WhisperPage() {
   const [challenge, setChallenge] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [geminiNotice, setGeminiNotice] = useState(false);
   const [history, setHistory] = useState<any[]>([]);
   const [keysActive, setKeysActive] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [savingNote, setSavingNote] = useState(false);
 
   useEffect(() => {
-    getApiKeyStatus().then(res => setKeysActive(res.hasClaude || res.hasOpenAI));
+    getApiKeyStatus().then(res => setKeysActive(res.hasClaude || res.hasOpenAI || res.hasGemini));
     getWhisperHistory().then(setHistory);
   }, []);
 
@@ -34,7 +35,10 @@ export default function WhisperPage() {
     try {
       const res = await generateWhisper(challenge);
       if (res.error) setError(res.error);
-      else setResult(res.data);
+      else {
+        setResult(res.data);
+        setGeminiNotice(!!res.geminiNotice);
+      }
     } catch (err) {
       setError('The divine connection was interrupted. Please try again.');
     } finally {
@@ -253,11 +257,25 @@ export default function WhisperPage() {
                           </div>
                        </div>
 
-                       <div className="pt-8 text-center">
-                          <p className="text-[10px] font-label tracking-[0.4em] uppercase text-primary/30 italic">
-                             Whisper generated via personal intelligence.
-                          </p>
-                       </div>
+                        {geminiNotice && (
+                           <motion.div
+                              initial={{ opacity: 0, y: 6 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="flex gap-3 items-start bg-blue-500/5 border border-blue-500/15 rounded-2xl px-5 py-4"
+                           >
+                              <AlertCircle className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
+                              <p className="text-[10px] leading-relaxed text-on-surface-variant/70 italic">
+                                 <strong className="text-blue-500 not-italic">Using Gemini (Free Tier).</strong>{' '}
+                                 For a deeper Quranic experience with richer tafsir grounding, switch to an{' '}
+                                 <Link href="/settings" className="underline text-primary/60 hover:text-primary transition-colors">OpenAI or Anthropic key</Link>.
+                              </p>
+                           </motion.div>
+                        )}
+                        <div className="pt-4 text-center">
+                           <p className="text-[10px] font-label tracking-[0.4em] uppercase text-primary/30 italic">
+                              Whisper generated via personal intelligence.
+                           </p>
+                        </div>
                     </div>
                  </motion.div>
                )}

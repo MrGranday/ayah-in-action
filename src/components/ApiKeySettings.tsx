@@ -1,30 +1,34 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Key, Shield, Check, AlertCircle, Save, Trash2, Cpu, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Key, Shield, Check, AlertCircle, Save, Trash2, Cpu, Info } from 'lucide-react';
 import { saveApiKeys, clearApiKeys, getApiKeyStatus } from '@/app/actions/keys';
 import { Button } from './ui/button';
+
+type PreferredModel = 'claude' | 'gpt4o' | 'gemini';
 
 export function ApiKeySettings() {
   const [keys, setKeys] = useState<{ 
     claudeKey: string; 
-    openaiKey: string; 
-    preferredModel: 'claude' | 'gpt4o' 
+    openaiKey: string;
+    geminiKey: string;
+    preferredModel: PreferredModel;
   }>({
     claudeKey: '',
     openaiKey: '',
+    geminiKey: '',
     preferredModel: 'claude'
   });
   
-  const [status, setStatus] = useState({ hasClaude: false, hasOpenAI: false });
+  const [status, setStatus] = useState({ hasClaude: false, hasOpenAI: false, hasGemini: false });
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     getApiKeyStatus().then(res => {
-      setStatus({ hasClaude: res.hasClaude, hasOpenAI: res.hasOpenAI });
-      setKeys(prev => ({ ...prev, preferredModel: res.preferredModel as any }));
+      setStatus({ hasClaude: res.hasClaude, hasOpenAI: res.hasOpenAI, hasGemini: res.hasGemini });
+      setKeys(prev => ({ ...prev, preferredModel: res.preferredModel as PreferredModel }));
     });
   }, []);
 
@@ -35,7 +39,7 @@ export function ApiKeySettings() {
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
       const res = await getApiKeyStatus();
-      setStatus({ hasClaude: res.hasClaude, hasOpenAI: res.hasOpenAI });
+      setStatus({ hasClaude: res.hasClaude, hasOpenAI: res.hasOpenAI, hasGemini: res.hasGemini });
     } finally {
       setLoading(false);
     }
@@ -44,9 +48,15 @@ export function ApiKeySettings() {
   const handleClear = async () => {
     if (!confirm('Are you sure you want to remove your API keys? Guidance features will be disabled.')) return;
     await clearApiKeys();
-    setKeys({ claudeKey: '', openaiKey: '', preferredModel: 'claude' });
-    setStatus({ hasClaude: false, hasOpenAI: false });
+    setKeys({ claudeKey: '', openaiKey: '', geminiKey: '', preferredModel: 'claude' });
+    setStatus({ hasClaude: false, hasOpenAI: false, hasGemini: false });
   };
+
+  const MODEL_OPTIONS: { id: PreferredModel; label: string; badge?: string }[] = [
+    { id: 'claude', label: 'Claude 3.5 Sonnet' },
+    { id: 'gpt4o', label: 'GPT-4o' },
+    { id: 'gemini', label: 'Gemini Flash', badge: 'Free Tier' },
+  ];
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
@@ -67,7 +77,7 @@ export function ApiKeySettings() {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12">
+          <div className="grid md:grid-cols-3 gap-8">
             {/* Claude Section */}
             <div className="space-y-6">
               <div className="flex items-center justify-between">
@@ -75,7 +85,7 @@ export function ApiKeySettings() {
                   <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-600">
                     <Cpu className="w-4 h-4" />
                   </div>
-                  <span className="font-serif text-lg text-primary">Claude 3.5 Sonnet</span>
+                  <span className="font-serif text-base text-primary">Claude 3.5</span>
                 </div>
                 {status.hasClaude && (
                   <span className="flex items-center gap-1.5 px-3 py-1 bg-green-500/10 text-green-600 rounded-full text-[9px] font-bold uppercase tracking-widest">
@@ -108,7 +118,7 @@ export function ApiKeySettings() {
                   <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center text-green-600">
                     <Cpu className="w-4 h-4" />
                   </div>
-                  <span className="font-serif text-lg text-primary">GPT-4o</span>
+                  <span className="font-serif text-base text-primary">GPT-4o</span>
                 </div>
                 {status.hasOpenAI && (
                   <span className="flex items-center gap-1.5 px-3 py-1 bg-green-500/10 text-green-600 rounded-full text-[9px] font-bold uppercase tracking-widest">
@@ -133,42 +143,77 @@ export function ApiKeySettings() {
                 </div>
               </div>
             </div>
+
+            {/* Gemini Section */}
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500">
+                    <Cpu className="w-4 h-4" />
+                  </div>
+                  <span className="font-serif text-base text-primary">Gemini Flash</span>
+                </div>
+                {status.hasGemini && (
+                  <span className="flex items-center gap-1.5 px-3 py-1 bg-green-500/10 text-green-600 rounded-full text-[9px] font-bold uppercase tracking-widest">
+                    <Check className="w-3 h-3" /> Active
+                  </span>
+                )}
+              </div>
+              
+              <div className="space-y-2">
+                <label className="font-label text-[9px] tracking-[0.2em] uppercase text-on-surface-variant/40 ml-4">
+                  Google AI API Key
+                </label>
+                <div className="relative group">
+                  <Key className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant/30 group-focus-within:text-primary transition-colors" />
+                  <input
+                    type="password"
+                    placeholder={status.hasGemini ? "••••••••••••••••" : "AIza..."}
+                    value={keys.geminiKey}
+                    onChange={(e) => setKeys({ ...keys, geminiKey: e.target.value })}
+                    className="w-full pl-14 pr-6 py-4 rounded-2xl bg-surface-container-lowest border border-outline-variant/10 font-mono text-sm outline-none focus:border-primary/40 transition-all placeholder:italic placeholder:text-on-surface-variant/20"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
+          {/* Model selector + actions */}
           <div className="mt-12 pt-8 border-t border-outline-variant/5">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
               <div className="space-y-3">
                 <label className="font-label text-[9px] tracking-[0.2em] uppercase text-on-surface-variant/40">
                   Default Guidance Model
                 </label>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setKeys({ ...keys, preferredModel: 'claude' })}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-bold tracking-widest uppercase transition-all border ${
-                      keys.preferredModel === 'claude' 
-                        ? 'silk-gradient text-white border-transparent' 
-                        : 'bg-surface-container-lowest text-on-surface-variant border-outline-variant/10 hover:border-primary/20'
-                    }`}
-                  >
-                    Claude 3.5 Sonnet
-                    {keys.preferredModel === 'claude' && <motion.div layoutId="pref" className="w-1.5 h-1.5 rounded-full bg-white" />}
-                  </button>
-                  <button
-                    onClick={() => setKeys({ ...keys, preferredModel: 'gpt4o' })}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-bold tracking-widest uppercase transition-all border ${
-                      keys.preferredModel === 'gpt4o' 
-                        ? 'silk-gradient text-white border-transparent' 
-                        : 'bg-surface-container-lowest text-on-surface-variant border-outline-variant/10 hover:border-primary/20'
-                    }`}
-                  >
-                    GPT-4o
-                    {keys.preferredModel === 'gpt4o' && <motion.div layoutId="pref" className="w-1.5 h-1.5 rounded-full bg-white" />}
-                  </button>
+                <div className="flex flex-wrap gap-2">
+                  {MODEL_OPTIONS.map(opt => (
+                    <button
+                      key={opt.id}
+                      onClick={() => setKeys({ ...keys, preferredModel: opt.id })}
+                      className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-bold tracking-widest uppercase transition-all border ${
+                        keys.preferredModel === opt.id
+                          ? 'silk-gradient text-white border-transparent'
+                          : 'bg-surface-container-lowest text-on-surface-variant border-outline-variant/10 hover:border-primary/20'
+                      }`}
+                    >
+                      {opt.label}
+                      {opt.badge && (
+                        <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-bold ${
+                          keys.preferredModel === opt.id ? 'bg-white/20 text-white' : 'bg-primary/10 text-primary/60'
+                        }`}>
+                          {opt.badge}
+                        </span>
+                      )}
+                      {keys.preferredModel === opt.id && (
+                        <motion.div layoutId="pref" className="w-1.5 h-1.5 rounded-full bg-white" />
+                      )}
+                    </button>
+                  ))}
                 </div>
               </div>
 
               <div className="flex items-center gap-4">
-                {(status.hasClaude || status.hasOpenAI) && (
+                {(status.hasClaude || status.hasOpenAI || status.hasGemini) && (
                   <button
                     onClick={handleClear}
                     className="p-4 rounded-2xl text-red-500 hover:bg-red-50 transition-all border border-transparent hover:border-red-100"
@@ -187,6 +232,33 @@ export function ApiKeySettings() {
               </div>
             </div>
           </div>
+
+          {/* Gemini advisory notice */}
+          <AnimatePresence>
+            {keys.preferredModel === 'gemini' && (
+              <motion.div
+                initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+                exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="flex gap-3 items-start bg-blue-500/5 border border-blue-500/15 rounded-2xl px-5 py-4">
+                  <Info className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-bold tracking-widest uppercase text-blue-500">
+                      Gemini — Free-Tier Experience Mode
+                    </p>
+                    <p className="text-[11px] leading-relaxed text-on-surface-variant/70 italic">
+                      For the richest Whisper experience — deep tafsir grounding, multi-step Quranic search, and
+                      the most accurate verse selection — we recommend using an <strong>OpenAI</strong> or
+                      <strong> Anthropic</strong> key. Gemini works and is a great free option to experience
+                      the Whisper feature, but the tool-calling pipeline may produce shallower results.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 

@@ -3,6 +3,7 @@
 import { getServerSession } from '@/lib/session';
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
+import { GoogleGenerativeAI, FunctionDeclaration, SchemaType } from '@google/generative-ai';
 import { ProcessedVerse } from '@/types/quran';
 
 /**
@@ -26,6 +27,14 @@ async function getTafsir(verseKey: string) {
   const response = await fetch(`https://api.quran.com/api/v4/tafsirs/169/by_verse_key/${verseKey}`);
   const data = await response.json();
   return JSON.stringify(data.tafsir || {});
+}
+
+/** Dispatch a tool call by name and arguments */
+async function dispatchTool(name: string, args: Record<string, string>): Promise<string> {
+  if (name === 'search_quran') return await searchQuran(args.query);
+  if (name === 'get_verse_details') return await getVerseDetails(args.verse_key);
+  if (name === 'get_tafsir') return await getTafsir(args.verse_key);
+  return '{}';
 }
 
 /**
@@ -57,7 +66,8 @@ async function fetchFullVerseDetails(verseKey: string): Promise<Partial<Processe
   };
 }
 
-const TOOLS = [
+// ─── Anthropic-format tool definitions ──────────────────────────────────────
+const TOOLS_ANTHROPIC = [
   {
     name: 'search_quran',
     description: 'Search the Quran for verses relevant to a specific topic or challenge.',
@@ -93,69 +103,125 @@ const TOOLS = [
   }
 ];
 
+// ─── OpenAI-format tool definitions ─────────────────────────────────────────
+const TOOLS_OPENAI = TOOLS_ANTHROPIC.map(t => ({
+  type: 'function' as const,
+  function: { name: t.name, description: t.description, parameters: t.input_schema }
+}));
+
+// ─── Gemini-format function declarations ─────────────────────────────────────
+const TOOLS_GEMINI: FunctionDeclaration[] = [
+  {
+    name: 'search_quran',
+    description: 'Search the Quran for verses relevant to a specific topic or challenge.',
+    parameters: {
+      type: SchemaType.OBJECT,
+      properties: {
+        query: { type: SchemaType.STRING, description: 'The search query (e.g., "patience in hardship")' }
+      },
+      required: ['query']
+    }
+  },
+  {
+    name: 'get_verse_details',
+    description: 'Retrieve the Arabic text, translation, and metadata for a specific verse key (e.g., "2:153").',
+    parameters: {
+      type: SchemaType.OBJECT,
+      properties: {
+        verse_key: { type: SchemaType.STRING, description: 'The verse key in format "chapter:verse"' }
+      },
+      required: ['verse_key']
+    }
+  },
+  {
+    name: 'get_tafsir',
+    description: 'Retrieve a detailed explanation (tafsir) for a specific verse key.',
+    parameters: {
+      type: SchemaType.OBJECT,
+      properties: {
+        verse_key: { type: SchemaType.STRING, description: 'The verse key in format "chapter:verse"' }
+      },
+      required: ['verse_key']
+    }
+  }
+];
+
+const SYSTEM_PROMPT = `You are 'The Whisper', a compassionate spiritual guide for the Ayah in Action app. Your goal is to provide grounded Quranic guidance for a user's life challenge.
+
+IMPORTANT: You MUST use the search_quran tool to find relevant verses. Do not rely solely on your internal knowledge. Once you find a verse, use get_verse_details and get_tafsir to provide a deeply grounded explanation.
+
+Output your final response in this exact JSON structure:
+{ "verse_key": "...", "guidance": "A short, empathetic explanation of why this verse applies", "reflection": "A daily application prompt for the user" }`;
+
 export async function generateWhisper(challenge: string) {
   const session = await getServerSession();
   const model = session.preferredModel || 'claude';
-  const key = model === 'claude' ? session.claudeKey : session.openaiKey;
+
+  // ─── Resolve the correct API key ──────────────────────────────────────────
+  let key: string | undefined;
+  if (model === 'claude') key = session.claudeKey;
+  else if (model === 'gpt4o') key = session.openaiKey;
+  else if (model === 'gemini') key = session.geminiKey;
 
   if (!key) {
     return { error: 'API Key not found. Please configure it in Settings.' };
   }
 
-  try {
-    let finalJson: any = null;
+  // Return an advisory notice when Gemini is selected
+  const geminiNotice = model === 'gemini';
 
+  try {
+    let finalJson: { verse_key: string; guidance: string; reflection: string } | null = null;
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // PROVIDER: Claude (Anthropic)
+    // ═══════════════════════════════════════════════════════════════════════
     if (model === 'claude') {
       const anthropic = new Anthropic({ apiKey: key });
       const messages: any[] = [{ role: 'user', content: challenge }];
-      const systemPrompt = "You are 'The Whisper', a compassionate spiritual guide for the Ayah in Action app. Your goal is to provide grounded Quranic guidance for a user's life challenge. \n\nIMPORTANT: You MUST use the search_quran tool to find relevant verses. Do not rely solely on your internal knowledge. Once you find a verse, use get_verse_details and get_tafsir to provide a deeply grounded explanation. \n\nOutput your final response in this exact JSON structure: \n{ \"verse_key\": \"...\", \"guidance\": \"A short, empathetic explanation of why this verse applies\", \"reflection\": \"A daily application prompt for the user\" }";
 
       let turns = 0;
       while (turns < 5) {
         const response = await anthropic.messages.create({
           model: 'claude-3-5-sonnet-20240620',
           max_tokens: 1024,
-          system: systemPrompt,
+          system: SYSTEM_PROMPT,
           messages,
-          tools: TOOLS
+          tools: TOOLS_ANTHROPIC
         });
 
         if (response.stop_reason === 'tool_use') {
           messages.push({ role: 'assistant', content: response.content });
-          
-          const toolResults = await Promise.all(response.content.map(async (contentBlock) => {
-            if (contentBlock.type !== 'tool_use') return null;
-            
-            const toolUse = contentBlock as any;
-            let result;
-            if (toolUse.name === 'search_quran') result = await searchQuran(toolUse.input.query);
-            else if (toolUse.name === 'get_verse_details') result = await getVerseDetails(toolUse.input.verse_key);
-            else if (toolUse.name === 'get_tafsir') result = await getTafsir(toolUse.input.verse_key);
-            
-            return {
-              type: 'tool_result' as const,
-              tool_use_id: toolUse.id,
-              content: result
-            };
-          }));
+
+          const toolResults = await Promise.all(
+            response.content.map(async (block) => {
+              if (block.type !== 'tool_use') return null;
+              const result = await dispatchTool(block.name, block.input as Record<string, string>);
+              return {
+                type: 'tool_result' as const,
+                tool_use_id: block.id,
+                content: result
+              };
+            })
+          );
 
           messages.push({ role: 'user', content: toolResults.filter(r => r !== null) });
           turns++;
         } else {
           const textBlock = response.content.find(c => c.type === 'text') as any;
           const jsonMatch = textBlock?.text.match(/\{.*\}/s);
-          if (jsonMatch) {
-            finalJson = JSON.parse(jsonMatch[0]);
-          }
+          if (jsonMatch) finalJson = JSON.parse(jsonMatch[0]);
           break;
         }
       }
 
-    } else {
-      // GPT-4o Implementation
+    // ═══════════════════════════════════════════════════════════════════════
+    // PROVIDER: GPT-4o (OpenAI)
+    // ═══════════════════════════════════════════════════════════════════════
+    } else if (model === 'gpt4o') {
       const openai = new OpenAI({ apiKey: key });
       const messages: any[] = [
-        { role: 'system', content: "You are 'The Whisper', a spiritual guide. Use search_quran, get_verse_details, and get_tafsir to provide grounded Quranic guidance. Return JSON: { \"verse_key\": \"...\", \"guidance\": \"...\", \"reflection\": \"...\" }" },
+        { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: challenge }
       ];
 
@@ -164,26 +230,17 @@ export async function generateWhisper(challenge: string) {
         const completion = await openai.chat.completions.create({
           model: 'gpt-4o',
           messages,
-          tools: TOOLS.map(t => ({ 
-            type: 'function', 
-            function: { name: t.name, description: t.description, parameters: t.input_schema } 
-          })) as any,
+          tools: TOOLS_OPENAI as any,
           response_format: { type: 'json_object' }
         });
 
         const choice = completion.choices[0];
         if (choice.message.tool_calls) {
           messages.push(choice.message);
-          
-          for (const toolCall of (choice.message.tool_calls as any[])) {
-            const name = toolCall.function.name;
+
+          for (const toolCall of choice.message.tool_calls as any[]) {
             const args = JSON.parse(toolCall.function.arguments);
-            let result;
-            
-            if (name === 'search_quran') result = await searchQuran(args.query);
-            else if (name === 'get_verse_details') result = await getVerseDetails(args.verse_key);
-            else if (name === 'get_tafsir') result = await getTafsir(args.verse_key);
-            
+            const result = await dispatchTool(toolCall.function.name, args);
             messages.push({
               role: 'tool',
               tool_call_id: toolCall.id,
@@ -196,15 +253,74 @@ export async function generateWhisper(challenge: string) {
           break;
         }
       }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // PROVIDER: Gemini (Google)
+    // Note: Works for basic Whisper functionality. For the richest grounded
+    // experience (multi-turn tool chaining, tafsir depth), OpenAI or
+    // Anthropic keys are recommended.
+    // ═══════════════════════════════════════════════════════════════════════
+    } else if (model === 'gemini') {
+      const genAI = new GoogleGenerativeAI(key);
+      const geminiModel = genAI.getGenerativeModel({
+        model: 'gemini-1.5-flash',
+        systemInstruction: SYSTEM_PROMPT,
+        tools: [{ functionDeclarations: TOOLS_GEMINI }]
+      });
+
+      // Start a chat session so we can do multi-turn tool calling
+      const chat = geminiModel.startChat();
+
+      let turns = 0;
+      while (turns < 5) {
+        const userMsg = turns === 0 ? challenge : 'Continue and provide the final JSON guidance.';
+        const result = await chat.sendMessage(userMsg);
+        const response = result.response;
+
+        // Check if the model wants to call functions
+        const functionCalls = response.functionCalls();
+
+        if (functionCalls && functionCalls.length > 0) {
+          // Execute all requested tool calls
+          const functionResponses = await Promise.all(
+            functionCalls.map(async (fc) => {
+              const toolResult = await dispatchTool(fc.name, fc.args as Record<string, string>);
+              return {
+                functionResponse: {
+                  name: fc.name,
+                  response: { result: toolResult }
+                }
+              };
+            })
+          );
+
+          // Feed results back to the model
+          await chat.sendMessage(functionResponses as any);
+          turns++;
+        } else {
+          // No more tool calls — extract the final text response
+          const text = response.text();
+          const jsonMatch = text.match(/\{.*\}/s);
+          if (jsonMatch) {
+            try {
+              finalJson = JSON.parse(jsonMatch[0]);
+            } catch {
+              throw new Error('Gemini returned malformed JSON. Please try again.');
+            }
+          }
+          break;
+        }
+      }
     }
 
+    // ─── Validate result ───────────────────────────────────────────────────
     if (!finalJson || !finalJson.verse_key) {
-      throw new Error('Failed to generate guidance JSON');
+      throw new Error('Failed to generate guidance. The model did not return a valid verse key.');
     }
 
-    // Post-generation: Fetch full metadata for ProcessedVerse
+    // Post-generation: fetch full Quranic metadata for the ProcessedVerse
     const metadata = await fetchFullVerseDetails(finalJson.verse_key);
-    
+
     const finalVerse: ProcessedVerse = {
       verse_key: finalJson.verse_key,
       chapter_id: metadata.chapter_id || 0,
@@ -217,11 +333,10 @@ export async function generateWhisper(challenge: string) {
       chapter_name_english: metadata.chapter_name_english || '',
     };
 
-    return { data: finalVerse };
+    return { data: finalVerse, geminiNotice };
 
   } catch (error: any) {
     console.error('Whisper generation failed:', error);
     return { error: error.message || 'Failed to generate guidance. Please check your API key.' };
   }
 }
-

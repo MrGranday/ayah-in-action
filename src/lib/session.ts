@@ -16,7 +16,8 @@ export interface SessionData {
   nonce?: string;
   claudeKey?: string;
   openaiKey?: string;
-  preferredModel?: 'claude' | 'gpt4o';
+  geminiKey?: string;
+  preferredModel?: 'claude' | 'gpt4o' | 'gemini';
 }
 
 export const sessionOptions: SessionOptions = {

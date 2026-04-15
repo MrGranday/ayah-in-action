@@ -6,12 +6,14 @@ import { revalidatePath } from 'next/cache';
 export async function saveApiKeys(data: { 
   claudeKey?: string; 
   openaiKey?: string; 
-  preferredModel?: 'claude' | 'gpt4o';
+  geminiKey?: string;
+  preferredModel?: 'claude' | 'gpt4o' | 'gemini';
 }) {
   const session = await getServerSession();
   
   if (data.claudeKey !== undefined) session.claudeKey = data.claudeKey;
   if (data.openaiKey !== undefined) session.openaiKey = data.openaiKey;
+  if (data.geminiKey !== undefined) session.geminiKey = data.geminiKey;
   if (data.preferredModel !== undefined) session.preferredModel = data.preferredModel;
   
   await session.save();
@@ -24,6 +26,7 @@ export async function clearApiKeys() {
   const session = await getServerSession();
   session.claudeKey = undefined;
   session.openaiKey = undefined;
+  session.geminiKey = undefined;
   await session.save();
   revalidatePath('/settings');
   revalidatePath('/whisper');
@@ -35,6 +38,7 @@ export async function getApiKeyStatus() {
   return {
     hasClaude: !!session.claudeKey,
     hasOpenAI: !!session.openaiKey,
+    hasGemini: !!session.geminiKey,
     preferredModel: session.preferredModel || 'claude'
   };
 }
