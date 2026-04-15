@@ -73,7 +73,11 @@ export default async function HistoryPage() {
       };
     });
 
-  const uniqueVerseKeys = [...new Set(appNotesRaw.map((n: any) => n.metadata?.verseKey).filter(Boolean))];
+  const uniqueVerseKeys = [
+    ...new Set(
+      appNotesRaw.map((n: any) => n.metadata?.verse_key || n.metadata?.verseKey).filter(Boolean)
+    )
+  ];
   
   const fetchedVerses: Record<string, { arabic: string; translation: string }> = {};
 
@@ -99,11 +103,14 @@ export default async function HistoryPage() {
     );
   }
 
-  const appNotes = appNotesRaw.map((note: any) => ({
-    ...note,
-    ayahTextArabic: note.metadata?.verseKey ? fetchedVerses[note.metadata.verseKey]?.arabic || null : null,
-    ayahTextTranslation: note.metadata?.verseKey ? fetchedVerses[note.metadata.verseKey]?.translation || null : null
-  }));
+  const appNotes = appNotesRaw.map((note: any) => {
+    const vKey = note.metadata?.verse_key || note.metadata?.verseKey;
+    return {
+      ...note,
+      ayahTextArabic: vKey ? fetchedVerses[vKey]?.arabic || null : null,
+      ayahTextTranslation: vKey ? fetchedVerses[vKey]?.translation || null : null
+    };
+  });
 
   if (appNotes.length === 0) {
     return (

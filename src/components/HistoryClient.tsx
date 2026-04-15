@@ -19,12 +19,18 @@ interface ParsedNote {
   id: string;
   logText: string;
   metadata: {
+    verse_key?: string;
     verseKey?: string;
     categories?: string[];
     voiceTranscript?: string | null;
     date?: string;
     type?: 'journal' | 'whisper';
     challenge?: string;
+    // Whisper specific
+    arabic?: string;
+    translation?: string;
+    guidance?: string;
+    reflection?: string;
   } | null;
   // ISO string — Date objects cannot cross the RSC Server→Client boundary (React #130)
   date: string;
@@ -47,7 +53,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
       const matchSearch =
         !search ||
         note.logText.toLowerCase().includes(search.toLowerCase()) ||
-        (note.metadata?.verseKey || '').includes(search);
+        (note.metadata?.verse_key || note.metadata?.verseKey || '').includes(search);
       const matchCats =
         selectedCats.length === 0 ||
         selectedCats.every((cat) =>
@@ -236,7 +242,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                       
                       <div className="flex items-center gap-3 mb-6">
                         <div className="w-8 h-8 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center text-[10px] font-bold">
-                          {note.metadata?.verseKey || '—'}
+                          {note.metadata?.verse_key || note.metadata?.verseKey || '—'}
                         </div>
                         <div className="flex gap-1.5">
                            {(note.metadata?.categories || []).slice(0, 2).map((cat) => (
@@ -292,7 +298,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                         <Star className="w-6 h-6 fill-current" />
                       </div>
                       <div>
-                        <h2 className="font-serif text-3xl text-primary">{selectedNote.metadata?.verseKey || 'Source Citation'}</h2>
+                        <h2 className="font-serif text-3xl text-primary">{selectedNote.metadata?.verse_key || selectedNote.metadata?.verseKey || 'Source Citation'}</h2>
                         <div className="flex items-center gap-2 text-on-surface-variant/70">
                           <Calendar className="w-3.5 h-3.5" />
                           <span className="font-label text-[10px] tracking-widest uppercase">
@@ -333,11 +339,29 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                   <div className="p-1 w-full bg-gradient-to-b from-primary/10 to-transparent rounded-2xl mb-8 opacity-40" />
                   
                   <span className="font-label text-[10px] tracking-widest text-on-surface-variant uppercase mb-4 block relative z-10">
-                    Preserved Insight
+                    {selectedNote.metadata?.type === 'whisper' ? 'Spiritual Insight' : 'Preserved Insight'}
                   </span>
-                  <p className="font-body text-xl md:text-2xl text-on-surface leading-loose italic relative z-10 pl-4 border-l-2 border-primary/20">
-                    &ldquo;{selectedNote.logText}&rdquo;
-                  </p>
+
+                  {selectedNote.metadata?.type === 'whisper' ? (
+                    <div className="space-y-8 relative z-10">
+                       <div className="space-y-4">
+                          <h5 className="font-label text-[10px] tracking-[0.3em] uppercase text-primary font-bold px-1 border-l-2 border-primary/20">The Gaze</h5>
+                          <p className="font-body text-base text-on-surface/80 leading-relaxed italic">
+                             {selectedNote.metadata.guidance || selectedNote.logText.split(' | ')[0]}
+                          </p>
+                       </div>
+                       <div className="space-y-4">
+                          <h5 className="font-label text-[10px] tracking-[0.3em] uppercase text-secondary font-bold px-1 border-l-2 border-secondary/40">The Manifestation</h5>
+                          <p className="font-body text-base text-on-surface-variant leading-relaxed">
+                             {selectedNote.metadata.reflection || selectedNote.logText.split(' | ')[1]}
+                          </p>
+                       </div>
+                    </div>
+                  ) : (
+                    <p className="font-body text-xl md:text-2xl text-on-surface leading-loose italic relative z-10 pl-4 border-l-2 border-primary/20">
+                      &ldquo;{selectedNote.logText}&rdquo;
+                    </p>
+                  )}
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-8 pt-8 border-t border-outline-variant/10">
