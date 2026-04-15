@@ -324,7 +324,22 @@ export async function generateWhisper(challenge: string) {
         } else {
           const textResponse = choice.message.content || '{}';
           const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
-          finalJson = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(textResponse);
+          try {
+            finalJson = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(textResponse);
+          } catch (e) {
+             finalJson = {} as any;
+          }
+          
+          if (!finalJson?.verse_key && !finalJson?.verseKey && !finalJson?.verse) {
+            if (internalRetries < 3) {
+              internalRetries++;
+              messages.push({
+                role: 'user',
+                content: 'You did not format your final response as the requested JSON structure. Please output exactly one JSON object containing "verse_key", "guidance", and "reflection".'
+              });
+              continue;
+            }
+          }
           break;
         }
       }
