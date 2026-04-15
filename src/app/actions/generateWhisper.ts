@@ -265,8 +265,12 @@ export async function generateWhisper(challenge: string) {
         apiKey: key,
         baseURL: isGroq ? 'https://api.groq.com/openai/v1' : 'https://api-inference.huggingface.co/v1/'
       });
+      const systemOverride = isGroq || model === 'hf' 
+        ? SYSTEM_PROMPT + '\n\nCRITICAL: You MUST use the provided function tools. DO NOT output raw text like <function=search_quran> or ```json tool calls. Use the native JSON tool schema provided by the API.' 
+        : SYSTEM_PROMPT;
+
       const messages: any[] = [
-        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'system', content: systemOverride },
         { role: 'user', content: challenge }
       ];
 
