@@ -3,6 +3,7 @@
 import { getServerSession } from '@/lib/session';
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
+import { ProcessedVerse } from '@/types/quran';
 
 /**
  * TOOLS for the LLM to call during the guidance generation process.
@@ -25,6 +26,35 @@ async function getTafsir(verseKey: string) {
   const response = await fetch(`https://api.quran.com/api/v4/tafsirs/169/by_verse_key/${verseKey}`);
   const data = await response.json();
   return JSON.stringify(data.tafsir || {});
+}
+
+/**
+ * Helper to fetch full verse metadata for the final ProcessedVerse object.
+ */
+async function fetchFullVerseDetails(verseKey: string): Promise<Partial<ProcessedVerse>> {
+  const [chapterId, verseNumber] = verseKey.split(':');
+  
+  const [chapRes, verseRes] = await Promise.all([
+    fetch(`https://api.quran.com/api/v4/chapters/${chapterId}`),
+    fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?translations=131&audio=7&fields=text_uthmani`)
+  ]);
+
+  if (!chapRes.ok || !verseRes.ok) return {};
+
+  const chapData = await chapRes.json();
+  const verseData = await verseRes.json();
+  const verse = verseData.verse;
+
+  return {
+    verse_key: verseKey,
+    chapter_id: parseInt(chapterId),
+    verse_number: parseInt(verseNumber),
+    text_uthmani: verse.text_uthmani,
+    translation: verse.translations?.[0]?.text?.replace(/<[^>]*>?/gm, '') || '',
+    audio_url: verse.audio?.url ? (verse.audio.url.startsWith('http') ? verse.audio.url : `https://verses.quran.com/${verse.audio.url}`) : '',
+    chapter_name_arabic: chapData.chapter?.name_arabic || '',
+    chapter_name_english: chapData.chapter?.name_simple || '',
+  };
 }
 
 const TOOLS = [
@@ -73,73 +103,125 @@ export async function generateWhisper(challenge: string) {
   }
 
   try {
+    let finalJson: any = null;
+
     if (model === 'claude') {
       const anthropic = new Anthropic({ apiKey: key });
-      
-      let message = await anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20240620',
-        max_tokens: 1024,
-        system: "You are 'The Whisper', a compassionate spiritual guide for the Ayah in Action app. Your goal is to provide grounded Quranic guidance for a user's life challenge. \n\nIMPORTANT: You MUST use the search_quran tool to find relevant verses. Do not rely solely on your internal knowledge. Once you find a verse, use get_verse_details and get_tafsir to provide a deeply grounded explanation. \n\nOutput your final response in this exact JSON structure: \n{ \"verse_key\": \"...\", \"arabic\": \"...\", \"translation\": \"...\", \"guidance\": \"A short, empathetic explanation of why this verse applies\", \"reflection\": \"A daily application prompt for the user\" }",
-        messages: [{ role: 'user', content: challenge }],
-        tools: TOOLS
-      });
+      const messages: any[] = [{ role: 'user', content: challenge }];
+      const systemPrompt = "You are 'The Whisper', a compassionate spiritual guide for the Ayah in Action app. Your goal is to provide grounded Quranic guidance for a user's life challenge. \n\nIMPORTANT: You MUST use the search_quran tool to find relevant verses. Do not rely solely on your internal knowledge. Once you find a verse, use get_verse_details and get_tafsir to provide a deeply grounded explanation. \n\nOutput your final response in this exact JSON structure: \n{ \"verse_key\": \"...\", \"guidance\": \"A short, empathetic explanation of why this verse applies\", \"reflection\": \"A daily application prompt for the user\" }";
 
-      // Handle tool-calling loop (Simplified for brevity, but functional for one round)
-      if (message.stop_reason === 'tool_use') {
-        const toolUse = message.content.find(c => c.type === 'tool_use') as any;
-        if (toolUse) {
-          let toolResult;
-          if (toolUse.name === 'search_quran') toolResult = await searchQuran(toolUse.input.query);
-          else if (toolUse.name === 'get_verse_details') toolResult = await getVerseDetails(toolUse.input.verse_key);
-          else if (toolUse.name === 'get_tafsir') toolResult = await getTafsir(toolUse.input.verse_key);
+      let turns = 0;
+      while (turns < 5) {
+        const response = await anthropic.messages.create({
+          model: 'claude-3-5-sonnet-20240620',
+          max_tokens: 1024,
+          system: systemPrompt,
+          messages,
+          tools: TOOLS
+        });
 
-          // Second turn to get final result
-          const finalResult = await anthropic.messages.create({
-            model: 'claude-3-5-sonnet-20240620',
-            max_tokens: 1024,
-            system: "Extract only the final guidance JSON from the conversation.",
-            messages: [
-              { role: 'user', content: challenge },
-              { role: 'assistant', content: message.content },
-              { role: 'user', content: [{ type: 'tool_result', tool_use_id: toolUse.id, content: toolResult }] }
-            ]
-          });
+        if (response.stop_reason === 'tool_use') {
+          messages.push({ role: 'assistant', content: response.content });
+          
+          const toolResults = await Promise.all(response.content.map(async (contentBlock) => {
+            if (contentBlock.type !== 'tool_use') return null;
+            
+            const toolUse = contentBlock as any;
+            let result;
+            if (toolUse.name === 'search_quran') result = await searchQuran(toolUse.input.query);
+            else if (toolUse.name === 'get_verse_details') result = await getVerseDetails(toolUse.input.verse_key);
+            else if (toolUse.name === 'get_tafsir') result = await getTafsir(toolUse.input.verse_key);
+            
+            return {
+              type: 'tool_result' as const,
+              tool_use_id: toolUse.id,
+              content: result
+            };
+          }));
 
-          const textContent = finalResult.content.find(c => c.type === 'text') as any;
-          return { data: JSON.parse(textContent.text.match(/\{.*\}/s)?.[0] || '{}') };
+          messages.push({ role: 'user', content: toolResults.filter(r => r !== null) });
+          turns++;
+        } else {
+          const textBlock = response.content.find(c => c.type === 'text') as any;
+          const jsonMatch = textBlock?.text.match(/\{.*\}/s);
+          if (jsonMatch) {
+            finalJson = JSON.parse(jsonMatch[0]);
+          }
+          break;
         }
       }
-      
-      const textContent = message.content.find(c => c.type === 'text') as any;
-      return { data: JSON.parse(textContent.text.match(/\{.*\}/s)?.[0] || '{}') };
 
     } else {
       // GPT-4o Implementation
       const openai = new OpenAI({ apiKey: key });
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-4o',
-        messages: [
-          { role: 'system', content: "You are 'The Whisper', a spiritual guide. Use search_quran, get_verse_details, and get_tafsir to provide grounded Quranic guidance. Return JSON." },
-          { role: 'user', content: challenge }
-        ],
-        tools: TOOLS.map(t => ({ 
-          type: 'function', 
-          function: { name: t.name, description: t.description, parameters: t.input_schema } 
-        })) as any,
-        response_format: { type: 'json_object' }
-      });
+      const messages: any[] = [
+        { role: 'system', content: "You are 'The Whisper', a spiritual guide. Use search_quran, get_verse_details, and get_tafsir to provide grounded Quranic guidance. Return JSON: { \"verse_key\": \"...\", \"guidance\": \"...\", \"reflection\": \"...\" }" },
+        { role: 'user', content: challenge }
+      ];
 
-      const toolCalls = completion.choices[0].message.tool_calls;
-      if (toolCalls && toolCalls.length > 0) {
-        // Tool calling handling logic similar to above...
-        // For brevity in the deliverable, we assume the model returns the grounded guidance.
-        // In a production app, I would implement the full multi-turn loop.
+      let turns = 0;
+      while (turns < 5) {
+        const completion = await openai.chat.completions.create({
+          model: 'gpt-4o',
+          messages,
+          tools: TOOLS.map(t => ({ 
+            type: 'function', 
+            function: { name: t.name, description: t.description, parameters: t.input_schema } 
+          })) as any,
+          response_format: { type: 'json_object' }
+        });
+
+        const choice = completion.choices[0];
+        if (choice.message.tool_calls) {
+          messages.push(choice.message);
+          
+          for (const toolCall of (choice.message.tool_calls as any[])) {
+            const name = toolCall.function.name;
+            const args = JSON.parse(toolCall.function.arguments);
+            let result;
+            
+            if (name === 'search_quran') result = await searchQuran(args.query);
+            else if (name === 'get_verse_details') result = await getVerseDetails(args.verse_key);
+            else if (name === 'get_tafsir') result = await getTafsir(args.verse_key);
+            
+            messages.push({
+              role: 'tool',
+              tool_call_id: toolCall.id,
+              content: result
+            });
+          }
+          turns++;
+        } else {
+          finalJson = JSON.parse(choice.message.content || '{}');
+          break;
+        }
       }
-
-      return { data: JSON.parse(completion.choices[0].message.content || '{}') };
     }
+
+    if (!finalJson || !finalJson.verse_key) {
+      throw new Error('Failed to generate guidance JSON');
+    }
+
+    // Post-generation: Fetch full metadata for ProcessedVerse
+    const metadata = await fetchFullVerseDetails(finalJson.verse_key);
+    
+    const finalVerse: ProcessedVerse = {
+      verse_key: finalJson.verse_key,
+      chapter_id: metadata.chapter_id || 0,
+      verse_number: metadata.verse_number || 0,
+      text_uthmani: metadata.text_uthmani || '',
+      translation: metadata.translation || '',
+      tafsir_snippet: finalJson.guidance,
+      audio_url: metadata.audio_url || '',
+      chapter_name_arabic: metadata.chapter_name_arabic || '',
+      chapter_name_english: metadata.chapter_name_english || '',
+    };
+
+    return { data: finalVerse };
+
   } catch (error: any) {
     console.error('Whisper generation failed:', error);
     return { error: error.message || 'Failed to generate guidance. Please check your API key.' };
   }
 }
+
