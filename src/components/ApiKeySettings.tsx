@@ -90,7 +90,7 @@ export function ApiKeySettings() {
     { id: 'claude', label: 'Claude 3.5 Sonnet' },
     { id: 'gpt4o', label: 'GPT-4o' },
     { id: 'gemini', label: 'Gemini 2.0', badge: 'Free' },
-    { id: 'groq', label: 'Groq (Llama 3.1)', badge: 'Free' },
+    { id: 'groq', label: 'Groq (Llama 3.3)', badge: 'Free' },
     { id: 'hf', label: 'Hugging Face', badge: 'Free' },
   ];
 

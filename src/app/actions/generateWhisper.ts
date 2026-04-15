@@ -273,7 +273,7 @@ export async function generateWhisper(challenge: string) {
       let turns = 0;
       while (turns < 5) {
         const completion = await openai.chat.completions.create({
-          model: isGroq ? 'llama-3.1-70b-versatile' : 'meta-llama/Meta-Llama-3-70B-Instruct',
+          model: isGroq ? 'llama-3.3-70b-versatile' : 'meta-llama/Meta-Llama-3-70B-Instruct',
           messages,
           tools: TOOLS_OPENAI as any,
           response_format: isGroq ? { type: 'json_object' } : undefined // HF doesn't strictly support json_object in all endpoints
