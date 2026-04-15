@@ -166,6 +166,15 @@ IMPORTANT: You MUST use the search_quran tool to find relevant verses. Do not re
 Output your final response in this exact JSON structure:
 { "verse_key": "...", "guidance": "A short, empathetic explanation of why this verse applies", "reflection": "A daily application prompt for the user" }`;
 
+/** 
+ * SYNTHESIS_PROMPT: Used for Phase 2 of Groq/HF generation.
+ * This instructs the model to take the gathered tool data and finalize the JSON output.
+ */
+const SYNTHESIS_PROMPT = `Based on the Quranic search results and Tafsir provided in the conversation history, finalize the spiritual guidance. 
+You MUST output strictly a JSON object with this structure:
+{ "verse_key": "...", "guidance": "...", "reflection": "..." }
+Do not provide any conversational text before or after the JSON.`;
+
 export async function generateWhisper(challenge: string) {
   const session = await getServerSession();
   const model = session.preferredModel || 'claude';
@@ -241,6 +250,7 @@ export async function generateWhisper(challenge: string) {
       ];
 
       let turns = 0;
+      // standard multi-turn loop for OpenAI
       while (turns < 5) {
         const completion = await openai.chat.completions.create({
           model: 'gpt-4o',
@@ -270,21 +280,25 @@ export async function generateWhisper(challenge: string) {
       }
 
     // ═══════════════════════════════════════════════════════════════════════
-    // PROVIDER: Groq / Hugging Face (OpenAI-compatible)
+    // PROVIDER: Groq / Hugging Face (OpenAI-compatible) -> TWO-STAGE PIPELINE
     // ═══════════════════════════════════════════════════════════════════════
     } else if (model === 'groq' || model === 'hf') {
       const isGroq = model === 'groq';
+      // Initialize the OpenAI client with provider-specific base URLs
       const openai = new OpenAI({ 
         apiKey: key,
         baseURL: isGroq ? 'https://api.groq.com/openai/v1' : 'https://api-inference.huggingface.co/v1/'
       });
+
+      // Phase 1: Knowledge Gathering (Retrieve data from Quran APIs)
       const messages: any[] = [
-        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'system', content: SYSTEM_PROMPT + "\nFOCUS: Use your tools to gather all necessary Quranic info first." },
         { role: 'user', content: challenge }
       ];
 
       let turns = 0;
       let internalRetries = 0;
+      // Loop up to 5 times to allow for multi-turn tool usage (search -> details -> tafsir)
       while (turns < 5 && internalRetries < 3) {
         let completion;
         try {
@@ -295,11 +309,12 @@ export async function generateWhisper(challenge: string) {
             tool_choice: "auto",
           });
         } catch (err: any) {
+          // Self-healing for potential Groq tool-formatting hallucinations
           if (isGroq && err.status === 400 && err.error?.code === 'tool_use_failed') {
             internalRetries++;
             messages.push({
               role: 'user',
-              content: 'CRITICAL FORMATTING ERROR: You attempted to invoke a tool but used invalid syntax (like <function=...>). You MUST invoke tools strictly by returning a native JSON tool_calls payload, NOT plain text XML/HTML tags.'
+              content: 'CRITICAL FORMATTING ERROR: Use native JSON tool payloads, not plain text tags.'
             });
             continue;
           }
@@ -307,12 +322,14 @@ export async function generateWhisper(challenge: string) {
         }
 
         const choice = completion.choices[0];
+        // If the LLM wants to use a tool, execute it and add to history
         if (choice.message.tool_calls && choice.message.tool_calls.length > 0) {
           messages.push(choice.message);
 
           for (const toolCall of choice.message.tool_calls as any[]) {
             const argsString = toolCall.function.arguments;
             const args = typeof argsString === 'string' ? JSON.parse(argsString) : argsString;
+            // dispatchTool calls the actual Quran Foundation APIs
             const result = await dispatchTool(toolCall.function.name, args);
             messages.push({
               role: 'tool',
@@ -322,26 +339,29 @@ export async function generateWhisper(challenge: string) {
           }
           turns++;
         } else {
-          const textResponse = choice.message.content || '{}';
-          const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
-          try {
-            finalJson = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(textResponse);
-          } catch (e) {
-             finalJson = {} as any;
-          }
-          
-          if (!finalJson?.verse_key && !finalJson?.verseKey && !finalJson?.verse) {
-            if (internalRetries < 3) {
-              internalRetries++;
-              messages.push({
-                role: 'user',
-                content: 'You did not format your final response as the requested JSON structure. Please output exactly one JSON object containing "verse_key", "guidance", and "reflection".'
-              });
-              continue;
-            }
-          }
+          // Tools exhausted. LLM has finished gathering info.
           break;
         }
+      }
+
+      // Phase 2: Synthesis (Convert gathered API knowledge into final JSON)
+      // This final call has NO tools enabled, preventing any further hallucination.
+      const synthesisResponse = await openai.chat.completions.create({
+        model: isGroq ? 'llama-3.3-70b-versatile' : 'meta-llama/Meta-Llama-3-70B-Instruct',
+        messages: [
+          ...messages,
+          { role: 'user', content: SYNTHESIS_PROMPT }
+        ],
+        response_format: isGroq ? { type: 'json_object' } : undefined
+      });
+
+      const finalContent = synthesisResponse.choices[0].message.content || '{}';
+      const jsonMatch = finalContent.match(/\{[\s\S]*\}/);
+      try {
+        finalJson = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(finalContent);
+      } catch (e) {
+        // Safe fallback in case JSON parsing fails
+        finalJson = {} as any;
       }
 
     // ═══════════════════════════════════════════════════════════════════════
