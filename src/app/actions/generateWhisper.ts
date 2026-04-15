@@ -284,13 +284,27 @@ export async function generateWhisper(challenge: string) {
       ];
 
       let turns = 0;
-      while (turns < 5) {
-        const completion = await openai.chat.completions.create({
-          model: isGroq ? 'llama-3.3-70b-versatile' : 'meta-llama/Meta-Llama-3-70B-Instruct',
-          messages,
-          tools: TOOLS_OPENAI as any,
-          tool_choice: "auto",
-        });
+      let internalRetries = 0;
+      while (turns < 5 && internalRetries < 3) {
+        let completion;
+        try {
+          completion = await openai.chat.completions.create({
+            model: isGroq ? 'llama-3.3-70b-versatile' : 'meta-llama/Meta-Llama-3-70B-Instruct',
+            messages,
+            tools: TOOLS_OPENAI as any,
+            tool_choice: "auto",
+          });
+        } catch (err: any) {
+          if (isGroq && err.status === 400 && err.error?.code === 'tool_use_failed') {
+            internalRetries++;
+            messages.push({
+              role: 'user',
+              content: 'CRITICAL FORMATTING ERROR: You attempted to invoke a tool but used invalid syntax (like <function=...>). You MUST invoke tools strictly by returning a native JSON tool_calls payload, NOT plain text XML/HTML tags.'
+            });
+            continue;
+          }
+          throw err;
+        }
 
         const choice = completion.choices[0];
         if (choice.message.tool_calls && choice.message.tool_calls.length > 0) {
