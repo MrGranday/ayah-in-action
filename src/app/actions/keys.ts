@@ -11,9 +11,9 @@ export async function saveApiKeys(data: {
 }) {
   const session = await getServerSession();
   
-  if (data.claudeKey !== undefined) session.claudeKey = data.claudeKey;
-  if (data.openaiKey !== undefined) session.openaiKey = data.openaiKey;
-  if (data.geminiKey !== undefined) session.geminiKey = data.geminiKey;
+  if (data.claudeKey !== undefined) session.claudeKey = data.claudeKey || undefined;
+  if (data.openaiKey !== undefined) session.openaiKey = data.openaiKey || undefined;
+  if (data.geminiKey !== undefined) session.geminiKey = data.geminiKey || undefined;
   if (data.preferredModel !== undefined) session.preferredModel = data.preferredModel;
   
   await session.save();

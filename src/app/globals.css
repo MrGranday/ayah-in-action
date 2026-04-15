@@ -37,6 +37,12 @@
 
   --background: var(--color-background);
   --foreground: var(--color-on-surface);
+
+  /* GitHub-style heatmap color scale */
+  --heatmap-empty: var(--color-surface-container-high);
+  --heatmap-l1: #0a665033;
+  --heatmap-l2: #0a665070;
+  --heatmap-l3: var(--color-primary);
   
   --shadow-color: rgba(27, 28, 24, 0.08);
   --glass-bg: rgba(255, 255, 255, 0.4);
@@ -68,6 +74,12 @@
   --shadow-color: rgba(0, 0, 0, 0.4);
   --glass-bg: rgba(27, 28, 24, 0.6);
   --glass-border: rgba(163, 242, 214, 0.1);
+
+  /* Heatmap dark mode */
+  --heatmap-empty: #2a2b26;
+  --heatmap-l1: #0a6650aa;
+  --heatmap-l2: #0a6650cc;
+  --heatmap-l3: #a3f2d6;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -202,39 +214,9 @@ body {
   }
 }
 
-/* ── Heatmap Color Scales ── */
-.react-calendar-heatmap .color-empty {
-  fill: var(--color-surface-container);
-}
-
-.react-calendar-heatmap .color-scale-1 {
-  fill: #0a665040;
-}
-
-.react-calendar-heatmap .color-scale-2 {
-  fill: #0a665080;
-}
-
-.react-calendar-heatmap .color-scale-3 {
-  fill: var(--color-primary);
-}
-
-.react-calendar-heatmap rect {
-  rx: 2px;
-  /* Rounded corners for heatmap tiles */
-  ry: 2px;
-}
-
-.react-calendar-heatmap-weekday-label {
-  font-size: 4px;
-  fill: var(--color-on-surface-variant);
-  opacity: 0.6;
-}
-
-.react-calendar-heatmap {
-  max-height: 120px;
-  width: 100%;
-}
+/* ── Heatmap (custom SVG — GitHub-style) ── */
+.heatmap-cell { transition: opacity 0.15s ease; }
+.heatmap-cell:hover { opacity: 0.8; }
 
 ::selection {
   background: var(--color-tertiary-fixed);

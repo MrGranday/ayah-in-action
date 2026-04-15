@@ -48,41 +48,41 @@ export function ScopeDoctor({ missingScopes }: ScopeDoctorProps) {
              </div>
              
              <div className="flex flex-wrap gap-2">
-                {missingScopes.map(scope => (
-                  <span key={scope} className="px-4 py-2 bg-red-50 border border-red-100 text-red-700 rounded-xl text-[10px] font-bold tracking-widest uppercase">
-                    {scope}
-                  </span>
-                ))}
-                {missingScopes.length === 0 && (
-                  <span className="px-4 py-2 bg-red-50 border border-red-100 text-red-700 rounded-xl text-[10px] font-bold tracking-widest uppercase">
-                    notes & collections
-                  </span>
-                )}
-             </div>
-             
-             <p className="text-sm text-on-surface-variant/80 leading-relaxed font-body">
-               To continue your journey, your **OAuth Client ID** must be authorized to access these areas of the Quran Foundation ecosystem.
-             </p>
+              {missingScopes.map(scope => (
+                <span key={scope} className="px-4 py-2 bg-red-50 border border-red-100 text-red-700 rounded-xl text-[10px] font-bold tracking-widest uppercase">
+                  {scope}
+                </span>
+              ))}
+              {missingScopes.length === 0 && (
+                <span className="px-4 py-2 bg-red-50 border border-red-100 text-red-700 rounded-xl text-[10px] font-bold tracking-widest uppercase">
+                  note & activity_day
+                </span>
+              )}
+           </div>
+           
+           <p className="text-sm text-on-surface-variant/80 leading-relaxed font-body">
+             Your OAuth session was granted before these scopes were added. Re-authenticating will request the correct permissions automatically.
+           </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
              <a 
+               href="/api/auth/logout?reauth=true"
+               className="group flex items-center gap-4 px-10 h-16 rounded-2xl bg-primary text-white font-label text-[10px] tracking-[0.2em] uppercase font-bold editorial-shadow hover:scale-[1.02] transition-all"
+             >
+               Re-authenticate with New Permissions
+               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+             </a>
+             
+             <a 
                href={portalUrl}
                target="_blank"
                rel="noopener noreferrer"
-               className="group flex items-center gap-4 px-10 h-16 rounded-2xl bg-primary text-white font-label text-[10px] tracking-[0.2em] uppercase font-bold editorial-shadow hover:scale-[1.02] transition-all"
-             >
-               Visit Developer Portal
-               <ExternalLink className="w-3.5 h-3.5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-             </a>
-             
-             <button
-               onClick={() => window.location.reload()}
                className="flex items-center gap-3 text-primary font-label text-[10px] tracking-widest uppercase font-bold hover:underline"
              >
-               <ArrowRight className="w-3.5 h-3.5" />
-               Re-verify Connection
-             </button>
+               <ExternalLink className="w-3.5 h-3.5" />
+               Developer Portal
+             </a>
           </div>
           
           <div className="pt-10 border-t border-outline-variant/10">

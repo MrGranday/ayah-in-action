@@ -30,7 +30,7 @@ export function generateRandomBytes(length: number): string {
 export const REQUIRED_SCOPES =
   'openid offline_access user note activity_day';
 
-export function getAuthUrl(codeChallenge: string, state: string, nonce: string) {
+export function getAuthUrl(codeChallenge: string, state: string, nonce: string, forceConsent: boolean = false) {
   const params = new URLSearchParams({
     response_type: 'code',
     client_id: qfConfig.clientId,
@@ -41,6 +41,10 @@ export function getAuthUrl(codeChallenge: string, state: string, nonce: string) 
     code_challenge: codeChallenge,
     code_challenge_method: 'S256',
   });
+
+  if (forceConsent) {
+    params.set('prompt', 'consent');
+  }
 
   const url = `${qfConfig.authBaseUrl}/oauth2/auth?${params.toString()}`;
   console.log('[Auth] Auth URL constructed with scopes:', REQUIRED_SCOPES);

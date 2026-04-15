@@ -3,65 +3,47 @@ import { cookies } from 'next/headers';
 import { getTypedSession } from '@/lib/session';
 import { getTokenUrl, getBasicAuthHeader } from '@/lib/auth';
 
-let refreshPromise: Promise<unknown> | null = null;
-
-export async function POST(request: NextRequest) {
-  if (refreshPromise) {
-    await refreshPromise;
-    return NextResponse.json({ success: true });
-  }
-
-  refreshPromise = (async () => {
+export async function POST(_request: NextRequest) {
+  try {
     const session = await getTypedSession(await cookies());
-    
+
     const refreshToken = session.refreshToken;
     if (!refreshToken) {
       return NextResponse.json({ error: 'No refresh token' }, { status: 401 });
     }
-
-    const tokenUrl = getTokenUrl();
-    const authHeader = getBasicAuthHeader();
 
     const tokenParams = new URLSearchParams({
       grant_type: 'refresh_token',
       refresh_token: refreshToken,
     });
 
-    try {
-      const tokenResponse = await fetch(tokenUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: authHeader,
-        },
-        body: tokenParams.toString(),
-      });
+    const tokenResponse = await fetch(getTokenUrl(), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: getBasicAuthHeader(),
+      },
+      body: tokenParams.toString(),
+    });
 
-      if (!tokenResponse.ok) {
-        return NextResponse.json({ error: 'Refresh failed' }, { status: 401 });
-      }
-
-      const tokens = await tokenResponse.json();
-      
-      session.accessToken = tokens.access_token;
-      session.expiresAt = Math.floor(Date.now() / 1000) + tokens.expires_in;
-      
-      if (tokens.refresh_token) {
-        session.refreshToken = tokens.refresh_token;
-      }
-      
-      await session.save();
-    } catch (error) {
-      console.error('Token refresh error:', error);
+    if (!tokenResponse.ok) {
+      const body = await tokenResponse.text();
+      console.error('[Auth/Refresh] Token refresh failed:', tokenResponse.status, body);
       return NextResponse.json({ error: 'Refresh failed' }, { status: 401 });
     }
-  })();
 
-  try {
-    await refreshPromise;
-  } finally {
-    refreshPromise = null;
+    const tokens = await tokenResponse.json();
+
+    session.accessToken = tokens.access_token;
+    session.expiresAt = Math.floor(Date.now() / 1000) + (tokens.expires_in ?? 3600);
+    if (tokens.refresh_token) {
+      session.refreshToken = tokens.refresh_token;
+    }
+
+    await session.save();
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('[Auth/Refresh] Unexpected error:', error);
+    return NextResponse.json({ error: 'Internal error' }, { status: 500 });
   }
-
-  return NextResponse.json({ success: true });
 }

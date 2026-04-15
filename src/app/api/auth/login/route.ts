@@ -22,8 +22,9 @@ export async function GET(request: NextRequest) {
     session.nonce = nonce;
     await session.save();
 
-    const authUrl = getAuthUrl(codeChallenge, state, nonce);
-    console.log('[Auth] Redirecting to:', authUrl);
+    const forceConsent = request.nextUrl.searchParams.get('force_consent') === 'true';
+    const authUrl = getAuthUrl(codeChallenge, state, nonce, forceConsent);
+    console.log('[Auth] Redirecting to:', authUrl, forceConsent ? '(force_consent)' : '');
     
     // Use the native redirect() from next/navigation
     redirect(authUrl);

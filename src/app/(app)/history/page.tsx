@@ -49,7 +49,7 @@ export default async function HistoryPage() {
   if (notesError?.type === 'insufficient_scope' || notesError?.status === 403) {
     return (
       <div className="pt-12">
-        <ScopeDoctor missingScopes={['notes', 'collections']} />
+        <ScopeDoctor missingScopes={['note', 'activity_day']} />
       </div>
     );
   }
