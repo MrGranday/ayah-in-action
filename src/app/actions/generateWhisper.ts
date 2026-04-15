@@ -53,8 +53,8 @@ async function fetchFullVerseDetails(verseKey: string): Promise<Partial<Processe
   const [chapterId, verseNumber] = verseKey.split(':');
   
   const [chapRes, verseRes] = await Promise.all([
-    fetch(`https://api.quran.com/api/v4/chapters/${chapterId}`),
-    fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?translations=131&audio=7&fields=text_uthmani`)
+    fetch(`https://api.quran.com/api/v4/chapters/${chapterId}?language=en`),
+    fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?translations=131&audio=7&language=en&text_uthmani=true`)
   ]);
 
   if (!chapRes.ok || !verseRes.ok) return {};

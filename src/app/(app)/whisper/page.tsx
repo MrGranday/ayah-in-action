@@ -236,9 +236,11 @@ export default function WhisperPage() {
                                 {result.arabic}
                              </p>
                              <div className="h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent w-full mb-10" />
-                             <p className="font-body text-xl text-on-surface leading-loose italic text-left pl-8 border-l-3 border-primary/20">
-                                &ldquo;{result.translation}&rdquo;
-                             </p>
+                             {result.translation && (
+                               <p className="font-body text-xl text-on-surface leading-loose italic text-left pl-8 border-l-3 border-primary/20">
+                                  &ldquo;{result.translation}&rdquo;
+                               </p>
+                             )}
                           </div>
                        </div>
 
