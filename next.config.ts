@@ -12,10 +12,10 @@ const nextConfig: NextConfig = {
         'localhost:3000',
         'localhost:3001',
         'ayah-in-action.vercel.app',
-        'https://ayah-in-action.vercel.app',
       ],
     },
   },
+  turbopack: {},
 };
 
 const pwaConfig = withPWA({
