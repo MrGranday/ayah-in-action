@@ -275,7 +275,8 @@ export async function generateWhisper(challenge: string) {
         const completion = await openai.chat.completions.create({
           model: isGroq ? 'llama-3.3-70b-versatile' : 'meta-llama/Meta-Llama-3-70B-Instruct',
           messages,
-          tools: TOOLS_OPENAI as any
+          tools: TOOLS_OPENAI as any,
+          parallel_tool_calls: isGroq ? false : undefined
         });
 
         const choice = completion.choices[0];
