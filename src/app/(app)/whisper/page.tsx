@@ -30,35 +30,32 @@ export default function WhisperPage() {
     getWhisperHistory().then(setHistory);
   }, []);
 
-  // Clean up audio on unmount or result change
+  // Pre-instantiate audio object when result changes
   useEffect(() => {
+    if (result?.audio_url) {
+      const audioEl = new Audio(result.audio_url);
+      audioEl.onended = () => setIsPlaying(false);
+      setAudio(audioEl);
+    }
     return () => {
       if (audio) {
         audio.pause();
         audio.src = '';
       }
     };
-  }, [audio]);
+  }, [result?.audio_url]);
 
   const toggleAudio = () => {
-    if (!result?.audio_url) {
-      toast.error("Audio not available for this verse");
+    if (!audio) {
+      toast.error("Audio is still loading or not available");
       return;
     }
     
-    if (audio) {
-      if (isPlaying) {
-        audio.pause();
-        setIsPlaying(false);
-      } else {
-        audio.play();
-        setIsPlaying(true);
-      }
+    if (isPlaying) {
+      audio.pause();
+      setIsPlaying(false);
     } else {
-      const newAudio = new Audio(result.audio_url);
-      newAudio.onended = () => setIsPlaying(false);
-      newAudio.play().catch(() => toast.error("Common browser restriction: Please interact with the page again to play audio."));
-      setAudio(newAudio);
+      audio.play().catch(() => toast.error("Browser blocked audio. Please interact with the page first."));
       setIsPlaying(true);
     }
   };
