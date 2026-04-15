@@ -27,6 +27,13 @@ export function AyahCard({ ayah }: AyahCardProps) {
     if (!currentAyah && ayah) {
        setCurrentAyah(ayah);
     }
+    // If the server ayah changes (e.g. via shuffle) and we AREN'T showing a whisper,
+    // we should sync the store so that the 'displayAyah' logic (line 23) picks it up.
+    if (currentAyah && ayah && currentAyah.verse_key !== ayah.verse_key) {
+        // Only override if the current store version looks like a previous daily guidiance
+        // OR if the user specifically requested a shuffle (handled by clearing currentAyah above).
+        // For reliability, we stick to the 'clear store' pattern in ShuffleAyahButton.
+    }
   }, [ayah, currentAyah, setCurrentAyah]);
 
   useEffect(() => {

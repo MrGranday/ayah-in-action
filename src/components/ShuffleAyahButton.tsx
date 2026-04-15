@@ -4,12 +4,16 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { RefreshCcw } from 'lucide-react';
 
+import { useAyahStore } from '@/stores/useAyahStore';
+
 export function ShuffleAyahButton() {
   const router = useRouter();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const resetCurrentAyah = useAyahStore((state) => state.resetCurrentAyah);
 
   const handleShuffle = () => {
     setIsRefreshing(true);
+    resetCurrentAyah();
     router.refresh();
     setTimeout(() => setIsRefreshing(false), 1000); // UI visual feedback
   };

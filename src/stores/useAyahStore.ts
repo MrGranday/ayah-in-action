@@ -22,6 +22,7 @@ interface AyahState {
   setSelectedCategories: (cats: Category[]) => void;
   setVoiceNote: (blob: Blob, transcript: string) => void;
   clearLogForm: () => void;
+  resetCurrentAyah: () => void;
 }
 
 export const useAyahStore = create<AyahState>()(
@@ -54,6 +55,7 @@ export const useAyahStore = create<AyahState>()(
           voiceNoteBlob: null,
           voiceTranscript: '',
         }),
+      resetCurrentAyah: () => set({ currentAyah: null }),
     }),
     {
       name: 'ayah-store',
