@@ -43,6 +43,70 @@ interface HistoryClientProps {
   notes: ParsedNote[];
 }
 
+function HeirloomSelect({ 
+  value, 
+  onChange, 
+  options, 
+  placeholder 
+}: { 
+  value: string; 
+  onChange: (val: string) => void; 
+  options: { label: string; value: string }[];
+  placeholder: string;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const selectedLabel = options.find(o => o.value === value)?.label || placeholder;
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full h-12 rounded-xl bg-surface-container-high border border-outline-variant/20 px-4 flex items-center justify-between font-body text-sm text-on-surface hover:bg-surface-container-highest transition-all focus:ring-2 focus:ring-primary/5 outline-none"
+      >
+        <span className={value === 'all' ? 'text-on-surface-variant/60' : 'text-on-surface'}>
+          {selectedLabel}
+        </span>
+        <ChevronDown className={cn("w-4 h-4 text-primary/30 transition-transform duration-300", isOpen && "rotate-180")} />
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <div 
+              className="fixed inset-0 z-40" 
+              onClick={() => setIsOpen(false)} 
+            />
+            <motion.div
+              initial={{ opacity: 0, y: -10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 4, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.95 }}
+              className="absolute top-full left-0 right-0 z-50 mt-2 bg-surface-container-highest rounded-2xl border border-outline-variant/10 editorial-shadow parchment-texture overflow-hidden"
+            >
+              <div className="max-h-60 overflow-y-auto py-2">
+                {options.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => {
+                      onChange(opt.value);
+                      setIsOpen(false);
+                    }}
+                    className={cn(
+                      "w-full px-4 py-3 text-left text-sm font-body transition-colors hover:bg-primary/10",
+                      value === opt.value ? "text-primary font-bold bg-primary/5" : "text-on-surface"
+                    )}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export function HistoryClient({ notes }: HistoryClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -180,35 +244,33 @@ export function HistoryClient({ notes }: HistoryClientProps) {
               <div className="grid md:grid-cols-2 gap-8 mb-8 pt-4 border-t border-outline-variant/5">
                 <div className="space-y-4">
                   <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">Archival Month</span>
-                  <div className="relative group">
-                    <select 
-                      value={selectedMonth} 
-                      onChange={(e) => updateParams({ month: e.target.value })}
-                      className="w-full h-12 rounded-xl bg-surface-container-high border border-outline-variant/20 px-4 font-body text-sm appearance-none outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/5 transition-all text-on-surface cursor-pointer hover:bg-surface-container-highest"
-                    >
-                      <option value="all" className="bg-surface text-on-surface">All Months</option>
-                      {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((m, i) => (
-                        <option key={m} value={(i + 1).toString()} className="bg-surface text-on-surface">{m}</option>
-                      ))}
-                    </select>
-                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/30 pointer-events-none group-focus-within:text-primary transition-colors" />
-                  </div>
+                  <HeirloomSelect 
+                    value={selectedMonth}
+                    placeholder="All Months"
+                    onChange={(val) => updateParams({ month: val })}
+                    options={[
+                      { label: 'All Months', value: 'all' },
+                      ...['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((m, i) => ({
+                        label: m,
+                        value: (i + 1).toString()
+                      }))
+                    ]}
+                  />
                 </div>
                 <div className="space-y-4">
                   <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">Year</span>
-                  <div className="relative group">
-                    <select 
-                      value={selectedYear} 
-                      onChange={(e) => updateParams({ year: e.target.value })}
-                      className="w-full h-12 rounded-xl bg-surface-container-high border border-outline-variant/20 px-4 font-body text-sm appearance-none outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/5 transition-all text-on-surface cursor-pointer hover:bg-surface-container-highest"
-                    >
-                      <option value="all" className="bg-surface text-on-surface">Any Year</option>
-                      {[2024, 2025, 2026].map(y => (
-                        <option key={y} value={y.toString()} className="bg-surface text-on-surface">{y}</option>
-                      ))}
-                    </select>
-                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/30 pointer-events-none group-focus-within:text-primary transition-colors" />
-                  </div>
+                  <HeirloomSelect 
+                    value={selectedYear}
+                    placeholder="Any Year"
+                    onChange={(val) => updateParams({ year: val })}
+                    options={[
+                      { label: 'Any Year', value: 'all' },
+                      ...[2024, 2025, 2026].map(y => ({
+                        label: y.toString(),
+                        value: y.toString()
+                      }))
+                    ]}
+                  />
                 </div>
               </div>
 
