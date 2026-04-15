@@ -289,7 +289,7 @@ export async function generateWhisper(challenge: string) {
           model: isGroq ? 'llama-3.3-70b-versatile' : 'meta-llama/Meta-Llama-3-70B-Instruct',
           messages,
           tools: TOOLS_OPENAI as any,
-          parallel_tool_calls: isGroq ? false : undefined
+          tool_choice: "auto",
         });
 
         const choice = completion.choices[0];
@@ -409,6 +409,8 @@ export async function generateWhisper(challenge: string) {
       errorMessage = 'Groq rate limit exceeded. Groq has strict tokens-per-minute limits for free tier. Please try again in a minute.';
     } else if (errorMessage.includes('loading') || errorMessage.includes('503')) {
       errorMessage = 'The language model is currently loading (cold start) or overloaded. It usually takes 10-20 seconds. Please try again!';
+    } else if (errorMessage.includes('Failed to call a function') || errorMessage.includes('tool_use_failed')) {
+      errorMessage = 'Groq encountered a formatting syntax error while executing semantic search tools. Please slightly rephrase your challenge and try again.';
     } else if (errorMessage.includes('Unexpected token') || errorMessage.includes('<!DOCTYPE')) {
       errorMessage = 'The API proxy or our Quran database temporarily went offline and returned an invalid response. Please try again.';
     } else if (errorMessage.includes('quota') || errorMessage.includes('429')) {
