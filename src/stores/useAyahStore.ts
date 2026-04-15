@@ -60,7 +60,8 @@ export const useAyahStore = create<AyahState>()(
     {
       name: 'ayah-store',
       partialize: (state) => ({
-        currentAyah: state.currentAyah,
+        // We no longer persist currentAyah across refreshes to ensure 
+        // that a manual refresh always fetches a fresh Daily Sanctuary Ayah.
       }),
     }
   )
