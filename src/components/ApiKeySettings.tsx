@@ -6,36 +6,40 @@ import { Key, Shield, Check, AlertCircle, Trash2, Cpu, Info, X } from 'lucide-re
 import { saveApiKeys, clearApiKeys, getApiKeyStatus } from '@/app/actions/keys';
 import { Button } from './ui/button';
 
-type PreferredModel = 'claude' | 'gpt4o' | 'gemini';
+type PreferredModel = 'claude' | 'gpt4o' | 'gemini' | 'groq' | 'hf';
 
 export function ApiKeySettings() {
   const [keys, setKeys] = useState<{
     claudeKey: string;
     openaiKey: string;
     geminiKey: string;
+    groqKey: string;
+    hfKey: string;
     preferredModel: PreferredModel;
   }>({
     claudeKey: '',
     openaiKey: '',
     geminiKey: '',
+    groqKey: '',
+    hfKey: '',
     preferredModel: 'claude',
   });
 
-  const [status, setStatus] = useState({ hasClaude: false, hasOpenAI: false, hasGemini: false });
+  const [status, setStatus] = useState({ hasClaude: false, hasOpenAI: false, hasGemini: false, hasGroq: false, hasHf: false });
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [deletingKey, setDeletingKey] = useState<'claude' | 'openai' | 'gemini' | null>(null);
+  const [deletingKey, setDeletingKey] = useState<'claude' | 'openai' | 'gemini' | 'groq' | 'hf' | null>(null);
 
   useEffect(() => {
     getApiKeyStatus().then(res => {
-      setStatus({ hasClaude: res.hasClaude, hasOpenAI: res.hasOpenAI, hasGemini: res.hasGemini });
+      setStatus({ hasClaude: res.hasClaude, hasOpenAI: res.hasOpenAI, hasGemini: res.hasGemini, hasGroq: res.hasGroq, hasHf: res.hasHf });
       setKeys(prev => ({ ...prev, preferredModel: res.preferredModel as PreferredModel }));
     });
   }, []);
 
   const refreshStatus = async () => {
     const res = await getApiKeyStatus();
-    setStatus({ hasClaude: res.hasClaude, hasOpenAI: res.hasOpenAI, hasGemini: res.hasGemini });
+    setStatus({ hasClaude: res.hasClaude, hasOpenAI: res.hasOpenAI, hasGemini: res.hasGemini, hasGroq: res.hasGroq, hasHf: res.hasHf });
   };
 
   const handleSave = async () => {
@@ -51,19 +55,23 @@ export function ApiKeySettings() {
   };
 
   // Delete a single key by saving an empty string for it
-  const handleDeleteKey = async (provider: 'claude' | 'openai' | 'gemini') => {
-    if (!confirm(`Remove your ${provider === 'claude' ? 'Anthropic' : provider === 'openai' ? 'OpenAI' : 'Google'} API key?`)) return;
+  const handleDeleteKey = async (provider: 'claude' | 'openai' | 'gemini' | 'groq' | 'hf') => {
+    if (!confirm(`Remove your ${provider === 'claude' ? 'Anthropic' : provider === 'openai' ? 'OpenAI' : provider === 'gemini' ? 'Google' : provider === 'groq' ? 'Groq' : 'Hugging Face'} API key?`)) return;
     setDeletingKey(provider);
     try {
       await saveApiKeys(
         provider === 'claude'   ? { claudeKey: '' }
         : provider === 'openai' ? { openaiKey: '' }
-        :                         { geminiKey: '' }
+        : provider === 'gemini' ? { geminiKey: '' }
+        : provider === 'groq'   ? { groqKey: '' }
+        :                         { hfKey: '' }
       );
       setKeys(prev =>
         provider === 'claude'   ? { ...prev, claudeKey: '' }
         : provider === 'openai' ? { ...prev, openaiKey: '' }
-        :                         { ...prev, geminiKey: '' }
+        : provider === 'gemini' ? { ...prev, geminiKey: '' }
+        : provider === 'groq'   ? { ...prev, groqKey: '' }
+        :                         { ...prev, hfKey: '' }
       );
       await refreshStatus();
     } finally {
@@ -74,14 +82,16 @@ export function ApiKeySettings() {
   const handleClearAll = async () => {
     if (!confirm('Remove all API keys? Guidance features will be disabled.')) return;
     await clearApiKeys();
-    setKeys({ claudeKey: '', openaiKey: '', geminiKey: '', preferredModel: 'claude' });
-    setStatus({ hasClaude: false, hasOpenAI: false, hasGemini: false });
+    setKeys({ claudeKey: '', openaiKey: '', geminiKey: '', groqKey: '', hfKey: '', preferredModel: 'claude' });
+    setStatus({ hasClaude: false, hasOpenAI: false, hasGemini: false, hasGroq: false, hasHf: false });
   };
 
   const MODEL_OPTIONS: { id: PreferredModel; label: string; badge?: string }[] = [
     { id: 'claude', label: 'Claude 3.5 Sonnet' },
     { id: 'gpt4o', label: 'GPT-4o' },
-    { id: 'gemini', label: 'Gemini 2.0 Flash', badge: 'Free Tier' },
+    { id: 'gemini', label: 'Gemini 2.0', badge: 'Free' },
+    { id: 'groq', label: 'Groq (Llama 3.1)', badge: 'Free' },
+    { id: 'hf', label: 'Hugging Face', badge: 'Free' },
   ];
 
   const API_SECTIONS = [
@@ -114,6 +124,26 @@ export function ApiKeySettings() {
       isActive: status.hasGemini,
       value: keys.geminiKey,
       onChange: (v: string) => setKeys(prev => ({ ...prev, geminiKey: v })),
+    },
+    {
+      id: 'groq' as const,
+      name: 'Groq Llama',
+      label: 'Groq API Key',
+      placeholder: 'gsk_...',
+      iconColor: 'bg-red-500/10 text-red-500',
+      isActive: status.hasGroq,
+      value: keys.groqKey,
+      onChange: (v: string) => setKeys(prev => ({ ...prev, groqKey: v })),
+    },
+    {
+      id: 'hf' as const,
+      name: 'Hugging Face',
+      label: 'HF Auth Token',
+      placeholder: 'hf_...',
+      iconColor: 'bg-yellow-500/10 text-yellow-600',
+      isActive: status.hasHf,
+      value: keys.hfKey,
+      onChange: (v: string) => setKeys(prev => ({ ...prev, hfKey: v })),
     },
   ];
 
@@ -235,7 +265,7 @@ export function ApiKeySettings() {
 
               <div className="flex items-center gap-4">
                 {/* Clear all button only shown when at least one key exists */}
-                {(status.hasClaude || status.hasOpenAI || status.hasGemini) && (
+                {(status.hasClaude || status.hasOpenAI || status.hasGemini || status.hasGroq || status.hasHf) && (
                   <button
                     onClick={handleClearAll}
                     className="flex items-center gap-2 px-4 py-3 rounded-2xl text-red-500 hover:bg-red-50 transition-all border border-transparent hover:border-red-100 text-[10px] font-bold tracking-widest uppercase"
@@ -256,9 +286,9 @@ export function ApiKeySettings() {
             </div>
           </div>
 
-          {/* Gemini advisory notice */}
+          {/* Free-tier advisory notice for Gemini, Groq, and HF */}
           <AnimatePresence>
-            {keys.preferredModel === 'gemini' && (
+            {(keys.preferredModel === 'gemini' || keys.preferredModel === 'groq' || keys.preferredModel === 'hf') && (
               <motion.div
                 initial={{ opacity: 0, height: 0, marginTop: 0 }}
                 animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
@@ -269,12 +299,12 @@ export function ApiKeySettings() {
                   <Info className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
                   <div className="space-y-1">
                     <p className="text-[10px] font-bold tracking-widest uppercase text-blue-500">
-                      Gemini — Free-Tier Experience Mode
+                      {keys.preferredModel === 'gemini' ? 'Gemini' : keys.preferredModel === 'groq' ? 'Groq' : 'Hugging Face'} — Free-Tier Experience Mode
                     </p>
                     <p className="text-[11px] leading-relaxed text-on-surface-variant/70 italic">
                       For the richest Whisper experience — deep tafsir grounding, multi-step Quranic search, and
                       the most accurate verse selection — we recommend using an <strong>OpenAI</strong> or{' '}
-                      <strong>Anthropic</strong> key. Gemini works and is a great free option to explore the
+                      <strong>Anthropic</strong> key. {keys.preferredModel === 'gemini' ? 'Gemini' : keys.preferredModel === 'groq' ? 'Groq' : 'Hugging Face'} works and is a great free option to explore the
                       Whisper feature, but may produce shallower results.
                     </p>
                   </div>

@@ -162,13 +162,15 @@ export async function generateWhisper(challenge: string) {
   if (model === 'claude') key = session.claudeKey;
   else if (model === 'gpt4o') key = session.openaiKey;
   else if (model === 'gemini') key = session.geminiKey;
+  else if (model === 'groq') key = session.groqKey;
+  else if (model === 'hf') key = session.hfKey;
 
   if (!key) {
     return { error: 'API Key not found. Please configure it in Settings.' };
   }
 
-  // Return an advisory notice when Gemini is selected
-  const geminiNotice = model === 'gemini';
+  // Return an advisory notice when a free-tier compatible model is selected
+  const freeTierNotice = model === 'gemini' || model === 'groq' || model === 'hf';
 
   try {
     let finalJson: { verse_key: string; guidance: string; reflection: string } | null = null;
@@ -255,6 +257,52 @@ export async function generateWhisper(challenge: string) {
       }
 
     // ═══════════════════════════════════════════════════════════════════════
+    // PROVIDER: Groq / Hugging Face (OpenAI-compatible)
+    // ═══════════════════════════════════════════════════════════════════════
+    } else if (model === 'groq' || model === 'hf') {
+      const isGroq = model === 'groq';
+      const openai = new OpenAI({ 
+        apiKey: key,
+        baseURL: isGroq ? 'https://api.groq.com/openai/v1' : 'https://api-inference.huggingface.co/v1/'
+      });
+      const messages: any[] = [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: challenge }
+      ];
+
+      let turns = 0;
+      while (turns < 5) {
+        const completion = await openai.chat.completions.create({
+          model: isGroq ? 'llama-3.1-70b-versatile' : 'meta-llama/Meta-Llama-3-70B-Instruct',
+          messages,
+          tools: TOOLS_OPENAI as any,
+          response_format: isGroq ? { type: 'json_object' } : undefined // HF doesn't strictly support json_object in all endpoints
+        });
+
+        const choice = completion.choices[0];
+        if (choice.message.tool_calls && choice.message.tool_calls.length > 0) {
+          messages.push(choice.message);
+
+          for (const toolCall of choice.message.tool_calls as any[]) {
+            const argsString = toolCall.function.arguments;
+            const args = typeof argsString === 'string' ? JSON.parse(argsString) : argsString;
+            const result = await dispatchTool(toolCall.function.name, args);
+            messages.push({
+              role: 'tool',
+              tool_call_id: toolCall.id,
+              content: result
+            });
+          }
+          turns++;
+        } else {
+          const textResponse = choice.message.content || '{}';
+          const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
+          finalJson = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(textResponse);
+          break;
+        }
+      }
+
+    // ═══════════════════════════════════════════════════════════════════════
     // PROVIDER: Gemini (Google)
     // Note: Works for basic Whisper functionality. For the richest grounded
     // experience (multi-turn tool chaining, tafsir depth), OpenAI or
@@ -333,7 +381,7 @@ export async function generateWhisper(challenge: string) {
       chapter_name_english: metadata.chapter_name_english || '',
     };
 
-    return { data: finalVerse, geminiNotice };
+    return { data: finalVerse, freeTierNotice };
 
   } catch (error: any) {
     console.error('Whisper generation failed:', error);
@@ -344,6 +392,10 @@ export async function generateWhisper(challenge: string) {
       errorMessage = 'Gemini API Error: Your Free Tier quota limit is literally 0. This happens if you are in a region where Google disables the free tier (like EU/UK), or if your API key requires a billing account to activate. Please use an OpenAI or Anthropic key instead.';
     } else if (model === 'gemini' && errorMessage.includes('429 Too Many Requests')) {
       errorMessage = 'Gemini free-tier quota exceeded (15 requests/minute). Tool-chaining uses multiple requests per generation. Please try again in 1 minute, or switch to Anthropic or OpenAI.';
+    } else if (model === 'groq' && errorMessage.includes('429')) {
+      errorMessage = 'Groq rate limit exceeded. Groq has strict tokens-per-minute limits for free tier. Please try again in a minute.';
+    } else if (model === 'hf' && (errorMessage.includes('503') || errorMessage.includes('loading'))) {
+      errorMessage = 'Hugging Face model is currently loading (cold start). It usually takes 10-20 seconds. Please try again!';
     } else if (errorMessage.includes('quota') || errorMessage.includes('429')) {
       errorMessage = 'API rate limit or quota exceeded for your selected model. Please wait a moment or check your billing plan.';
     }

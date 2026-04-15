@@ -17,14 +17,14 @@ export default function WhisperPage() {
   const [challenge, setChallenge] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
-  const [geminiNotice, setGeminiNotice] = useState(false);
+  const [freeTierNotice, setFreeTierNotice] = useState(false);
   const [history, setHistory] = useState<any[]>([]);
   const [keysActive, setKeysActive] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [savingNote, setSavingNote] = useState(false);
 
   useEffect(() => {
-    getApiKeyStatus().then(res => setKeysActive(res.hasClaude || res.hasOpenAI || res.hasGemini));
+    getApiKeyStatus().then(res => setKeysActive(res.hasClaude || res.hasOpenAI || res.hasGemini || res.hasGroq || res.hasHf));
     getWhisperHistory().then(setHistory);
   }, []);
 
@@ -37,7 +37,7 @@ export default function WhisperPage() {
       if (res.error) setError(res.error);
       else {
         setResult(res.data);
-        setGeminiNotice(!!res.geminiNotice);
+        setFreeTierNotice(!!res.freeTierNotice);
       }
     } catch (err) {
       setError('The divine connection was interrupted. Please try again.');
@@ -257,7 +257,7 @@ export default function WhisperPage() {
                           </div>
                        </div>
 
-                        {geminiNotice && (
+                        {freeTierNotice && (
                            <motion.div
                               initial={{ opacity: 0, y: 6 }}
                               animate={{ opacity: 1, y: 0 }}
@@ -265,7 +265,7 @@ export default function WhisperPage() {
                            >
                               <AlertCircle className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
                               <p className="text-[10px] leading-relaxed text-on-surface-variant/70 italic">
-                                 <strong className="text-blue-500 not-italic">Using Gemini (Free Tier).</strong>{' '}
+                                 <strong className="text-blue-500 not-italic">Using a Free Tier Model.</strong>{' '}
                                  For a deeper Quranic experience with richer tafsir grounding, switch to an{' '}
                                  <Link href="/settings" className="underline text-primary/60 hover:text-primary transition-colors">OpenAI or Anthropic key</Link>.
                               </p>
