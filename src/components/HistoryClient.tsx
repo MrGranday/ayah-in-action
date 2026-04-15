@@ -180,34 +180,34 @@ export function HistoryClient({ notes }: HistoryClientProps) {
               <div className="grid md:grid-cols-2 gap-8 mb-8 pt-4 border-t border-outline-variant/5">
                 <div className="space-y-4">
                   <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">Archival Month</span>
-                  <div className="relative">
+                  <div className="relative group">
                     <select 
                       value={selectedMonth} 
                       onChange={(e) => updateParams({ month: e.target.value })}
-                      className="w-full h-12 rounded-xl bg-surface-container-highest/20 border border-outline-variant/10 px-4 font-body text-sm appearance-none outline-none focus:border-primary/40 transition-all"
+                      className="w-full h-12 rounded-xl bg-surface-container-high border border-outline-variant/20 px-4 font-body text-sm appearance-none outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/5 transition-all text-on-surface cursor-pointer hover:bg-surface-container-highest"
                     >
-                      <option value="all">All Months</option>
+                      <option value="all" className="bg-surface text-on-surface">All Months</option>
                       {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((m, i) => (
-                        <option key={m} value={(i + 1).toString()}>{m}</option>
+                        <option key={m} value={(i + 1).toString()} className="bg-surface text-on-surface">{m}</option>
                       ))}
                     </select>
-                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/30 pointer-events-none" />
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/30 pointer-events-none group-focus-within:text-primary transition-colors" />
                   </div>
                 </div>
                 <div className="space-y-4">
                   <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">Year</span>
-                  <div className="relative">
+                  <div className="relative group">
                     <select 
                       value={selectedYear} 
                       onChange={(e) => updateParams({ year: e.target.value })}
-                      className="w-full h-12 rounded-xl bg-surface-container-highest/20 border border-outline-variant/10 px-4 font-body text-sm appearance-none outline-none focus:border-primary/40 transition-all"
+                      className="w-full h-12 rounded-xl bg-surface-container-high border border-outline-variant/20 px-4 font-body text-sm appearance-none outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/5 transition-all text-on-surface cursor-pointer hover:bg-surface-container-highest"
                     >
-                      <option value="all">Any Year</option>
+                      <option value="all" className="bg-surface text-on-surface">Any Year</option>
                       {[2024, 2025, 2026].map(y => (
-                        <option key={y} value={y.toString()}>{y}</option>
+                        <option key={y} value={y.toString()} className="bg-surface text-on-surface">{y}</option>
                       ))}
                     </select>
-                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/30 pointer-events-none" />
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/30 pointer-events-none group-focus-within:text-primary transition-colors" />
                   </div>
                 </div>
               </div>
