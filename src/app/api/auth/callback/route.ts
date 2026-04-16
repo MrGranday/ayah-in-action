@@ -136,38 +136,76 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Fallback: call the specific QF profile endpoint if name or email are missing
-  // We use the same pattern as 'note' and 'activity_day' scopes (x-auth-token + x-client-id)
+  // Fallback: call QF profile endpoints to get the real display name
+  // Priority: /auth/v2/profile (returns first_name/last_name) → /auth/v1/me → /userinfo
   if ((!userName || !userEmail) && tokens.access_token) {
     try {
-      console.log('[Auth/Callback] Fetching /auth/v1/me Profile for missing fields');
-      const profileResponse = await fetch(`${qfConfig.apiBaseUrl}/auth/v1/me`, {
-        headers: { 
+      // ── Try v2 profile first (needs user.profile.read scope) ──────────────
+      console.log('[Auth/Callback] Fetching /auth/v2/profile for real name');
+      const v2Res = await fetch(`${qfConfig.apiBaseUrl}/auth/v2/profile`, {
+        headers: {
           'x-auth-token': tokens.access_token as string,
           'x-client-id': qfConfig.clientId,
         },
       });
 
-      if (profileResponse.ok) {
-        const profileData = await profileResponse.json() as Record<string, unknown>;
-        console.log('[Auth/Callback] Profile response fields:', Object.keys(profileData));
-        
-        // Map QF specific fields or standard OIDC fields if present
-        userSub ??= (profileData.id ?? profileData.sub) as string | undefined;
-        userName ??= (profileData.name ?? profileData.full_name ?? profileData.given_name) as string | undefined;
-        userEmail ??= profileData.email as string | undefined;
-        userPicture ??= (profileData.picture ?? profileData.profile_picture) as string | undefined;
+      if (v2Res.ok) {
+        const v2Data = await v2Res.json() as Record<string, unknown>;
+        console.log('[Auth/Callback] v2 profile fields:', Object.keys(v2Data));
+        userSub ??= (v2Data.id ?? v2Data.sub) as string | undefined;
+        // Build full name from first_name + last_name if available
+        const firstName = v2Data.first_name as string | undefined;
+        const lastName = v2Data.last_name as string | undefined;
+        if (!userName) {
+          if (firstName || lastName) {
+            userName = [firstName, lastName].filter(Boolean).join(' ');
+          } else {
+            userName = (v2Data.name ?? v2Data.full_name ?? v2Data.username ?? v2Data.preferred_username) as string | undefined;
+          }
+        }
+        userEmail ??= v2Data.email as string | undefined;
+        userPicture ??= (v2Data.picture ?? v2Data.profile_picture ?? v2Data.avatar) as string | undefined;
       } else {
-        console.warn('[Auth/Callback] Profile request returned:', profileResponse.status);
-        // Secondary fallback to standard /userinfo if API /me fails
-        const uiRes = await fetch(`${qfConfig.authBaseUrl}/userinfo`, {
-          headers: { Authorization: `Bearer ${tokens.access_token}` },
+        console.warn('[Auth/Callback] v2 profile returned:', v2Res.status, '— trying v1/me');
+        // ── Try v1/me fallback ──────────────────────────────────────────────
+        const v1Res = await fetch(`${qfConfig.apiBaseUrl}/auth/v1/me`, {
+          headers: {
+            'x-auth-token': tokens.access_token as string,
+            'x-client-id': qfConfig.clientId,
+          },
         });
-        if (uiRes.ok) {
-          const ui = await uiRes.json();
-          userSub ??= ui.sub;
-          userName ??= (ui.name ?? ui.given_name ?? ui.nickname);
-          userEmail ??= ui.email;
+
+        if (v1Res.ok) {
+          const v1Data = await v1Res.json() as Record<string, unknown>;
+          console.log('[Auth/Callback] v1 me fields:', Object.keys(v1Data));
+          userSub ??= (v1Data.id ?? v1Data.sub) as string | undefined;
+          const fn = v1Data.first_name as string | undefined;
+          const ln = v1Data.last_name as string | undefined;
+          if (!userName) {
+            userName = fn || ln
+              ? [fn, ln].filter(Boolean).join(' ')
+              : (v1Data.name ?? v1Data.full_name ?? v1Data.given_name) as string | undefined;
+          }
+          userEmail ??= v1Data.email as string | undefined;
+          userPicture ??= (v1Data.picture ?? v1Data.profile_picture) as string | undefined;
+        } else {
+          console.warn('[Auth/Callback] v1 me returned:', v1Res.status, '— trying /userinfo');
+          // ── Final fallback: OIDC userinfo ──────────────────────────────────
+          const uiRes = await fetch(`${qfConfig.authBaseUrl}/userinfo`, {
+            headers: { Authorization: `Bearer ${tokens.access_token}` },
+          });
+          if (uiRes.ok) {
+            const ui = await uiRes.json();
+            userSub ??= ui.sub;
+            userEmail ??= ui.email;
+            if (!userName) {
+              const fn2 = ui.given_name as string | undefined;
+              const ln2 = ui.family_name as string | undefined;
+              userName = fn2 || ln2
+                ? [fn2, ln2].filter(Boolean).join(' ')
+                : (ui.name ?? ui.nickname ?? ui.preferred_username);
+            }
+          }
         }
       }
     } catch (err) {

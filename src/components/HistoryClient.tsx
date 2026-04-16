@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Search, Filter, X, BookOpen, Mic, Sparkles, Star, Calendar, ArrowRight, Quote, ChevronDown, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
 
 const CATEGORIES = [
   'Patience', 'Gratitude', 'Family', 'Work', 'Anger',
@@ -57,12 +56,34 @@ function HeirloomSelect({
   placeholder: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const selectedLabel = options.find(o => o.value === value)?.label || placeholder;
+
+  const openDropdown = () => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const dropdownHeight = Math.min(options.length * 48 + 16, 260);
+      const showAbove = spaceBelow < dropdownHeight && rect.top > dropdownHeight;
+      setDropdownStyle({
+        position: 'fixed',
+        left: rect.left,
+        width: rect.width,
+        zIndex: 9999,
+        ...(showAbove
+          ? { bottom: window.innerHeight - rect.top + 6 }
+          : { top: rect.bottom + 6 }),
+      });
+    }
+    setIsOpen(true);
+  };
 
   return (
     <div className="relative">
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        ref={buttonRef}
+        onClick={() => (isOpen ? setIsOpen(false) : openDropdown())}
         className="w-full h-12 rounded-xl bg-surface-container-high border border-outline-variant/20 px-4 flex items-center justify-between font-body text-sm text-on-surface hover:bg-surface-container-highest transition-all focus:ring-2 focus:ring-primary/5 outline-none"
       >
         <span className={value === 'all' ? 'text-on-surface-variant/60' : 'text-on-surface'}>
@@ -74,17 +95,21 @@ function HeirloomSelect({
       <AnimatePresence>
         {isOpen && (
           <>
+            {/* Full-screen backdrop to catch outside clicks */}
             <div 
-              className="fixed inset-0 z-40" 
+              className="fixed inset-0"
+              style={{ zIndex: 9998 }}
               onClick={() => setIsOpen(false)} 
             />
             <motion.div
-              initial={{ opacity: 0, y: -10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 4, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.95 }}
-              className="absolute top-full left-0 right-0 z-50 mt-2 bg-surface-container-highest rounded-2xl border border-outline-variant/10 editorial-shadow parchment-texture overflow-hidden"
+              initial={{ opacity: 0, y: -8, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.97 }}
+              transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
+              style={dropdownStyle}
+              className="bg-surface-container-highest rounded-2xl border border-outline-variant/10 editorial-shadow parchment-texture overflow-hidden"
             >
-              <div className="max-h-60 overflow-y-auto py-2">
+              <div className="max-h-64 overflow-y-auto py-2">
                 {options.map((opt) => (
                   <button
                     key={opt.value}
