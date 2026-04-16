@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, Sparkles, Send, X, BookOpen, ChevronRight, Loader2 } from 'lucide-react';
-import { generateWhisper } from '@/app/actions/generateWhisper';
+import { suggestAyahFromChallenge } from '@/app/actions/whisper';
 import { useAyahStore } from '@/stores/useAyahStore';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -35,16 +35,9 @@ export const LifeWhisper = () => {
     setWhisperAyah(null);
     
     try {
-      const response = await generateWhisper(challenge);
-      
-      if (response.error) {
-        if (response.error.toLowerCase().includes('api key')) {
-          toast.error("The Atelier is required. Please set up your API key in The Atelier first.");
-        } else {
-          toast.error(response.error);
-        }
-      } else if (response.data) {
-        setWhisperAyah(response.data as any);
+      const ayah = await suggestAyahFromChallenge(challenge);
+      if (ayah) {
+        setWhisperAyah(ayah);
       } else {
         toast.error("The Whisper didn't find a direct connection. Try rephrasing your challenge.");
       }
