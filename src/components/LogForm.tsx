@@ -69,7 +69,22 @@ export function LogForm({
       });
 
       if (result.success) {
-        toast.success('Reflection Preserved.');
+        // Primary success toast
+        toast.success('Reflection Preserved to the Archive.');
+
+        // If an Echo was generated, show it in a special poetic toast
+        if (result.echo) {
+          const preview = result.echo.length > 90
+            ? result.echo.slice(0, 90) + '\u2026'
+            : result.echo;
+          setTimeout(() => {
+            toast.success(`\u2728 Echo\u2009\u2014\u2009\u201c${preview}\u201d`, {
+              duration: 7000,
+              description: 'Your poetic reflection has been woven into the Timeline.',
+            });
+          }, 600);
+        }
+
         confetti({
           particleCount: 150,
           spread: 80,

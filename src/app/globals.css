@@ -239,3 +239,85 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-primary);
 }
+
+/* ── Sonner Toast Overrides (Heirloom V2) ─────────────────────────── */
+
+[data-sonner-toaster] {
+  --width: 380px;
+}
+
+[data-sonner-toast] {
+  font-family: var(--font-inter), system-ui, sans-serif !important;
+  border-radius: 1rem !important;
+  border: 1px solid var(--color-outline-variant) !important;
+  background: var(--color-surface-container-lowest) !important;
+  color: var(--color-on-surface) !important;
+  box-shadow: 0 8px 32px var(--shadow-color) !important;
+  backdrop-filter: blur(12px);
+  padding: 14px 18px !important;
+}
+
+/* Success — white/green tint */
+[data-sonner-toast][data-type='success'] {
+  background: color-mix(in srgb, var(--color-surface-container-lowest) 92%, var(--color-primary)) !important;
+  border-color: color-mix(in srgb, var(--color-outline-variant) 60%, var(--color-primary)) !important;
+  color: var(--color-on-surface) !important;
+}
+[data-sonner-toast][data-type='success'] [data-icon] svg {
+  color: var(--color-primary) !important;
+}
+
+/* Error — red tint */
+[data-sonner-toast][data-type='error'] {
+  background: color-mix(in srgb, var(--color-surface-container-lowest) 92%, #ef4444) !important;
+  border-color: color-mix(in srgb, var(--color-outline-variant) 60%, #ef4444) !important;
+}
+[data-sonner-toast][data-type='error'] [data-icon] svg,
+[data-sonner-toast][data-type='error'] [data-title] {
+  color: #dc2626 !important;
+}
+
+/* Warning — yellow tint */
+[data-sonner-toast][data-type='warning'] {
+  background: color-mix(in srgb, var(--color-surface-container-lowest) 92%, #ffc641) !important;
+  border-color: color-mix(in srgb, var(--color-outline-variant) 60%, #ffc641) !important;
+}
+[data-sonner-toast][data-type='warning'] [data-icon] svg,
+[data-sonner-toast][data-type='warning'] [data-title] {
+  color: #92400e !important;
+}
+
+/* Info — primary tint */
+[data-sonner-toast][data-type='info'] {
+  background: color-mix(in srgb, var(--color-surface-container-lowest) 92%, var(--color-primary)) !important;
+  border-color: color-mix(in srgb, var(--color-outline-variant) 60%, var(--color-primary)) !important;
+}
+
+[data-sonner-toast] [data-title] {
+  font-family: var(--font-newsreader), serif !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em;
+}
+
+[data-sonner-toast] [data-description] {
+  font-family: var(--font-inter), system-ui, sans-serif !important;
+  font-size: 0.7rem !important;
+  opacity: 0.7;
+  margin-top: 2px;
+}
+
+/* Dark mode overrides */
+[data-theme='dark'] [data-sonner-toast] {
+  background: var(--color-surface-container) !important;
+  border-color: var(--color-outline-variant) !important;
+}
+[data-theme='dark'] [data-sonner-toast][data-type='success'] {
+  background: color-mix(in srgb, var(--color-surface-container) 88%, var(--color-primary)) !important;
+}
+[data-theme='dark'] [data-sonner-toast][data-type='error'] {
+  background: color-mix(in srgb, var(--color-surface-container) 88%, #ef4444) !important;
+}
+[data-theme='dark'] [data-sonner-toast][data-type='warning'] {
+  background: color-mix(in srgb, var(--color-surface-container) 88%, #ffc641) !important;
+}

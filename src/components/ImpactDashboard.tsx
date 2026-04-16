@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Flame, Tag, Trophy, Sparkles, Star, Target, BookOpen } from 'lucide-react';
+import { Flame, Trophy, Sparkles, Star, Target, BookOpen } from 'lucide-react';
 import { StreakHeatmap } from './StreakHeatmap';
 import { ImpactStats } from './ImpactStats';
+import { EchoTimeline } from './EchoTimeline';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { EmptyState } from './EmptyState';
 import { computeAppStreak, parseNoteBody, isAyahInActionNote } from '@/lib/utils';
@@ -229,6 +230,31 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
         transition={{ delay: 0.5 }}
       >
         <ImpactStats notes={notes} />
+      </motion.div>
+
+      {/* ── Echoes of Transformation ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.7 }}
+        className="bg-surface-container-low rounded-2xl border border-outline-variant/10 editorial-shadow parchment-texture overflow-hidden"
+      >
+        <div className="p-6 md:p-8 border-b border-outline-variant/5">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl silk-gradient flex items-center justify-center editorial-shadow">
+              <Sparkles className="w-4 h-4 text-white" />
+            </div>
+            <div>
+              <h3 className="font-serif text-xl text-primary">Echoes of Transformation</h3>
+              <p className="font-body text-[11px] text-on-surface-variant/60 italic">
+                Poetic reflections woven from your real-life applications of the Quran
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="p-6 md:p-8">
+          <EchoTimeline notes={notes} />
+        </div>
       </motion.div>
     </div>
   );

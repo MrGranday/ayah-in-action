@@ -33,6 +33,8 @@ interface ParsedNote {
     translation?: string;
     guidance?: string;
     reflection?: string;
+    // Echo of Application
+    echo?: string | null;
   } | null;
   // ISO string — Date objects cannot cross the RSC Server→Client boundary (React #130)
   date: string;
@@ -379,6 +381,16 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                         &ldquo;{note.logText}&rdquo;
                       </p>
 
+                      {/* Echo of Application */}
+                      {note.metadata?.echo && (
+                        <div className="mt-3 mb-2 flex items-start gap-2 bg-primary/5 rounded-xl px-3 py-2.5 border border-primary/10">
+                          <Sparkles className="w-3 h-3 text-primary/50 mt-0.5 shrink-0" />
+                          <p className="font-serif text-[11px] text-primary/70 italic leading-snug line-clamp-2">
+                            {note.metadata.echo}
+                          </p>
+                        </div>
+                      )}
+
                       {note.metadata?.voiceTranscript && (
                         <div className="flex items-center gap-2 text-primary/60">
                           <Mic className="w-3.5 h-3.5" />
@@ -495,9 +507,22 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                        </div>
                     </div>
                   ) : (
-                    <p className="font-body text-xl md:text-2xl text-on-surface leading-loose italic relative z-10 pl-4 border-l-2 border-primary/20">
-                      &ldquo;{selectedNote.logText}&rdquo;
-                    </p>
+                    <div className="space-y-6">
+                      <p className="font-body text-xl md:text-2xl text-on-surface leading-loose italic relative z-10 pl-4 border-l-2 border-primary/20">
+                        &ldquo;{selectedNote.logText}&rdquo;
+                      </p>
+                      {selectedNote.metadata?.echo && (
+                        <div className="flex items-start gap-3 bg-primary/5 rounded-2xl px-5 py-4 border border-primary/10">
+                          <Sparkles className="w-4 h-4 text-primary/50 mt-0.5 shrink-0" />
+                          <div>
+                            <span className="font-label text-[9px] tracking-[0.2em] uppercase text-primary/40 block mb-1">Echo of Transformation</span>
+                            <p className="font-serif text-base text-primary italic leading-relaxed">
+                              &ldquo;{selectedNote.metadata.echo}&rdquo;
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
 

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Key, Shield, Check, AlertCircle, Trash2, Cpu, Info, X } from 'lucide-react';
 import { saveApiKeys, clearApiKeys, getApiKeyStatus } from '@/app/actions/keys';
 import { Button } from './ui/button';
+import { toast } from 'sonner';
 
 type PreferredModel = 'claude' | 'gpt4o' | 'gemini' | 'groq' | 'hf';
 
@@ -49,6 +50,9 @@ export function ApiKeySettings() {
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
       await refreshStatus();
+      toast.success('AI configuration secured to your session.');
+    } catch {
+      toast.error('Failed to save configuration. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -56,7 +60,7 @@ export function ApiKeySettings() {
 
   // Delete a single key by saving an empty string for it
   const handleDeleteKey = async (provider: 'claude' | 'openai' | 'gemini' | 'groq' | 'hf') => {
-    if (!confirm(`Remove your ${provider === 'claude' ? 'Anthropic' : provider === 'openai' ? 'OpenAI' : provider === 'gemini' ? 'Google' : provider === 'groq' ? 'Groq' : 'Hugging Face'} API key?`)) return;
+    const providerName = provider === 'claude' ? 'Anthropic' : provider === 'openai' ? 'OpenAI' : provider === 'gemini' ? 'Google Gemini' : provider === 'groq' ? 'Groq' : 'Hugging Face';
     setDeletingKey(provider);
     try {
       await saveApiKeys(
@@ -74,16 +78,27 @@ export function ApiKeySettings() {
         :                         { ...prev, hfKey: '' }
       );
       await refreshStatus();
+      toast.warning(`${providerName} key removed from your session.`);
+    } catch {
+      toast.error(`Failed to remove ${providerName} key.`);
     } finally {
       setDeletingKey(null);
     }
   };
 
   const handleClearAll = async () => {
-    if (!confirm('Remove all API keys? Guidance features will be disabled.')) return;
-    await clearApiKeys();
-    setKeys({ claudeKey: '', openaiKey: '', geminiKey: '', groqKey: '', hfKey: '', preferredModel: 'claude' });
-    setStatus({ hasClaude: false, hasOpenAI: false, hasGemini: false, hasGroq: false, hasHf: false });
+    toast.warning('All API keys will be removed from your session.', {
+      action: {
+        label: 'Confirm',
+        onClick: async () => {
+          await clearApiKeys();
+          setKeys({ claudeKey: '', openaiKey: '', geminiKey: '', groqKey: '', hfKey: '', preferredModel: 'claude' });
+          setStatus({ hasClaude: false, hasOpenAI: false, hasGemini: false, hasGroq: false, hasHf: false });
+          toast.success('All keys cleared from session.');
+        },
+      },
+      duration: 8000,
+    });
   };
 
   const MODEL_OPTIONS: { id: PreferredModel; label: string; badge?: string }[] = [

@@ -56,7 +56,23 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           {children}
         </main>
         {mounted && <InstallPrompt />}
-        <Toaster position="bottom-center" />
+        <Toaster
+          position="bottom-center"
+          richColors
+          expand
+          visibleToasts={4}
+          toastOptions={{
+            classNames: {
+              toast: 'aia-toast',
+              success: 'aia-toast-success',
+              error: 'aia-toast-error',
+              warning: 'aia-toast-warning',
+              info: 'aia-toast-info',
+              description: 'aia-toast-description',
+            },
+            duration: 4500,
+          }}
+        />
       </div>
     </ThemeProvider>
   );

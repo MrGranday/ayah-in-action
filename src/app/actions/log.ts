@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { addApplicationNote, postActivityDay } from '@/lib/api';
 import { getTypedSession } from '@/lib/session';
+import { generateEcho } from './generateEcho';
 import type { Category } from '@/types/log';
 
 const LogSchema = z.object({
@@ -26,15 +27,15 @@ export async function saveApplicationLog(formData: {
   translation?: string;
   guidance?: string;
   reflection?: string;
-}) {
+}): Promise<{ success: boolean; noteId?: string; echo?: string; error?: any }> {
   const parsed = LogSchema.safeParse(formData);
   if (!parsed.success) {
     return { success: false, error: parsed.error.flatten() };
   }
 
   const { verseKey, logText, categories, voiceTranscript } = parsed.data;
-  const { 
-    type = 'journal', 
+  const {
+    type = 'journal',
     challenge,
     arabic,
     translation,
@@ -48,11 +49,28 @@ export async function saveApplicationLog(formData: {
     return { success: false, error: 'Not authenticated' };
   }
 
+  // ── Step 1: Try to generate an Echo (with 5-second timeout) ─────────────────
+  let echo: string | undefined;
+  try {
+    const echoResult = await Promise.race([
+      generateEcho({ logText, categories, verseKey }),
+      new Promise<{ error: string }>((resolve) =>
+        setTimeout(() => resolve({ error: 'timeout' }), 5000)
+      ),
+    ]);
+    if ('echo' in echoResult && echoResult.echo) {
+      echo = echoResult.echo;
+    }
+  } catch {
+    // Non-blocking — echo failure never prevents saving the log
+  }
+
+  // ── Step 2: Build note metadata (with echo embedded) ────────────────────────
   const meta = JSON.stringify({
     v: 1,
     app: 'ayah-in-action',
     verseKey,       // Legacy compat
-    verse_key: verseKey, 
+    verse_key: verseKey,
     categories,
     voiceTranscript: voiceTranscript ?? null,
     date: new Date().toLocaleDateString('en-CA'),
@@ -62,7 +80,9 @@ export async function saveApplicationLog(formData: {
     arabic,
     translation,
     guidance,
-    reflection
+    reflection,
+    // Echo of Application
+    echo: echo ?? null,
   });
 
   const noteBody = `${logText}\n\n--- \n*Ayah in Action Archive* \n\`\`\`json\n${meta}\n\`\`\``;
@@ -91,7 +111,7 @@ export async function saveApplicationLog(formData: {
     revalidatePath('/dashboard');
     revalidatePath('/impact');
     revalidatePath('/history');
-    return { success: true, noteId: result.data?.id };
+    return { success: true, noteId: result.data?.id, echo };
   } catch (error) {
     console.error('Error saving application log:', error);
     return { success: false, error: 'Failed to save note' };
