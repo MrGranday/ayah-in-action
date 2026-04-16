@@ -51,15 +51,15 @@ async function getRandomAyah() {
      * the static public data without crashing the server.
      */
     const chapterId = Math.floor(Math.random() * 114) + 1;
-    
+
     // Fetch chapter info for verse count
     const chapRes = await fetch(`https://api.quran.com/api/v4/chapters/${chapterId}`, { cache: 'no-store' });
     if (!chapRes.ok) throw new Error("Chapters API failed");
     const chapData = await chapRes.json();
     const versesCount = chapData.chapter.verses_count;
-    
+
     const verseNum = Math.floor(Math.random() * versesCount) + 1;
-    
+
     // Translation 131 is Clear Quran English, 20 is Sahih International (fallback). Audio 1 is Mishari Alafasy.
     const verseRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${chapterId}:${verseNum}?translations=131,20&audio=1&fields=text_uthmani,text_uthmani_simple`, { cache: 'no-store' });
     if (!verseRes.ok) throw new Error("Verses API failed");
@@ -92,12 +92,12 @@ async function getNotes(accessToken: string) {
     return { data: result.data || [], error: null };
   } catch (error: any) {
     console.error('Failed to fetch notes:', error);
-    return { 
-      data: [], 
-      error: error instanceof ApiError ? { 
-        status: error.status, 
+    return {
+      data: [],
+      error: error instanceof ApiError ? {
+        status: error.status,
         type: error.type,
-        message: error.message 
+        message: error.message
       } : { status: 500, message: String(error) }
     };
   }
@@ -131,7 +131,7 @@ export default async function DashboardPage() {
         </div>
       );
     }
-    
+
     const accessToken = session.accessToken;
     if (!accessToken) {
       redirect('/login');
@@ -143,7 +143,7 @@ export default async function DashboardPage() {
     if (notesError?.type === 'insufficient_scope' || notesError?.status === 403) {
       return (
         <div className="pt-12">
-        <ScopeDoctor missingScopes={['note', 'activity_day']} />
+          <ScopeDoctor missingScopes={['note', 'activity_day']} />
         </div>
       );
     }
@@ -177,13 +177,13 @@ export default async function DashboardPage() {
         <div className="mb-6">
           <DailyGreeting user={user || null} />
         </div>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
           {/* Left Column: Divine Wisdom (Ayah) */}
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-               <span className="font-label text-[10px] tracking-[0.4em] uppercase text-primary/40 block">Today&apos;s Sanctuary</span>
-               <ShuffleAyahButton />
+              <span className="font-label text-[10px] tracking-[0.4em] uppercase text-primary/40 block">Today&apos;s Sanctuary</span>
+              <ShuffleAyahButton />
             </div>
             {ayah && <AyahCard ayah={ayah} />}
           </div>
@@ -199,9 +199,9 @@ export default async function DashboardPage() {
             />
           </div>
         </div>
-        
+
         {/* Floating Life Whisper Guidance */}
-        <LifeWhisper />
+        {/* <LifeWhisper /> */}
       </div>
     );
   } catch (error: any) {
