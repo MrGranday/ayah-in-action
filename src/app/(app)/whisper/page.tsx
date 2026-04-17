@@ -2,13 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Send, Loader2, BookOpen, Quote, ChevronRight, History, AlertCircle, Bookmark, Play, Pause, Volume2 } from 'lucide-react';
+import { Sparkles, Send, Loader2, BookOpen, Quote, ChevronRight, History, AlertCircle, Bookmark, Play, Pause } from 'lucide-react';
 import { generateWhisper } from '@/app/actions/generateWhisper';
 import { getApiKeyStatus } from '@/app/actions/keys';
 import { getWhisperHistory } from '@/app/actions/whisper';
 import { saveApplicationLog } from '@/app/actions/log';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
 import Link from 'next/link';
@@ -24,10 +23,11 @@ export default function WhisperPage() {
   const [savingNote, setSavingNote] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+  const [visibleCount, setVisibleCount] = useState(5);
 
   useEffect(() => {
     getApiKeyStatus().then(res => setKeysActive(res.hasClaude || res.hasOpenAI || res.hasGemini || res.hasGroq || res.hasHf));
-    getWhisperHistory().then(setHistory);
+    getWhisperHistory().then((h) => { setHistory(h); setVisibleCount(5); });
   }, []);
 
   // Pre-instantiate audio object when result changes
@@ -50,7 +50,6 @@ export default function WhisperPage() {
       toast.error("Audio is still loading or not available");
       return;
     }
-    
     if (isPlaying) {
       audio.pause();
       setIsPlaying(false);
@@ -70,12 +69,7 @@ export default function WhisperPage() {
       else {
         setResult(res.data);
         setFreeTierNotice(!!res.freeTierNotice);
-        // Reset audio state for new result
-        if (audio) {
-          audio.pause();
-          setAudio(null);
-          setIsPlaying(false);
-        }
+        if (audio) { audio.pause(); setAudio(null); setIsPlaying(false); }
         confetti({
           particleCount: 100,
           spread: 70,
@@ -100,7 +94,6 @@ export default function WhisperPage() {
         categories: ['Reflection'],
         type: 'whisper',
         challenge: challenge,
-        // Detailed metadata for restoration
         arabic: result.arabic,
         translation: result.translation,
         guidance: result.guidance,
@@ -108,14 +101,8 @@ export default function WhisperPage() {
       });
       if (res.success) {
         toast.success('Whisper preserved in your legacy.');
-        confetti({
-           particleCount: 150,
-           spread: 70,
-           origin: { y: 0.6 },
-           colors: ['#004c3b', '#d4a017']
-        });
-        // Refresh history
-        getWhisperHistory().then(setHistory);
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#004c3b', '#d4a017'] });
+        getWhisperHistory().then((h) => { setHistory(h); setVisibleCount(5); });
       } else {
         toast.error('The archive is full or unreachable.');
       }
@@ -128,17 +115,17 @@ export default function WhisperPage() {
 
   return (
     <div className="min-h-screen bg-surface parchment-texture overflow-hidden">
-      <div className="max-w-[1400px] mx-auto px-8 md:px-16 py-12 lg:py-20">
-        
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-8 md:px-16 py-12 lg:py-20">
+
         {/* Asymmetrical Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
-          
+
           {/* Left Column: Challenge Input & Recent guidance history */}
           <div className="lg:col-span-5 space-y-12">
             <header className="space-y-4">
               <h1 className="font-serif text-5xl md:text-7xl text-primary leading-tight">Life Whisper</h1>
               <p className="font-body text-base text-on-surface-variant leading-relaxed max-w-md italic">
-                Speak your heart's weights, and receive the Quran's timeless guidance tailored for your specific moment.
+                Speak your heart&apos;s weights, and receive the Quran&apos;s timeless guidance tailored for your specific moment.
               </p>
             </header>
 
@@ -186,7 +173,7 @@ export default function WhisperPage() {
                    </motion.div>
                  )}
 
-                 {/* Local History Subsection */}
+                 {/* Recent Guidance History — paginated 5 at a time */}
                  <div className="pt-12">
                     <div className="flex items-center gap-3 mb-8">
                        <History className="w-4 h-4 text-primary/40" />
@@ -195,35 +182,49 @@ export default function WhisperPage() {
                     <div className="space-y-4">
                        {history.length === 0 ? (
                          <p className="text-[10px] italic text-on-surface-variant/30 px-2 tracking-widest uppercase">No whisper threads found.</p>
-                       ) : history.map((h, i) => (
-                         <motion.button
-                            key={h.id}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.1 }}
-                            onClick={() => {
-                               // Standardize the result object from history
-                               const meta = h.metadata;
-                               setResult({
-                                 ...meta,
-                                 verse_key: meta.verse_key || meta.verseKey || "1:1",
-                                 guidance: meta.guidance || meta.logText?.split(' | ')[0] || '',
-                                 reflection: meta.reflection || meta.logText?.split(' | ')[1] || ''
-                               });
-                               setChallenge(meta.challenge || '');
-                            }}
-                            className="w-full text-left p-6 rounded-[2rem] bg-surface-container-low border-b-2 border-outline-variant/5 hover:bg-surface-container-high transition-all group flex items-start gap-4"
-                         >
-                            <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center text-primary/30 group-hover:text-primary transition-colors">
-                               <Bookmark className="w-3.5 h-3.5" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                               <p className="text-xs font-serif text-primary truncate mb-1">{h.metadata.challenge || 'Untyped Challenge'}</p>
-                               <p className="text-[9px] font-label text-on-surface-variant/50 uppercase tracking-widest">{new Date(h.date).toLocaleDateString()}</p>
-                            </div>
-                            <ChevronRight className="w-4 h-4 text-primary/10 group-hover:text-primary transition-colors" />
-                         </motion.button>
-                       ))}
+                       ) : (
+                         <>
+                           {history.slice(0, visibleCount).map((h, i) => (
+                             <motion.button
+                                key={h.id}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: Math.min(i, 4) * 0.08 }}
+                                onClick={() => {
+                                   const meta = h.metadata;
+                                   setResult({
+                                     ...meta,
+                                     verse_key: meta.verse_key || meta.verseKey || "1:1",
+                                     guidance: meta.guidance || meta.logText?.split(' | ')[0] || '',
+                                     reflection: meta.reflection || meta.logText?.split(' | ')[1] || ''
+                                   });
+                                   setChallenge(meta.challenge || '');
+                                }}
+                                className="w-full text-left p-6 rounded-[2rem] bg-surface-container-low border-b-2 border-outline-variant/5 hover:bg-surface-container-high transition-all group flex items-start gap-4"
+                             >
+                                <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center text-primary/30 group-hover:text-primary transition-colors">
+                                   <Bookmark className="w-3.5 h-3.5" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                   <p className="text-xs font-serif text-primary truncate mb-1">{h.metadata.challenge || 'Untyped Challenge'}</p>
+                                   <p className="text-[9px] font-label text-on-surface-variant/50 uppercase tracking-widest">{new Date(h.date).toLocaleDateString()}</p>
+                                </div>
+                                <ChevronRight className="w-4 h-4 text-primary/10 group-hover:text-primary transition-colors" />
+                             </motion.button>
+                           ))}
+
+                           {visibleCount < history.length && (
+                             <motion.button
+                               initial={{ opacity: 0 }}
+                               animate={{ opacity: 1 }}
+                               onClick={() => setVisibleCount(v => v + 5)}
+                               className="w-full py-3 rounded-2xl border border-outline-variant/10 text-[9px] font-bold tracking-[0.25em] uppercase text-primary/40 hover:text-primary hover:border-primary/20 transition-all"
+                             >
+                               Load 5 More · {history.length - visibleCount} remaining
+                             </motion.button>
+                           )}
+                         </>
+                       )}
                     </div>
                  </div>
                </div>
@@ -234,9 +235,9 @@ export default function WhisperPage() {
           <div className="lg:col-span-7 lg:pt-32 relative">
              <AnimatePresence mode="wait">
                {!result ? (
-                 <motion.div 
-                    initial={{ opacity: 0 }} 
-                    animate={{ opacity: 1 }} 
+                 <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     className="p-16 text-center border-2 border-dashed border-outline-variant/5 rounded-[4rem] flex flex-col items-center justify-center min-h-[500px]"
                  >
                     <BookOpen className="w-16 h-16 text-primary/5 mb-8" />
@@ -269,7 +270,7 @@ export default function WhisperPage() {
                                 </span>
                              </div>
                           </div>
-                          <button 
+                          <button
                              onClick={handleLog}
                              disabled={savingNote}
                              className="flex flex-col items-center gap-2 group transition-all"

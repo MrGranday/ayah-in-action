@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, BookOpen, CalendarDays } from 'lucide-react';
 import { parseNoteBody, isAyahInActionNote } from '@/lib/utils';
@@ -21,6 +22,8 @@ interface EchoTimelineProps {
  * Each Echo is a one-sentence spiritual memoir entry.
  */
 export function EchoTimeline({ notes }: EchoTimelineProps) {
+  const [visibleCount, setVisibleCount] = useState(5);
+
   // Parse notes and extract only those that have an echo
   const echoEntries = notes
     .filter((n) => isAyahInActionNote(n))
@@ -57,7 +60,7 @@ export function EchoTimeline({ notes }: EchoTimelineProps) {
       <div className="absolute left-6 top-0 bottom-0 w-px bg-gradient-to-b from-primary/30 via-primary/20 to-transparent" />
 
       <div className="space-y-8 pl-16">
-        {echoEntries.map((entry, i) => {
+        {echoEntries.slice(0, visibleCount).map((entry, i) => {
           const date = new Date(entry.note.createdAt || entry.note.created_at || 0);
           const verseKey = (entry.metadata as any)?.verse_key || entry.metadata?.verseKey || '';
           const categories = entry.metadata?.categories || [];
@@ -68,7 +71,7 @@ export function EchoTimeline({ notes }: EchoTimelineProps) {
               key={entry.note.id}
               initial={{ opacity: 0, x: -16 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: Math.min(i, 4) * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               className="relative group"
             >
               {/* Timeline node */}
@@ -120,6 +123,21 @@ export function EchoTimeline({ notes }: EchoTimelineProps) {
             </motion.div>
           );
         })}
+
+        {visibleCount < echoEntries.length && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="pt-4"
+          >
+            <button
+              onClick={() => setVisibleCount(v => v + 5)}
+              className="w-full py-4 rounded-2xl border border-outline-variant/10 bg-surface-container-lowest hover:bg-surface-container-low text-[10px] font-bold tracking-[0.2em] uppercase text-primary/60 hover:text-primary transition-all border-dashed editorial-shadow duration-300"
+            >
+              Load 5 More Echoes · {echoEntries.length - visibleCount} remaining
+            </button>
+          </motion.div>
+        )}
       </div>
 
       {/* Tail fade */}

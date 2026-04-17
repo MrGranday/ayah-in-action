@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Search, Filter, X, BookOpen, Mic, Sparkles, Star, Calendar, ArrowRight, Quote, ChevronDown, Plus } from 'lucide-react';
@@ -530,6 +530,27 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                              {selectedNote.metadata.reflection || selectedNote.logText.split(' | ')[1]}
                           </p>
                        </div>
+                       {selectedNote.metadata?.echo && (
+                         <div className="flex items-start gap-3 bg-primary/5 rounded-2xl px-5 py-4 border border-primary/10">
+                           <Sparkles className="w-4 h-4 text-primary/50 mt-0.5 shrink-0" />
+                           <div>
+                             <span className="font-label text-[9px] tracking-[0.2em] uppercase text-primary/40 block mb-1">Echo of Transformation</span>
+                             <p className="font-serif text-base text-primary italic leading-relaxed">
+                               &ldquo;{selectedNote.metadata.echo}&rdquo;
+                             </p>
+                           </div>
+                         </div>
+                       )}
+                    </div>
+                  ) : selectedNote.source === 'qf' ? (
+                    <div className="space-y-4">
+                      <p className="font-body text-xl text-on-surface leading-loose relative z-10 pl-4 border-l-2 border-blue-300/30">
+                        {selectedNote.logText}
+                      </p>
+                      <div className="flex items-center gap-1.5 px-3 py-1 w-fit rounded-full bg-blue-500/10 border border-blue-300/30">
+                        <BookOpen className="w-3 h-3 text-blue-500" />
+                        <span className="text-[8px] font-bold tracking-widest uppercase text-blue-500">Quran.com Note</span>
+                      </div>
                     </div>
                   ) : (
                     <div className="space-y-6">
