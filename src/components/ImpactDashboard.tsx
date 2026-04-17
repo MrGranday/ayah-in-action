@@ -183,7 +183,7 @@ export function ImpactDashboard({ notes, heatmapValues: heatmapValuesProp }: Imp
         </motion.div>
 
         {/* Small Stats Grid */}
-        <div className="grid gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-4 lg:gap-6">
           {[
             { label: 'Total Legacy', value: stats.totalLogs, icon: <BookOpen className="w-4 h-4" />, color: 'bg-primary/5 text-primary' },
             { label: 'Prime Virtue', value: stats.topCategory, icon: <Trophy className="w-4 h-4" />, color: 'bg-gold/10 text-gold' },

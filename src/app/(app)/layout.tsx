@@ -10,7 +10,7 @@ import { Toaster } from 'sonner';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, setUser, setLoading } = useAuthStore();
-  const { sidebarOpen, theme } = useUIStore();
+  const { sidebarOpen, theme, toggleSidebar } = useUIStore();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -47,11 +47,25 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background flex flex-col md:block">
+        
+        {/* Mobile Top Bar */}
+        <div className="md:hidden sticky top-0 z-30 bg-surface-container/80 backdrop-blur-md border-b border-outline-variant/10 px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+             <img src="/icons/icon-192.png" alt="Logo" className="w-8 h-8 rounded-full border border-primary/10" />
+             <span className="font-serif text-lg text-primary">Ayah in Action</span>
+          </div>
+          <button onClick={toggleSidebar} className="p-2 rounded-xl bg-surface-container-low border border-outline-variant/10 text-primary hover:bg-primary/5 transition-all">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+          </button>
+        </div>
+
         <NavSidebar />
+        
         <main
-          className="transition-all duration-300 p-4 md:p-8"
-          style={{ marginLeft: mounted && sidebarOpen ? '240px' : '64px' }}
+          className={`transition-all duration-300 p-4 sm:p-6 md:p-8 flex-1 ${
+             mounted && sidebarOpen ? 'md:ml-[288px]' : 'md:ml-[80px]'
+          }`}
         >
           {children}
         </main>

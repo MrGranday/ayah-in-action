@@ -449,7 +449,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
       {/* â”€â”€ Detail Archive Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <AnimatePresence>
         {selectedNote && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 md:p-8">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 md:p-8">
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -462,36 +462,34 @@ export function HistoryClient({ notes }: HistoryClientProps) {
               initial={{ opacity: 0, scale: 0.95, y: 40 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 40 }}
-              className="relative w-full max-w-2xl bg-surface rounded-[3rem] overflow-hidden editorial-shadow parchment-texture flex flex-col max-h-[90vh]"
+              className="relative w-full max-w-2xl bg-surface rounded-[2rem] md:rounded-[3rem] overflow-hidden editorial-shadow parchment-texture flex flex-col max-h-[90vh]"
             >
               {/* Modal Header */}
-              <div className="p-8 md:p-12 pb-6 flex items-start justify-between">
-                <div>
-                   <div className="flex items-center gap-4 mb-4">
-                      <div className="w-14 h-14 rounded-full silk-gradient flex items-center justify-center text-white editorial-shadow">
-                        <Star className="w-6 h-6 fill-current" />
-                      </div>
-                      <div>
-                        <h2 className="font-serif text-3xl text-primary">{selectedNote.metadata?.verse_key || selectedNote.metadata?.verseKey || 'Source Citation'}</h2>
-                        <div className="flex items-center gap-2 text-on-surface-variant/70">
-                          <Calendar className="w-3.5 h-3.5" />
-                          <span className="font-label text-[10px] tracking-widest uppercase">
-                            {new Date(selectedNote.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
-                          </span>
-                        </div>
-                      </div>
-                   </div>
+              <div className="p-6 md:p-12 pb-4 md:pb-6 flex items-start justify-between gap-4">
+                <div className="flex items-center gap-3 md:gap-4 mb-2 md:mb-4 min-w-0">
+                  <div className="w-10 h-10 md:w-14 md:h-14 shrink-0 rounded-full silk-gradient flex items-center justify-center text-white editorial-shadow">
+                    <Star className="w-5 h-5 md:w-6 md:h-6 fill-current" />
+                  </div>
+                  <div className="min-w-0">
+                    <h2 className="font-serif text-2xl md:text-3xl text-primary truncate">{selectedNote.metadata?.verse_key || selectedNote.metadata?.verseKey || 'Source Citation'}</h2>
+                    <div className="flex items-center gap-2 text-on-surface-variant/70 overflow-hidden">
+                      <Calendar className="w-3.5 h-3.5 shrink-0" />
+                      <span className="font-label text-[9px] md:text-[10px] tracking-widest uppercase truncate">
+                        {new Date(selectedNote.date).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' })}
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 <button 
                   onClick={() => setSelectedNote(null)}
-                  className="w-12 h-12 rounded-full border border-outline-variant/10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-lowest transition-all"
+                  className="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-full border border-outline-variant/10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-lowest transition-all"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
               </div>
 
               {/* Modal Content */}
-              <div className="flex-1 overflow-y-auto px-8 md:px-12 pb-12 space-y-10">
+              <div className="flex-1 overflow-y-auto px-6 md:px-12 pb-8 md:pb-12 space-y-8 md:space-y-10">
                 <div className="relative">
                   <span className="absolute -top-6 -left-4 text-primary/5 select-none opacity-50">
                     <Quote className="w-24 h-24 fill-current" />
