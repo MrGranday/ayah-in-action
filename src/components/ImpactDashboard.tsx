@@ -20,9 +20,11 @@ interface Note {
 
 interface ImpactDashboardProps {
   notes: Note[];
+  /** Pre-computed heatmap values merging AIA notes + QF activity days (two-way sync). */
+  heatmapValues?: Array<{ date: string; count: number }>;
 }
 
-export function ImpactDashboard({ notes }: ImpactDashboardProps) {
+export function ImpactDashboard({ notes, heatmapValues: heatmapValuesProp }: ImpactDashboardProps) {
   const { user } = useAuthStore();
   const router = useRouter();
   const [stats, setStats] = useState({
@@ -98,7 +100,9 @@ export function ImpactDashboard({ notes }: ImpactDashboardProps) {
     });
   }, [notes]);
 
-  const heatmapValues = notes
+  // Use server-provided heatmap (which includes QF activity days for two-way sync)
+  // Fall back to deriving from AIA notes only if prop not provided
+  const heatmapValues = heatmapValuesProp ?? notes
     .filter(n => isAyahInActionNote(n))
     .reduce((acc: { date: string; count: number }[], note) => {
       const date = new Date(note.createdAt || note.created_at || 0).toLocaleDateString('en-CA');

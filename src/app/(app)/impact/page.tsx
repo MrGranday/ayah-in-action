@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { getTypedSession } from '@/lib/session';
-import { getAllNotes } from '@/lib/api';
+import { getAllNotes, getActivityDays } from '@/lib/api';
 import { ImpactDashboard } from '@/components/ImpactDashboard';
 import { PdfExportButton } from '@/components/PdfExportButton';
 import { Metadata } from 'next';
@@ -25,8 +25,6 @@ async function getNotes(accessToken: string) {
     // Stage 2: If we hit the limit, fetch the next 50 for better trend visualization
     if (notes.length === 50) {
       try {
-        // Find the cursor for the next page (assuming the last note's id or similar if the API doesn't provide a specific cursor)
-        // Note: The QF API typically uses the ID of the last element as the cursor for the next page.
         const cursor = notes[notes.length - 1].id;
         const result2 = await getAllNotes(accessToken, cursor, 50);
         notes.push(...(result2.data || []));
@@ -57,7 +55,14 @@ export default async function ImpactPage() {
     redirect('/login');
   }
 
-  const { data: notes, error: notesError } = await getNotes(accessToken || '');
+  // Fetch notes and activity days in parallel
+  const [{ data: notes, error: notesError }, activityDaysResult] = await Promise.all([
+    getNotes(accessToken || ''),
+    getActivityDays(accessToken || '').catch((err) => {
+      console.warn('[Impact] Could not fetch activity days (non-blocking):', err);
+      return { data: [] };
+    }),
+  ]);
 
   if (notesError?.type === 'insufficient_scope' || notesError?.status === 403) {
     return (
@@ -66,6 +71,32 @@ export default async function ImpactPage() {
       </div>
     );
   }
+
+  // Build heatmap values: merge AIA note dates + QF activity day dates
+  // This gives true two-way sync on the heatmap
+  const noteDateCounts: Record<string, number> = {};
+  notes.forEach((n: any) => {
+    const ts = n.createdAt || n.created_at;
+    if (ts) {
+      const key = new Date(ts).toLocaleDateString('en-CA');
+      noteDateCounts[key] = (noteDateCounts[key] || 0) + 1;
+    }
+  });
+
+  // Activity days from QF (includes Quran.com sessions) — each day = 1 activity
+  const activityDates = new Set<string>();
+  (activityDaysResult.data || []).forEach((day: any) => {
+    // QF returns date as 'YYYY-MM-DD' directly
+    if (day.date) activityDates.add(day.date);
+    else if (day.createdAt) activityDates.add(new Date(day.createdAt).toLocaleDateString('en-CA'));
+  });
+
+  // Merge: heatmap cell = max(notes on date, 1 if activity day exists)
+  const allDates = new Set([...Object.keys(noteDateCounts), ...activityDates]);
+  const heatmapValues = Array.from(allDates).map(date => ({
+    date,
+    count: Math.max(noteDateCounts[date] || 0, activityDates.has(date) ? 1 : 0),
+  }));
 
   return (
     <div className="max-w-5xl mx-auto space-y-12 pb-24">
@@ -82,7 +113,7 @@ export default async function ImpactPage() {
         </div>
       </div>
       
-      <ImpactDashboard notes={notes} />
+      <ImpactDashboard notes={notes} heatmapValues={heatmapValues} />
     </div>
   );
 }

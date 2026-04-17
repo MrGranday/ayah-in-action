@@ -29,10 +29,7 @@ export default async function HistoryPage({
   const year = params.year;
   const limit = parseInt(params.limit || '20');
   
-  // If we are filtering by month, the user expects to see ALL for that month.
-  // Since the API doesn't support date-range filtering yet, we fetch a larger 
-  // chunk (100) to ensure we find potential matches for that month within 
-  // the recent history.
+  // If filtering by month we need a larger chunk
   const fetchLimit = month ? 100 : limit;
 
   const cookieStore = await cookies();
@@ -58,28 +55,42 @@ export default async function HistoryPage({
     );
   }
 
-  const appNotesRaw = rawNotes
+  // Sort all notes newest-first
+  const sortedNotes = [...rawNotes].sort((a: any, b: any) => {
+    const da = new Date(a.createdAt || a.created_at || 0).getTime();
+    const db = new Date(b.createdAt || b.created_at || 0).getTime();
+    return db - da;
+  });
+
+  // ── AIA notes: parse metadata ───────────────────────────────────────────────
+  const aiaNotesRaw = sortedNotes
     .filter((n: any) => isAyahInActionNote(n))
-    .sort(
-      (a: any, b: any) => {
-        const da = new Date(a.createdAt || a.created_at || 0).getTime();
-        const db = new Date(b.createdAt || b.created_at || 0).getTime();
-        return db - da;
-      }
-    )
     .map((note: any) => {
       const { logText, metadata } = parseNoteBody(note.body);
       return {
         id: note.id,
         logText,
         metadata,
+        source: 'aia' as const,
         date: new Date(note.createdAt || note.created_at || 0).toISOString(),
       };
     });
 
+  // ── QF-native notes: show as-is (two-way sync) ─────────────────────────────
+  const qfNotesRaw = sortedNotes
+    .filter((n: any) => !isAyahInActionNote(n))
+    .map((note: any) => ({
+      id: note.id,
+      logText: note.body,
+      metadata: null,
+      source: 'qf' as const,
+      date: new Date(note.createdAt || note.created_at || 0).toISOString(),
+    }));
+
+  // ── Fetch verse text for AIA notes ─────────────────────────────────────────
   const uniqueVerseKeys = [
     ...new Set(
-      appNotesRaw.map((n: any) => n.metadata?.verse_key || n.metadata?.verseKey).filter(Boolean)
+      aiaNotesRaw.map((n: any) => n.metadata?.verse_key || n.metadata?.verseKey).filter(Boolean)
     )
   ];
   
@@ -90,7 +101,7 @@ export default async function HistoryPage({
       uniqueVerseKeys.map(async (key) => {
         try {
           const res = await fetch(`https://api.quran.com/api/v4/verses/by_key/${key}?translations=131,20&fields=text_uthmani,text_uthmani_simple`, {
-            next: { revalidate: 86400 } // Cache verse static text for 1 day
+            next: { revalidate: 86400 }
           });
           if (res.ok) {
             const data = await res.json();
@@ -101,22 +112,35 @@ export default async function HistoryPage({
             };
           }
         } catch {
-          // fail silently for individual verse fetches
+          // fail silently
         }
       })
     );
   }
 
-  const appNotes = appNotesRaw.map((note: any) => {
+  // Attach verse text to AIA notes
+  const aiaNotesWithVerses = aiaNotesRaw.map((note: any) => {
     const vKey = note.metadata?.verse_key || note.metadata?.verseKey;
     return {
       ...note,
       ayahTextArabic: vKey ? fetchedVerses[vKey]?.arabic || null : null,
-      ayahTextTranslation: vKey ? fetchedVerses[vKey]?.translation || null : null
+      ayahTextTranslation: vKey ? fetchedVerses[vKey]?.translation || null : null,
     };
   });
 
-  if (appNotes.length === 0) {
+  // QF notes don't have verse data in this context
+  const qfNotesWithVerses = qfNotesRaw.map((note: any) => ({
+    ...note,
+    ayahTextArabic: null,
+    ayahTextTranslation: null,
+  }));
+
+  // Merge: AIA notes + QF notes, sorted by date
+  const allNotes = [...aiaNotesWithVerses, ...qfNotesWithVerses].sort((a, b) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  });
+
+  if (allNotes.length === 0) {
     return (
       <div className="max-w-3xl mx-auto py-12">
         <div className="space-y-2 mb-12">
@@ -149,5 +173,5 @@ export default async function HistoryPage({
     );
   }
 
-  return <HistoryClient notes={appNotes} />;
+  return <HistoryClient notes={allNotes} />;
 }

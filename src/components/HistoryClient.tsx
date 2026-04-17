@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Search, Filter, X, BookOpen, Mic, Sparkles, Star, Calendar, ArrowRight, Quote, ChevronDown, Plus } from 'lucide-react';
@@ -19,6 +19,7 @@ interface Note {
 interface ParsedNote {
   id: string;
   logText: string;
+  source?: 'aia' | 'qf';
   metadata: {
     verse_key?: string;
     verseKey?: string;
@@ -27,15 +28,12 @@ interface ParsedNote {
     date?: string;
     type?: 'journal' | 'whisper';
     challenge?: string;
-    // Whisper specific
     arabic?: string;
     translation?: string;
     guidance?: string;
     reflection?: string;
-    // Echo of Application
     echo?: string | null;
   } | null;
-  // ISO string — Date objects cannot cross the RSC Server→Client boundary (React #130)
   date: string;
   ayahTextArabic?: string | null;
   ayahTextTranslation?: string | null;
@@ -142,7 +140,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
   const [selectedCats, setSelectedCats] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   const [selectedNote, setSelectedNote] = useState<ParsedNote | null>(null);
-  const [filterType, setFilterType] = useState<'all' | 'journal' | 'whisper'>('all');
+  const [filterType, setFilterType] = useState<'all' | 'journal' | 'whisper' | 'qf'>('all');
   
   // URL-driven filters
   const selectedMonth = searchParams.get('month') || 'all';
@@ -169,7 +167,9 @@ export function HistoryClient({ notes }: HistoryClientProps) {
         selectedCats.every((cat) =>
           (note.metadata?.categories || []).includes(cat)
         );
-      const matchType = filterType === 'all' || (note.metadata?.type || 'journal') === filterType;
+      const matchType = filterType === 'all'
+        || (filterType === 'qf' && note.source === 'qf')
+        || (filterType !== 'qf' && note.source !== 'qf' && (note.metadata?.type || 'journal') === filterType);
       
       const noteDate = new Date(note.date);
       const matchMonth = selectedMonth === 'all' || (noteDate.getMonth() + 1).toString() === selectedMonth;
@@ -188,7 +188,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
 
   return (
     <div className="max-w-4xl mx-auto space-y-12">
-      {/* ── Header Area ────────────────────────────────────────────── */}
+      {/* â”€â”€ Header Area â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <span className="font-label text-[10px] tracking-[0.4em] uppercase text-primary/60 block mb-4">
@@ -218,7 +218,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
         </button>
       </div>
 
-      {/* ── Search Bar ─────────────────────────────────────────────── */}
+      {/* â”€â”€ Search Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="relative group">
         <div className="absolute inset-0 bg-primary/5 rounded-2xl blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity" />
         <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant/40 group-focus-within:text-primary transition-colors" />
@@ -239,7 +239,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
         )}
       </div>
 
-      {/* ── Filter Drawer ──────────────────────────────────────────── */}
+      {/* â”€â”€ Filter Drawer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <AnimatePresence>
         {showFilters && (
           <motion.div
@@ -252,7 +252,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
               <div className="flex items-center justify-between mb-6">
                 <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">Filter by Source</span>
                 <div className="flex gap-2">
-                   {(['all', 'journal', 'whisper'] as const).map(t => (
+                   {(['all', 'journal', 'whisper', 'qf'] as const).map(t => (
                       <button
                         key={t}
                         onClick={() => setFilterType(t)}
@@ -262,7 +262,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                             : 'bg-surface-container-highest text-on-surface-variant/60 hover:text-primary'
                         }`}
                       >
-                        {t}
+                        {t === 'qf' ? 'Quran.com' : t}
                       </button>
                    ))}
                 </div>
@@ -332,7 +332,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
         )}
       </AnimatePresence>
 
-      {/* ── Entry Timeline ─────────────────────────────────────────── */}
+      {/* â”€â”€ Entry Timeline â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="relative">
         {/* The center line */}
         <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary/20 via-primary/5 to-transparent hidden md:block" />
@@ -376,7 +376,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                       onClick={() => setSelectedNote(note)}
                       className={cn(
                         "w-full text-left bg-surface-container-lowest rounded-3xl p-8 border transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 group relative overflow-hidden",
-                        note.metadata?.type === 'whisper' ? "border-tertiary/30 bg-tertiary-fixed/5" : "border-outline-variant/10"
+                        note.source === 'qf' ? "border-blue-200/50 bg-blue-50/20" : note.metadata?.type === 'whisper' ? "border-tertiary/30 bg-tertiary-fixed/5" : "border-outline-variant/10"
                       )}
                     >
                       {note.metadata?.type === 'whisper' && (
@@ -391,7 +391,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                       
                       <div className="flex items-center gap-3 mb-6">
                         <div className="w-8 h-8 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center text-[10px] font-bold">
-                          {note.metadata?.verse_key || note.metadata?.verseKey || '—'}
+                          {note.metadata?.verse_key || note.metadata?.verseKey || 'â€”'}
                         </div>
                         <div className="flex gap-1.5">
                            {(note.metadata?.categories || []).slice(0, 2).map((cat) => (
@@ -446,7 +446,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
         )}
       </div>
 
-      {/* ── Detail Archive Modal ──────────────────────────────────────── */}
+      {/* â”€â”€ Detail Archive Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <AnimatePresence>
         {selectedNote && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 md:p-8">
@@ -598,3 +598,4 @@ export function HistoryClient({ notes }: HistoryClientProps) {
     </div>
   );
 }
+
