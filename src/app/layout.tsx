@@ -70,14 +70,19 @@ export const viewport = {
   viewportFit: 'cover',
 };
 
-export default function RootLayout({
+import { getServerSession } from '@/lib/session';
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession();
+
   return (
     <html
-      lang="en"
+      lang={session.isoCode || "en"}
+      dir={session.direction || "ltr"}
       className={`${inter.variable} ${amiri.variable} ${newsreader.variable} h-full antialiased`}
       suppressHydrationWarning
     >

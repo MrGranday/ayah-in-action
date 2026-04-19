@@ -1,4 +1,5 @@
 import { ApiKeySettings } from '@/components/ApiKeySettings';
+import { LanguageSelector } from '@/components/LanguageSelector';
 
 export default function SettingsPage() {
   return (
@@ -23,18 +24,13 @@ export default function SettingsPage() {
           <ApiKeySettings />
         </section>
 
-        {/* Placeholder for other settings */}
-        <section className="opacity-50 pointer-events-none grayscale">
+        <section>
           <div className="flex items-center gap-3 mb-8">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent to-primary/10" />
-            <span className="font-label text-[10px] tracking-widest uppercase text-primary/40">Interface Themes</span>
+            <span className="font-label text-[10px] tracking-widest uppercase text-primary/40">Localization</span>
             <div className="h-px flex-1 bg-gradient-to-l from-transparent to-primary/10" />
           </div>
-          <div className="grid grid-cols-3 gap-6">
-             {[1,2,3].map(i => (
-               <div key={i} className="h-32 rounded-3xl bg-surface-container-low border border-dashed border-outline-variant/20" />
-             ))}
-          </div>
+          <LanguageSelector />
         </section>
       </div>
     </div>

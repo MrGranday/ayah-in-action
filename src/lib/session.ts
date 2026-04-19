@@ -19,7 +19,11 @@ export interface SessionData {
   geminiKey?: string;
   groqKey?: string;
   hfKey?: string;
-  preferredModel?: 'claude' | 'gpt4o' | 'gemini' | 'groq' | 'hf';
+  isoCode?: string;
+  direction?: 'ltr' | 'rtl';
+  translationResourceId?: number;
+  nativeName?: string;
+  preferredModel?: string;
 }
 
 export const sessionOptions: SessionOptions = {

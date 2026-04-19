@@ -124,6 +124,19 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+html {
+  font-size: 16px; /* Desktops */
+}
+
+@media (max-width: 1024px) {
+  html { font-size: 14px; } /* Tablets */
+}
+
+@media (max-width: 768px) {
+  html { font-size: 12.5px; } /* Mobile */
+}
+
+
 /* ── Redesign Utility Classes ─────────────────────────────────────── */
 
 .parchment-texture {

@@ -64,7 +64,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         
         <main
           className={`transition-all duration-300 p-4 sm:p-6 md:p-8 flex-1 ${
-             mounted && sidebarOpen ? 'md:ml-[288px]' : 'md:ml-[80px]'
+             mounted && sidebarOpen ? 'md:ms-[288px]' : 'md:ms-[80px]'
           }`}
         >
           {children}

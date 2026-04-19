@@ -213,7 +213,44 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // ── 7. Persist session ─────────────────────────────────────────────────────
+  // ── 7. Preferences Rehydration ─────────────────────────────────────────────
+  if (tokens.access_token) {
+    try {
+      const { getPreferences } = await import('@/lib/api');
+      const prefsRes = await getPreferences(tokens.access_token as string);
+      
+      let translationId = 131; // Default to The Clear Quran
+      const data = prefsRes.data as any;
+      
+      if (Array.isArray(data)) {
+         const tPref = data.find(p => p.group === 'translations' && p.key === 'selectedTranslations');
+         if (tPref && Array.isArray(tPref.value) && tPref.value.length > 0) translationId = tPref.value[0];
+      } else if (data && data.translations && data.translations.selectedTranslations) {
+         translationId = data.translations.selectedTranslations[0];
+      }
+
+      // Reverse lookup via local Language Configuration map directly, avoiding double external API calls
+      const { LANGUAGE_CONFIG } = await import('@/lib/config/languageMap');
+      const matchedConfig = Object.entries(LANGUAGE_CONFIG).find(([iso, config]) => config.resourceId === translationId);
+      
+      if (matchedConfig) {
+         session.isoCode = matchedConfig[0];
+         session.direction = matchedConfig[1].direction;
+         session.nativeName = matchedConfig[1].nativeName;
+         session.translationResourceId = translationId;
+      } else {
+         // Fallback if the user has a custom ID configured not in our map
+         session.isoCode = 'en';
+         session.direction = 'ltr';
+         session.nativeName = 'English';
+         session.translationResourceId = translationId;
+      }
+    } catch (err) {
+      console.warn('[Auth/Callback] Preferences Rehydration failed (non-critical):', err);
+    }
+  }
+
+  // ── 8. Persist session ─────────────────────────────────────────────────────
   // NOTE: idToken is intentionally NOT stored in session — it's a large JWT that
   // pushes the iron-session cookie over the 4096-byte browser limit.
   // User info has already been extracted from it above.

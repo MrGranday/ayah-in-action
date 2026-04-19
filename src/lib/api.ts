@@ -176,4 +176,27 @@ export async function getActivityDays(
   return { data: result.data || [] };
 }
 
+export async function getPreferences(accessToken: string) {
+  try {
+    const result = await userApiFetch('/preferences', accessToken);
+    return result as { data?: Record<string, any> };
+  } catch (err) {
+    console.error('Failed to get preferences:', err);
+    return { data: {} };
+  }
+}
+
+export async function setPreference(accessToken: string, group: string, key: string, value: any) {
+  try {
+    // mushafId=2 represents the standard Uthmani script preference required for backend validation
+    return await userApiFetch('/preferences?mushafId=2', accessToken, {
+      method: 'POST',
+      body: JSON.stringify({ group, key, value }),
+    });
+  } catch (err) {
+    console.error(`Failed to set preference ${group}:${key}:`, err);
+    throw err;
+  }
+}
+
 export { userApiFetch };

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { FileDown, Loader2, Sparkles } from 'lucide-react';
 import { format } from 'date-fns';
 import { parseNoteBody, isAyahInActionNote } from '@/lib/utils';
+import { useLanguageStore } from '@/stores/useLanguageStore';
 
 interface Note {
   id: string;
@@ -37,11 +38,13 @@ export function PdfExportButton({ notes }: { notes: Note[] }) {
       const uniqueVerseKeys = [...new Set(appNotes.map(n => parseNoteBody(n.body).metadata?.verseKey).filter(Boolean))];
       const fetchedVerses: Record<string, { arabic: string; translation: string }> = {};
 
+      const translationId = useLanguageStore.getState().translationResourceId;
+
       if (uniqueVerseKeys.length > 0) {
         await Promise.all(
           uniqueVerseKeys.map(async (key) => {
             try {
-              const res = await fetch(`https://api.quran.com/api/v4/verses/by_key/${key}?translations=131,20&fields=text_uthmani,text_uthmani_simple`);
+              const res = await fetch(`https://api.quran.com/api/v4/verses/by_key/${key}?translations=${translationId},20&fields=text_uthmani,text_uthmani_simple`);
               if (res.ok) {
                 const data = await res.json();
                 const verse = data.verse;

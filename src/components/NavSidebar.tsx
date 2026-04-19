@@ -54,11 +54,11 @@ export function NavSidebar() {
 
       <aside
         className={cn(
-          'fixed left-0 top-0 h-full z-40 flex flex-col transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]',
-          'border-r bg-surface-container parchment-texture shadow-2xl border-outline-variant/5',
+          'fixed ltr:left-0 rtl:right-0 top-0 h-full z-40 flex flex-col transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]',
+          'ltr:border-r rtl:border-l bg-surface-container parchment-texture shadow-2xl border-outline-variant/5',
           sidebarOpen 
             ? 'translate-x-0 w-[288px]' 
-            : '-translate-x-full md:translate-x-0 w-[288px] md:w-[80px]',
+            : 'ltr:-translate-x-full rtl:translate-x-full md:translate-x-0 w-[288px] md:w-[80px]',
         )}
       >
         {/* Header / Logo Section */}

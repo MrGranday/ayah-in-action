@@ -52,13 +52,17 @@ async function dispatchTool(name: string, args: Record<string, string>): Promise
  * which handles text, translations (with Sahih fallback), and audio in one go.
  */
 async function fetchFullVerseDetails(verseKey: string): Promise<Partial<ProcessedVerse>> {
+  const session = await getServerSession();
+  const tId = session.translationResourceId || 131;
+  const isoCode = session.isoCode || 'en';
+  
   const [chapterId, verseNumber] = verseKey.split(':');
   
   try {
-    // Stage 1: Fetch Chapter info (for names)
-    const chapRes = await fetch(`https://api.quran.com/api/v4/chapters/${chapterId}?language=en`);
-    // Stage 2: Fetch Verse data (Arabic, Translations 131/20, and Audio 1)
-    const verseRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?translations=131,20&audio=1&fields=text_uthmani,text_uthmani_simple`, { cache: 'no-store' });
+    // Stage 1: Fetch Chapter info (for localized names)
+    const chapRes = await fetch(`https://api.quran.com/api/v4/chapters/${chapterId}?language=${isoCode}`);
+    // Stage 2: Fetch Verse data (Arabic, Translatable texts)
+    const verseRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?translations=${tId},20&audio=1&fields=text_uthmani,text_uthmani_simple`, { cache: 'no-store' });
 
     if (!chapRes.ok || !verseRes.ok) throw new Error("API Connection Error");
 
@@ -167,12 +171,7 @@ const TOOLS_GEMINI: FunctionDeclaration[] = [
   }
 ];
 
-const SYSTEM_PROMPT = `You are 'The Whisper', a compassionate spiritual guide for the Ayah in Action app. Your goal is to provide grounded Quranic guidance for a user's life challenge.
 
-IMPORTANT: You MUST use the search_quran tool to find relevant verses. Do not rely solely on your internal knowledge. Once you find a verse, use get_verse_details and get_tafsir to provide a deeply grounded explanation.
-
-Output your final response in this exact JSON structure:
-{ "verse_key": "...", "guidance": "A short, empathetic explanation of why this verse applies", "reflection": "A daily application prompt for the user" }`;
 
 /** 
  * SYNTHESIS_PROMPT: Used for Phase 2 of Groq/HF generation.
@@ -186,6 +185,14 @@ Do not provide any conversational text before or after the JSON.`;
 export async function generateWhisper(challenge: string) {
   const session = await getServerSession();
   const model = session.preferredModel || 'claude';
+  
+  const { getLanguageInstruction } = await import('@/lib/ai/languageInstruction');
+  const SYSTEM_PROMPT = `${getLanguageInstruction(session.isoCode, session.direction)}You are 'The Whisper', a compassionate spiritual guide for the Ayah in Action app. Your goal is to provide grounded Quranic guidance for a user's life challenge.
+
+IMPORTANT: You MUST use the search_quran tool to find relevant verses. Do not rely solely on your internal knowledge. Once you find a verse, use get_verse_details and get_tafsir to provide a deeply grounded explanation.
+
+Output your final response in this exact JSON structure:
+{ "verse_key": "...", "guidance": "A short, empathetic explanation of why this verse applies", "reflection": "A daily application prompt for the user" }`;
 
   // ─── Resolve the correct API key ──────────────────────────────────────────
   let key: string | undefined;

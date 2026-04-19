@@ -33,7 +33,7 @@ const FALLBACK_AYAH = {
 import { ScopeDoctor } from '@/components/ScopeDoctor';
 import { ApiError } from '@/lib/api';
 
-async function getRandomAyah() {
+async function getRandomAyah(tId = 131, isoCode = 'en') {
   try {
     /* 
      * [FIX: API 404 & React Error #130]
@@ -43,9 +43,7 @@ async function getRandomAyah() {
      * 2. Since `api.quran.com/api/v4` is a public API, sending an authenticated pre-live token 
      *    caused a 404/403 internal SDK error ("Token request failed: Not Found").
      * 3. This 404 error destabilized the Next.js SSR build on Vercel, returning a 500 error 
-     *    payload to the browser during redirect.
-     * 4. The browser router crashed trying to parse the 500 error payload into React components,
-     *    resulting in the vague `Minified React error #130` on the client.
+     *    downstream due to uncaught SDK promises interacting with RSC cache bounds.
      * 
      * By using direct fetch(), we sidestep the OAuth SDK completely and reliably fetch 
      * the static public data without crashing the server.
@@ -53,15 +51,15 @@ async function getRandomAyah() {
     const chapterId = Math.floor(Math.random() * 114) + 1;
 
     // Fetch chapter info for verse count
-    const chapRes = await fetch(`https://api.quran.com/api/v4/chapters/${chapterId}`, { cache: 'no-store' });
+    const chapRes = await fetch(`https://api.quran.com/api/v4/chapters/${chapterId}?language=${isoCode}`, { cache: 'no-store' });
     if (!chapRes.ok) throw new Error("Chapters API failed");
     const chapData = await chapRes.json();
     const versesCount = chapData.chapter.verses_count;
 
     const verseNum = Math.floor(Math.random() * versesCount) + 1;
 
-    // Translation 131 is Clear Quran English, 20 is Sahih International (fallback). Audio 1 is Mishari Alafasy.
-    const verseRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${chapterId}:${verseNum}?translations=131,20&audio=1&fields=text_uthmani,text_uthmani_simple`, { cache: 'no-store' });
+    // Dynamically query user's translation ID, fallback to Sahih 20 for completeness
+    const verseRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${chapterId}:${verseNum}?translations=${tId},20&audio=1&fields=text_uthmani,text_uthmani_simple`, { cache: 'no-store' });
     if (!verseRes.ok) throw new Error("Verses API failed");
     const verseData = await verseRes.json();
     const verse = verseData.verse;
@@ -137,7 +135,7 @@ export default async function DashboardPage() {
       redirect('/login');
     }
 
-    const ayah = await getRandomAyah();
+    const ayah = await getRandomAyah(session.translationResourceId || 131, session.isoCode || 'en');
     const { data: notes, error: notesError } = await getNotes(accessToken || '');
 
     if (notesError?.type === 'insufficient_scope' || notesError?.status === 403) {
