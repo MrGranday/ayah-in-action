@@ -169,21 +169,9 @@ export async function getActivityDays(
   accessToken: string,
   limit = 50
 ): Promise<{ data: ActivityDay[] }> {
-  const cappedLimit = Math.min(limit, 50);
-  const params = new URLSearchParams({ limit: String(cappedLimit) });
-  const result = await userApiFetch(`/activity-days?${params}`, accessToken) as { data: ActivityDay[] };
-
-  // If we got a full page, try fetching next page for richer heatmap data
-  if (result.data?.length === cappedLimit) {
-    try {
-      const cursor = result.data[result.data.length - 1].id;
-      const params2 = new URLSearchParams({ limit: String(cappedLimit), cursor });
-      const result2 = await userApiFetch(`/activity-days?${params2}`, accessToken) as { data: ActivityDay[] };
-      return { data: [...result.data, ...(result2.data || [])] };
-    } catch {
-      // pagination failure is non-blocking
-    }
-  }
+  // Limit parameter is not allowed by QF backend for this endpoint.
+  // We fetch without it to prevent 422 errors.
+  const result = await userApiFetch(`/activity-days`, accessToken) as { data: ActivityDay[] };
 
   return { data: result.data || [] };
 }

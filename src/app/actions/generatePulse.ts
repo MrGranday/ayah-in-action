@@ -99,7 +99,7 @@ export async function generatePulse() {
     // 2. Fetch User Bookmarks (and Notes if needed, keeping simple with Bookmarks first)
     let bookmarks: any[] = [];
     try {
-       const bRes: any = await userApiFetch('/bookmarks', session.accessToken);
+       const bRes: any = await userApiFetch('/bookmarks?mushafId=2', session.accessToken);
        bookmarks = bRes.data || bRes || [];
     } catch(err) {
        console.warn("Failed to fetch bookmarks:", err);
