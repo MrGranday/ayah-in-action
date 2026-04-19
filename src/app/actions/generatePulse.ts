@@ -109,7 +109,9 @@ export async function generatePulse() {
     // 2. Fetch User Bookmarks (and Notes if needed, keeping simple with Bookmarks first)
     let bookmarks: any[] = [];
     try {
-       const bRes: any = await userApiFetch('/bookmarks?mushafId=2', session.accessToken);
+       // QF API now requires 'first' for pagination. Without it, we get a 422.
+       // This re-enables the data link so the AI can see the user's history.
+       const bRes: any = await userApiFetch('/bookmarks?mushafId=2&first=20', session.accessToken);
        bookmarks = bRes.data || bRes || [];
     } catch(err) {
        console.warn("Failed to fetch bookmarks:", err);
@@ -129,21 +131,23 @@ export async function generatePulse() {
 
     const { getLanguageInstruction } = await import('@/lib/ai/languageInstruction');
     
-    const SYSTEM_PROMPT = `${getLanguageInstruction(session.isoCode || 'en', session.direction || 'ltr')}You are 'The Ummah Pulse', the collective heartbeat of the Muslim community. You find the intersection between what the global Ummah is reflecting on today, and what the user is carrying in their heart (via their bookmarks).
+    const SYSTEM_PROMPT = `${getLanguageInstruction(session.isoCode || 'en', session.direction || 'ltr')}You are 'The Ummah Pulse', a profound spiritual mirror bridging the collective consciousness of the global Muslim community and the private heart-work of the user. Your voice should be poetic, insightful, and deeply compassionate—matching a premium 'Living Journal' aesthetic.
+     
+    Core Objectives:
+    1. Analyze the themes currently trending in the Ummah (look at community_reflections and themes).
+    2. Cross-reference these with the user's bookmark history.
+    3. Generate a 'personalized_message' that feels like a shared secret between the Divine, the community, and the user.
     
-    Data provided:
-    1. The top 3 verses the Ummah is reflecting on today (with snippets of what they wrote).
-    2. The User's currently bookmarked verses.
-
-    Task:
-    Find any overlap or thematic connection between the user's bookmarks and the Ummah's trending verses.
-    Generate a personalized intersection message (e.g. "Today, thousands are sitting with Al-Baqarah 2:286... You bookmarked this 23 days ago. You are not alone.")
-    If there is direct overlap, use that verse as the "personal_verse". If no overlap, gracefully suggest the top Ummah verse to them as something they should read today.
-
+    Message Guidelines:
+    - Use narrative, reflective language (e.g., "While thousands are currently leaning into the shelter of Al-Kahf, it is no coincidence that you sought refuge in this same verse weeks ago...")
+    - If there is a direct overlap between a community-trending verse and a user bookmark, celebrate that shared heartbeat.
+    - If there is no direct overlap, find a thematic bridge based on the 'themes' provided (e.g., "The community is sitting with themes of hardship today, much like the verses you have been holding in your bookmarks.")
+    - Avoid generic advice. Be specific about the verses provided.
+    
     CRITICAL: YOU MUST strictly output ONLY valid JSON without Markdown blocks. 
     Format:
     {
-       "personalized_message": "The intersection message...",
+       "personalized_message": "A 2-3 sentence narrative of profound connection...",
        "personal_verse": "chapter:verse",
        "trending": [
           { "verse_key": "93:3", "reflection_snippet": "A soul remembered... 'This verse finds me every time...'", "theme": "Sabr" },
@@ -226,7 +230,10 @@ export async function generatePulse() {
            text_uthmani: v.text_uthmani,
            translation: v.translations?.[0]?.text?.replace(/<[^>]*>?/gm, '')
          };
-       } catch { return { verse_key: verseKey }; }
+       } catch(err) { 
+         console.warn(`[Pulse] Metadata fetch failed for ${verseKey}:`, err);
+         return { verse_key: verseKey }; 
+       }
     };
 
     const finalResult = {
