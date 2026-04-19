@@ -517,13 +517,13 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                   {selectedNote.metadata?.type === 'whisper' ? (
                     <div className="space-y-8 relative z-10">
                        <div className="space-y-4">
-                          <h5 className="font-label text-[10px] tracking-[0.3em] uppercase text-primary font-bold px-1 border-l-2 border-primary/20">The Gaze</h5>
+                          <h5 className="font-label text-[10px] tracking-[0.3em] uppercase text-primary font-bold px-1 border-s-2 border-primary/20">The Gaze</h5>
                           <p className="font-body text-base text-on-surface/80 leading-relaxed italic">
                              {selectedNote.metadata.guidance || selectedNote.logText.split(' | ')[0]}
                           </p>
                        </div>
                        <div className="space-y-4">
-                          <h5 className="font-label text-[10px] tracking-[0.3em] uppercase text-secondary font-bold px-1 border-l-2 border-secondary/40">The Manifestation</h5>
+                          <h5 className="font-label text-[10px] tracking-[0.3em] uppercase text-secondary font-bold px-1 border-s-2 border-secondary/40">The Manifestation</h5>
                           <p className="font-body text-base text-on-surface-variant leading-relaxed">
                              {selectedNote.metadata.reflection || selectedNote.logText.split(' | ')[1]}
                           </p>
@@ -542,7 +542,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                     </div>
                   ) : selectedNote.source === 'qf' ? (
                     <div className="space-y-4">
-                      <p className="font-body text-xl text-on-surface leading-loose relative z-10 pl-4 border-l-2 border-blue-300/30">
+                      <p className="font-body text-xl text-on-surface leading-loose relative z-10 ps-4 border-s-2 border-blue-300/30">
                         {selectedNote.logText}
                       </p>
                       <div className="flex items-center gap-1.5 px-3 py-1 w-fit rounded-full bg-blue-500/10 border border-blue-300/30">
@@ -552,7 +552,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                     </div>
                   ) : (
                     <div className="space-y-6">
-                      <p className="font-body text-xl md:text-2xl text-on-surface leading-loose italic relative z-10 pl-4 border-l-2 border-primary/20">
+                      <p className="font-body text-xl md:text-2xl text-on-surface leading-loose italic relative z-10 ps-4 border-s-2 border-primary/20">
                         &ldquo;{selectedNote.logText}&rdquo;
                       </p>
                       {selectedNote.metadata?.echo && (

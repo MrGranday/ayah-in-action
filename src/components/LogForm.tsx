@@ -125,7 +125,7 @@ export function LogForm({
           <Badge className="bg-tertiary-fixed text-on-tertiary-fixed border-none px-3 py-1">{effectiveVerseKey}</Badge>
         </div>
 
-        <p className="font-body text-sm text-on-surface leading-loose italic mb-4 border-l-2 border-primary/20 pl-4">
+        <p className="font-body text-sm text-on-surface leading-loose italic mb-4 border-s-2 border-primary/20 ps-4">
           &ldquo;{existingLogText}&rdquo;
         </p>
 
