@@ -1,5 +1,5 @@
 import { ApiKeySettings } from '@/components/ApiKeySettings';
-import { LanguageSelector } from '@/components/LanguageSelector';
+// import { LanguageSelector } from '@/components/LanguageSelector';
 
 export default function SettingsPage() {
   return (
@@ -24,14 +24,14 @@ export default function SettingsPage() {
           <ApiKeySettings />
         </section>
 
-        <section>
+        {/* <section>
           <div className="flex items-center gap-3 mb-8">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent to-primary/10" />
             <span className="font-label text-[10px] tracking-widest uppercase text-primary/40">Localization</span>
             <div className="h-px flex-1 bg-gradient-to-l from-transparent to-primary/10" />
           </div>
           <LanguageSelector />
-        </section>
+        </section> */}
       </div>
     </div>
   );
