@@ -145,7 +145,7 @@ export default async function HistoryPage({
       <div className="max-w-3xl mx-auto py-12">
         <div className="space-y-2 mb-12">
           <span className="font-label text-xs tracking-[0.3em] uppercase text-primary/40 font-bold">Chronology of Wisdom</span>
-          <h1 className="font-serif text-5xl text-primary">The Archive</h1>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-primary">The Archive</h1>
         </div>
         
         <div className="bg-white rounded-[2.5rem] p-12 md:p-20 border border-outline-variant/10 editorial-shadow parchment-texture text-center space-y-8">
@@ -154,7 +154,7 @@ export default async function HistoryPage({
           </div>
           
           <div className="space-y-4 max-w-sm mx-auto">
-            <h2 className="font-serif text-3xl text-primary">The first entry awaits.</h2>
+            <h2 className="font-serif text-2xl md:text-3xl text-primary">The first entry awaits.</h2>
             <p className="font-body text-on-surface-variant leading-relaxed">
               Every legacy begins with a single reflection. Return to the Sanctuary to preserve your first moment of transcendence.
             </p>

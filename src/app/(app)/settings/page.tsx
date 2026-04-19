@@ -7,7 +7,7 @@ export default function SettingsPage() {
         <span className="font-label text-[10px] tracking-[0.4em] uppercase text-primary/60 block mb-4">
           Configuration
         </span>
-        <h1 className="font-serif text-5xl text-primary mb-4">The Atelier</h1>
+        <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl text-primary mb-4">The Atelier</h1>
         <p className="font-body text-on-surface-variant italic">
           Refine your digital environment and spiritual intelligence.
         </p>

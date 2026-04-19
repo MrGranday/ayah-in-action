@@ -103,7 +103,7 @@ export default async function ImpactPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-4 md:px-0">
         <div className="space-y-2">
           <span className="font-label text-xs tracking-[0.3em] uppercase text-primary/40 font-bold">Spiritual Progress</span>
-          <h1 className="font-serif text-5xl text-primary">The Influence</h1>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-primary">The Influence</h1>
           <p className="font-body text-on-surface-variant max-w-md italic">
             Visualizing the ripples of change created by your daily commitment to the Word.
           </p>

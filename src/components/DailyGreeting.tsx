@@ -22,7 +22,7 @@ export function DailyGreeting({ user }: DailyGreetingProps) {
         The Daily Anchor
       </span>
       
-      <h1 className="font-serif text-3xl md:text-4xl text-on-surface mb-4 leading-tight">
+      <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl text-on-surface mb-4 leading-tight">
         Assalamu Alaikum<span className="text-primary italic font-light">{greeting}</span>
       </h1>
       

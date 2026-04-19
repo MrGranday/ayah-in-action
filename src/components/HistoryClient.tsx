@@ -194,7 +194,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
           <span className="font-label text-[10px] tracking-[0.4em] uppercase text-primary/60 block mb-4">
             Personal Narrative
           </span>
-          <h1 className="font-serif text-5xl text-primary">The Archive</h1>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-primary">The Archive</h1>
           <p className="font-body text-on-surface-variant italic mt-2">
             {notes.length} sacred moment{notes.length !== 1 ? 's' : ''} preserved.
           </p>

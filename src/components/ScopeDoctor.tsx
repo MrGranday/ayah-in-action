@@ -31,7 +31,7 @@ export function ScopeDoctor({ missingScopes }: ScopeDoctorProps) {
                 <span className="font-label text-[10px] tracking-[0.4em] uppercase text-red-600/60 font-bold block mb-4">
                   Security Handshake Restricted
                 </span>
-                <h1 className="font-serif text-4xl md:text-5xl text-primary leading-tight">
+                <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl text-primary leading-tight">
                   Access Required for <br/><span className="italic font-light">The Archive.</span>
                 </h1>
              </div>

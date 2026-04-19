@@ -123,7 +123,7 @@ export default function WhisperPage() {
           {/* Left Column: Challenge Input & Recent guidance history */}
           <div className="lg:col-span-5 space-y-12">
             <header className="space-y-4">
-              <h1 className="font-serif text-5xl md:text-7xl text-primary leading-tight">Life Whisper</h1>
+              <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl lg:text-7xl text-primary leading-tight">Life Whisper</h1>
               <p className="font-body text-base text-on-surface-variant leading-relaxed max-w-md italic">
                 Speak your heart&apos;s weights, and receive the Quran&apos;s timeless guidance tailored for your specific moment.
               </p>
@@ -264,7 +264,7 @@ export default function WhisperPage() {
                                 {(result.verse_key || result.verseKey || "1:1").split(':')[0]}
                              </div>
                              <div>
-                                <h4 className="font-serif text-3xl text-primary">Divine Reflection</h4>
+                                <h4 className="font-serif text-2xl md:text-3xl text-primary">Divine Reflection</h4>
                                 <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant/40">
                                    Quran {result.verse_key || result.verseKey}
                                 </span>
@@ -285,7 +285,7 @@ export default function WhisperPage() {
                        <div className="space-y-8">
                           <div className="relative">
                              <Quote className="absolute -top-10 -left-10 w-24 h-24 text-primary/5" />
-                             <p className="font-arabic text-5xl leading-[2.5] text-primary text-right mb-10 drop-shadow-sm" dir="rtl">
+                             <p className="font-arabic text-3xl md:text-4xl lg:text-5xl leading-[2.5] text-primary text-right mb-10 drop-shadow-sm" dir="rtl">
                                 {result.arabic}
                              </p>
 

@@ -40,7 +40,7 @@ export default function UmmahPulsePage() {
           <div className="w-20 h-20 rounded-full bg-primary/5 flex items-center justify-center text-primary mx-auto">
              <Globe className="w-10 h-10 opacity-70" strokeWidth={1.5} />
           </div>
-          <h1 className="font-serif text-5xl md:text-7xl text-primary leading-tight">The Ummah Pulse</h1>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-7xl text-primary leading-tight">The Ummah Pulse</h1>
           <p className="font-body text-lg text-on-surface-variant leading-relaxed max-w-2xl mx-auto italic">
              The collective heart of the Ummah, meeting yours.
           </p>
@@ -89,7 +89,7 @@ export default function UmmahPulsePage() {
                    
                    {/* Personal Verse Highlight */}
                    <div className="flex-1 w-full p-8 md:p-12 rounded-[2rem] bg-surface-container-low border border-primary/5">
-                      <p className="font-arabic text-3xl md:text-4xl leading-[2.2] text-primary text-right mb-6 drop-shadow-sm" dir="rtl">
+                      <p className="font-arabic text-2xl md:text-3xl lg:text-4xl xl:text-5xl leading-[2.2] text-primary text-right mb-6 drop-shadow-sm" dir="rtl">
                          {pulseData.personal_verse?.text_uthmani || "لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا..."}
                       </p>
                       <h4 className="font-serif text-2xl text-primary mt-8 mb-2">
@@ -104,7 +104,7 @@ export default function UmmahPulsePage() {
                 {/* Trending List */}
                 <div className="max-w-4xl mx-auto pt-12 space-y-10">
                    <div className="text-center space-y-4 mb-16">
-                      <h2 className="font-serif text-3xl md:text-4xl text-primary">Trending with the Ummah</h2>
+                      <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl text-primary">Trending with the Ummah</h2>
                       <p className="font-label text-xs tracking-[0.2em] uppercase text-on-surface-variant font-bold">Collective echoes from global reflections</p>
                    </div>
 
