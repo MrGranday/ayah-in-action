@@ -3,6 +3,7 @@
 import { getServerSession } from '@/lib/session';
 import { qfConfig } from '@/lib/qf-config';
 import { userApiFetch } from '@/lib/api';
+import { parseNoteBody, isAyahInActionNote } from '@/lib/utils';
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
 import { GoogleGenerativeAI } from '@google/generative-ai';
@@ -34,9 +35,6 @@ export async function generatePulse() {
 
   // ----------------------------------------------------------------------------------
   // DYNAMIC AI SELECTION BASED ON "THE ATELIER" (SETTINGS)
-  // The system uses whatever AI the user clicked/selected in The Atelier settings.
-  // This screen and logic are specifically bound to that chosen API. 
-  // It applies the chosen AI across the entire project unconditionally.
   // ----------------------------------------------------------------------------------
   const model = session.preferredModel || 'claude';
   let key: string | undefined;
@@ -52,7 +50,8 @@ export async function generatePulse() {
 
   try {
     // 1. Fetch community trending posts
-    let trendingRes = await fetch(`${qfConfig.apiBaseUrl}/quran-reflect/v1/posts/feed?tab=trending`, {
+    const communityUrl = `${qfConfig.apiBaseUrl}/quran-reflect/v1/posts/feed?tab=trending`;
+    let trendingRes = await fetch(communityUrl, {
       method: 'GET',
       headers: {
         'x-auth-token': session.accessToken,
@@ -60,11 +59,9 @@ export async function generatePulse() {
       }
     });
     
-    // If authenticated fetch fails (e.g. 403, 401), retry as a Public fetch.
-    // Trending community data is often public, and a restricted token can block results.
     if (!trendingRes.ok && (trendingRes.status === 403 || trendingRes.status === 401)) {
       console.warn(`[Pulse] Auth fetch returned ${trendingRes.status}. Retrying as public fetch...`);
-      trendingRes = await fetch(`${qfConfig.apiBaseUrl}/quran-reflect/v1/posts/feed?tab=trending`, {
+      trendingRes = await fetch(communityUrl, {
         method: 'GET',
         headers: {
           'x-client-id': qfConfig.clientId,
@@ -106,15 +103,38 @@ export async function generatePulse() {
       return { error: 'The Ummah is currently quiet. No trending community reflections found at this moment.' };
     }
 
-    // 2. Fetch User Bookmarks (and Notes if needed, keeping simple with Bookmarks first)
-    let bookmarks: any[] = [];
+    // 2. UNIFIED PERSONAL CONTEXT: Bookmarks + Notes (Reflections)
+    let personalContext: any[] = [];
     try {
-       // QF API now requires 'first' for pagination. Without it, we get a 422.
-       // This re-enables the data link so the AI can see the user's history.
+       // Fetch native bookmarks
        const bRes: any = await userApiFetch('/bookmarks?mushafId=2&first=20', session.accessToken);
-       bookmarks = bRes.data || bRes || [];
+       const bookmarks = bRes.data || [];
+       bookmarks.forEach((b: any) => {
+         personalContext.push({
+           verse_key: b.verseKey || `${b.chapterId}:${b.verseNumber}`,
+           type: 'bookmark',
+           date: b.createdAt
+         });
+       });
+
+       // Fetch recent reflections (notes)
+       const nRes: any = await userApiFetch('/notes?limit=20', session.accessToken);
+       const notes = nRes.data || [];
+       notes.forEach((n: any) => {
+         if (isAyahInActionNote(n)) {
+           const { metadata } = parseNoteBody(n.body);
+           const vKey = metadata?.verseKey;
+           if (vKey) {
+              personalContext.push({
+                verse_key: vKey,
+                type: 'reflection',
+                date: n.createdAt
+              });
+           }
+         }
+       });
     } catch(err) {
-       console.warn("Failed to fetch bookmarks:", err);
+       console.warn("[Pulse] Personal context fetch partially failed:", err);
     }
 
     const promptData = {
@@ -123,34 +143,33 @@ export async function generatePulse() {
          community_reflections: v.postBodies,
          themes: v.tags
       })),
-      user_bookmarks: bookmarks.map((b: any) => ({
-         verse_key: b.verseKey || `${b.chapterId}:${b.verseNumber}`,
-         createdAt: b.createdAt
-      }))
+      user_personal_context: personalContext
     };
 
     const { getLanguageInstruction } = await import('@/lib/ai/languageInstruction');
-        const SYSTEM_PROMPT = `${getLanguageInstruction(session.isoCode || 'en', session.direction || 'ltr')}You are 'The Ummah Pulse'. Your goal is to analyze current community trends and connect them to the user's personal bookmark history in a simple, clear, and detailed way.
+    
+    const SYSTEM_PROMPT = `${getLanguageInstruction(session.isoCode || 'en', session.direction || 'ltr')}You are 'The Ummah Pulse'. Your goal is to analyze current community trends and connect them to the user's personal context (bookmarks and private reflections) in a simple, clear, and detailed way.
      
     Core Objectives:
     1. Identify common themes in the provided community_reflections.
-    2. Check the user_bookmarks for any direct or thematic matches.
+    2. Check the user_personal_context for any direct or thematic matches in their bookmarks or reflections.
     3. Generate a 'personalized_message' that explains why a specific verse was chosen for them today based on these two data points.
     
     Message Guidelines:
     - Be direct and informative.
-    - Explicitly state the connection: "X verses are trending in the community regarding [Topic]. Since you have bookmarked verses about [Topic/Verse ID], this connection was found."
+    - Explicitly state the connection: "X verses are trending in the community regarding [Topic]. Since you recently [reflected on/bookmarked] verses about [Topic/Verse ID], this connection was found."
     - Provide a detailed explanation of why the community is sitting with these verses and how it relates to the user's saved items.
+    - DO NOT say the user has no bookmarks if they have reflections (and vice versa). Treat 'user_personal_context' as their total history.
     - Do not use poetic or flowery language. 
     
     CRITICAL: YOU MUST strictly output ONLY valid JSON without Markdown blocks. 
     Format:
     {
-       "personalized_message": "A clear and detailed explanation of the connection (2-4 sentences)...",
+       "personalized_message": "A clear and detailed explanation of the connection...",
        "personal_verse": "chapter:verse",
        "trending": [
-          { "verse_key": "93:3", "reflection_snippet": "Reflection from community...", "theme": "Sabr" },
-          { "verse_key": "94:5", "reflection_snippet": "Reflection from community...", "theme": "Tawakkul" }
+          { "verse_key": "93:3", "reflection_snippet": "...", "theme": "Sabr" },
+          { "verse_key": "94:5", "reflection_snippet": "...", "theme": "Tawakkul" }
        ]
     }`;
 
@@ -158,10 +177,6 @@ export async function generatePulse() {
     const challenge = JSON.stringify(promptData);
 
     try {
-      // ------------------------------------------------------------------------------
-      // ROUTE TO THE USER'S CHOSEN AI PROVIDER
-      // The system strictly limits this call to whichever API the user configured.
-      // ------------------------------------------------------------------------------
       if (model === 'claude') {
         const anthropic = new Anthropic({ apiKey: key });
         const response = await anthropic.messages.create({
@@ -174,7 +189,6 @@ export async function generatePulse() {
         const jsonMatch = textBlock?.text.match(/\{.*\}/s);
         finalJson = JSON.parse(jsonMatch ? jsonMatch[0] : textBlock?.text || '{}');
       } else if (model === 'gpt4o' || model === 'groq' || model === 'hf') {
-        // Fallback for OpenAI-compatible interfaces as configured in The Atelier
         const isGroq = model === 'groq';
         const isHf = model === 'hf';
         const baseURL = isGroq ? 'https://api.groq.com/openai/v1' : isHf ? 'https://api-inference.huggingface.co/v1/' : undefined;
