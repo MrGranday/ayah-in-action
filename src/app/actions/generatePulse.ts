@@ -52,7 +52,7 @@ export async function generatePulse() {
 
   try {
     // 1. Fetch community trending posts
-    let trendingRes = await fetch(`${qfConfig.apiBaseUrl}/v1/posts/feed?tab=trending`, {
+    let trendingRes = await fetch(`${qfConfig.apiBaseUrl}/quran-reflect/v1/posts/feed?tab=trending`, {
       method: 'GET',
       headers: {
         'x-auth-token': session.accessToken,
@@ -64,7 +64,7 @@ export async function generatePulse() {
     // Trending community data is often public, and a restricted token can block results.
     if (!trendingRes.ok && (trendingRes.status === 403 || trendingRes.status === 401)) {
       console.warn(`[Pulse] Auth fetch returned ${trendingRes.status}. Retrying as public fetch...`);
-      trendingRes = await fetch(`${qfConfig.apiBaseUrl}/v1/posts/feed?tab=trending`, {
+      trendingRes = await fetch(`${qfConfig.apiBaseUrl}/quran-reflect/v1/posts/feed?tab=trending`, {
         method: 'GET',
         headers: {
           'x-client-id': qfConfig.clientId,
