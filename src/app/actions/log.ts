@@ -10,7 +10,7 @@ import type { Category } from '@/types/log';
 
 const LogSchema = z.object({
   verseKey: z.string().regex(/^\d+:\d+$/),
-  logText: z.string().min(1).max(5000),
+  logText: z.string().min(1).max(5000), // Increased from 490 to 5000
   categories: z.array(z.string()).min(1).max(10),
   voiceTranscript: z.string().max(1500).optional(),
 });

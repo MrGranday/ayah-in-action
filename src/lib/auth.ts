@@ -28,7 +28,7 @@ export function generateRandomBytes(length: number): string {
 //   activity_day  → Manage your activity days (read, create, estimate, update, delete)
 //   user          → Manage your user profile data
 export const REQUIRED_SCOPES =
-  'openid offline_access user note activity_day';
+  'openid offline_access user note activity_day post bookmark';
 
 export function getAuthUrl(codeChallenge: string, state: string, nonce: string, forceConsent: boolean = false) {
   const params = new URLSearchParams({

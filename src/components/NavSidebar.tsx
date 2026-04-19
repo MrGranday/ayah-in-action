@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Home, ScrollText, BarChart3, LogOut, Moon, Sun, Menu, X, Sparkles, User as UserIcon } from 'lucide-react';
+import { Home, ScrollText, BarChart3, LogOut, Moon, Sun, Menu, X, Sparkles, User as UserIcon, Globe } from 'lucide-react';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
@@ -15,6 +15,7 @@ export function NavSidebar() {
 
   const navItems = [
     { href: '/dashboard', label: 'Sanctuary', icon: Home },
+    { href: '/pulse', label: 'Ummah Pulse', icon: Globe },
     { href: '/whisper', label: 'Life Whisper Guidance', icon: Sparkles },
     { href: '/history', label: 'The Archive', icon: ScrollText },
     { href: '/impact', label: 'The Influence', icon: BarChart3 },
