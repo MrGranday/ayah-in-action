@@ -93,13 +93,13 @@ export default function UmmahPulsePage() {
                    {/* Personal Verse Highlight */}
                    <div className="flex-1 w-full p-8 md:p-12 rounded-[2rem] bg-surface-container-low border border-primary/5">
                       <p className="font-arabic text-2xl md:text-3xl lg:text-4xl xl:text-5xl leading-[2.2] text-primary text-right mb-6 drop-shadow-sm" dir="rtl">
-                         {pulseData.personal_verse?.text_uthmani || "لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا..."}
+                         {pulseData.personal_verse?.text_uthmani}
                       </p>
                       <h4 className="font-serif text-2xl text-primary mt-8 mb-2">
-                         {pulseData.personal_verse?.chapter_name_english || "Al-Baqarah"} {pulseData.personal_verse?.verse_key}
+                         {pulseData.personal_verse?.chapter_name_english} {pulseData.personal_verse?.verse_key}
                       </h4>
                       <p className="font-body text-lg text-on-surface-variant italic">
-                         "{pulseData.personal_verse?.translation || "Allah does not burden a soul beyond that it can bear..."}"
+                         {pulseData.personal_verse?.translation && `"${pulseData.personal_verse?.translation}"`}
                       </p>
                    </div>
                 </div>
@@ -124,17 +124,19 @@ export default function UmmahPulsePage() {
                                <div className="flex-1 space-y-3">
                                   <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-2">
                                      <h4 className="font-serif text-2xl text-primary">
-                                        {item.meta?.chapter_name_english || "Surah"} {item.meta?.verse_key || item.verse_key}
+                                        {item.meta?.chapter_name_english} {item.meta?.verse_key || item.verse_key}
                                      </h4>
-                                     <span className="px-3 py-1 bg-secondary/10 text-secondary rounded-full font-label text-[10px] tracking-widest uppercase border border-secondary/20">
-                                        {item.theme}
-                                     </span>
+                                     {item.theme && (
+                                       <span className="px-3 py-1 bg-secondary/10 text-secondary rounded-full font-label text-[10px] tracking-widest uppercase border border-secondary/20">
+                                          {item.theme}
+                                       </span>
+                                     )}
                                   </div>
                                   <p className="font-arabic text-2xl leading-loose text-primary text-center md:text-right" dir="rtl">
-                                     {item.meta?.text_uthmani || "مَا وَدَّعَكَ رَبُّكَ وَمَا قَلَىٰ"}
+                                     {item.meta?.text_uthmani}
                                   </p>
                                   <p className="font-body text-base text-on-surface-variant italic">
-                                     "{item.meta?.translation || "Your Lord has not forsaken you, nor does He hate you."}"
+                                     {item.meta?.translation && `"${item.meta?.translation}"`}
                                   </p>
                                </div>
                             </div>
@@ -144,7 +146,7 @@ export default function UmmahPulsePage() {
                                <p className="font-body text-sm leading-relaxed text-on-surface/80 flex items-start gap-3">
                                   <Users className="w-5 h-5 text-primary/30 shrink-0 mt-0.5" />
                                   <span dangerouslySetInnerHTML={{ __html: item.reflection_snippet }} />
-                               </p>
+                                </p>
                             </div>
                          </div>
                       ))}

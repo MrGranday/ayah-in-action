@@ -89,11 +89,9 @@ export async function generatePulse() {
 
     const sortedVerses = Object.values(refCounts).sort((a, b) => b.count - a.count).slice(0, 3);
     
-    // Fallback if no posts
+    // If no community data, do not provide fake data
     if (sortedVerses.length === 0) {
-      sortedVerses.push({ count: 100, refs: { chapterId: 2, from: 286, to: 286 }, postBodies: ['Allah does not burden a soul...'], tags: ['Sabr'] });
-      sortedVerses.push({ count: 80, refs: { chapterId: 93, from: 3, to: 3 }, postBodies: ['A hug from the Divine'], tags: ['Hope'] });
-      sortedVerses.push({ count: 70, refs: { chapterId: 94, from: 5, to: 5 }, postBodies: ['Ease is tucked inside'], tags: ['Tawakkul'] });
+      return { error: 'The Ummah is currently quiet. No trending community reflections found at this moment.' };
     }
 
     // 2. Fetch User Bookmarks (and Notes if needed, keeping simple with Bookmarks first)
@@ -196,16 +194,7 @@ export async function generatePulse() {
     }
 
     if (!finalJson) {
-      // Graceful fallback mimicking the mockup exactly
-      finalJson = {
-        personalized_message: "Today, hundreds of thousands of Muslims are sitting with this verse. You bookmarked it 23 days ago. You are not alone in whatever you are carrying. The community is here with you.",
-        personal_verse: sortedVerses[0]?.refs ? `${sortedVerses[0].refs.chapterId}:${sortedVerses[0].refs.from}` : "2:286",
-        trending: sortedVerses.slice(1, 4).map(v => ({
-           verse_key: v.refs ? `${v.refs.chapterId}:${v.refs.from}` : '93:3',
-           reflection_snippet: v.postBodies[0] ? `A soul remembered... "${v.postBodies[0]}"` : "A soul remembered...",
-           theme: v.tags[0] || "Sabr"
-        }))
-      };
+      return { error: 'Failed to generate personalized Ummah Pulse guidance. Our AI scribes might be busy. Please try again soon.' };
     }
 
     // Now enrich the verses with metadata from public API
