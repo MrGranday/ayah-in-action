@@ -52,16 +52,28 @@ export async function generatePulse() {
 
   try {
     // 1. Fetch community trending posts
-    const trendingRes = await fetch(`${qfConfig.apiBaseUrl}/v1/posts/feed?tab=trending`, {
+    let trendingRes = await fetch(`${qfConfig.apiBaseUrl}/v1/posts/feed?tab=trending`, {
       method: 'GET',
       headers: {
         'x-auth-token': session.accessToken,
         'x-client-id': qfConfig.clientId,
       }
     });
+    
+    // If authenticated fetch fails (e.g. 403, 401), retry as a Public fetch.
+    // Trending community data is often public, and a restricted token can block results.
+    if (!trendingRes.ok && (trendingRes.status === 403 || trendingRes.status === 401)) {
+      console.warn(`[Pulse] Auth fetch returned ${trendingRes.status}. Retrying as public fetch...`);
+      trendingRes = await fetch(`${qfConfig.apiBaseUrl}/v1/posts/feed?tab=trending`, {
+        method: 'GET',
+        headers: {
+          'x-client-id': qfConfig.clientId,
+        }
+      });
+    }
 
     if (!trendingRes.ok) {
-       console.warn('Fallback to public fetch for posts feed...', trendingRes.status);
+       console.warn('[Pulse] Community feed fetch failed:', trendingRes.status);
     }
     const trendingData = trendingRes.ok ? await trendingRes.json() : { data: [] };
     const posts: Post[] = trendingData.data || trendingData || [];

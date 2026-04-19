@@ -169,9 +169,8 @@ export async function getActivityDays(
   accessToken: string,
   limit = 50
 ): Promise<{ data: ActivityDay[] }> {
-  // Limit parameter is not allowed by QF backend for this endpoint.
-  // We fetch without it to prevent 422 errors.
-  const result = await userApiFetch(`/activity-days`, accessToken) as { data: ActivityDay[] };
+  // The QF backend now requires 'first' or 'last' for pagination to prevent unoptimized queries.
+  const result = await userApiFetch(`/activity-days?first=${limit}`, accessToken) as { data: ActivityDay[] };
 
   return { data: result.data || [] };
 }
