@@ -22,7 +22,9 @@ async function searchQuran(query: string) {
 
 async function getVerseDetails(verseKey: string) {
   try {
-    const response = await fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?text_uthmani=true&translations=131&audio=7`);
+    const session = await import('@/lib/session').then(m => m.getServerSession());
+    const tId = session.translationResourceId || 131;
+    const response = await fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?text_uthmani=true&translations=${tId}&audio=7`);
     if (!response.ok) return '{}';
     const data = await response.json();
     return JSON.stringify(data.verse || {});
@@ -187,7 +189,7 @@ export async function generateWhisper(challenge: string) {
   const model = session.preferredModel || 'claude';
   
   const { getLanguageInstruction } = await import('@/lib/ai/languageInstruction');
-  const SYSTEM_PROMPT = `${getLanguageInstruction(session.isoCode, session.direction)}You are 'The Whisper', a compassionate spiritual guide for the Ayah in Action app. Your goal is to provide grounded Quranic guidance for a user's life challenge.
+  const SYSTEM_PROMPT = `${getLanguageInstruction(session.isoCode || 'en', session.direction || 'ltr')}You are 'The Whisper', a compassionate spiritual guide for the Ayah in Action app. Your goal is to provide grounded Quranic guidance for a user's life challenge.
 
 IMPORTANT: You MUST use the search_quran tool to find relevant verses. Do not rely solely on your internal knowledge. Once you find a verse, use get_verse_details and get_tafsir to provide a deeply grounded explanation.
 

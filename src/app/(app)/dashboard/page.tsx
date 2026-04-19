@@ -9,6 +9,7 @@ import { LogForm } from '@/components/LogForm';
 import { ShuffleAyahButton } from '@/components/ShuffleAyahButton';
 import { LifeWhisper } from '@/components/LifeWhisper';
 import { Metadata } from 'next';
+import { t } from '@/lib/i18n/uiStrings';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -135,7 +136,9 @@ export default async function DashboardPage() {
       redirect('/login');
     }
 
-    const ayah = await getRandomAyah(session.translationResourceId || 131, session.isoCode || 'en');
+    const tId = session.translationResourceId || 131;
+    const isoCode = session.isoCode || 'en';
+    const ayah = await getRandomAyah(tId, isoCode);
     const { data: notes, error: notesError } = await getNotes(accessToken || '');
 
     if (notesError?.type === 'insufficient_scope' || notesError?.status === 403) {
@@ -180,7 +183,7 @@ export default async function DashboardPage() {
           {/* Left Column: Divine Wisdom (Ayah) */}
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <span className="font-label text-[10px] tracking-[0.4em] uppercase text-primary/40 block">Today&apos;s Sanctuary</span>
+              <span className="font-label text-[10px] tracking-[0.4em] uppercase text-primary/40 block">{t('todaysSanctuary', isoCode)}</span>
               <ShuffleAyahButton />
             </div>
             {ayah && <AyahCard ayah={ayah} />}

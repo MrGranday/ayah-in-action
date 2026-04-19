@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getQuranClient, getRandomChapter, getRandomVerse } from '@/lib/quran-sdk';
+import { getServerSession } from '@/lib/session';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,11 +26,14 @@ export async function GET(request: NextRequest) {
     const versesCount = chapter.versesCount;
     const verseNum = getRandomVerse(chapterId, versesCount);
     
-    // Fetch verse with English translation (Resource ID 131 is generally Clear Quran or similar popular one)
-    // and audio
+    const session = await getServerSession();
+    const tId = session?.translationResourceId || 131;
+    const isoCode = session?.isoCode || 'en';
+    
+    // Fetch verse
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const verse = await client.verses.findByKey(`${chapterId}:${verseNum}` as any, {
-      translations: [131],
+      translations: [tId],
       audio: 1
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);

@@ -6,11 +6,14 @@ import { Sparkles, Loader2, Globe, Heart, Bookmark, Users } from 'lucide-react';
 import { generatePulse } from '@/app/actions/generatePulse';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { useLanguageStore } from '@/stores/useLanguageStore';
+import { t } from '@/lib/i18n/uiStrings';
 
 export default function UmmahPulsePage() {
   const [pulseData, setPulseData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const isoCode = useLanguageStore((state) => state.isoCode);
 
   useEffect(() => {
     fetchPulse();
@@ -40,9 +43,9 @@ export default function UmmahPulsePage() {
           <div className="w-20 h-20 rounded-full bg-primary/5 flex items-center justify-center text-primary mx-auto">
              <Globe className="w-10 h-10 opacity-70" strokeWidth={1.5} />
           </div>
-          <h1 className="font-serif text-4xl md:text-5xl lg:text-7xl text-primary leading-tight">The Ummah Pulse</h1>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-7xl text-primary leading-tight">{t('pulseHeader', isoCode)}</h1>
           <p className="font-body text-lg text-on-surface-variant leading-relaxed max-w-2xl mx-auto italic">
-             The collective heart of the Ummah, meeting yours.
+             {t('pulseSubheader', isoCode)}
           </p>
         </header>
 
@@ -56,7 +59,7 @@ export default function UmmahPulsePage() {
                className="flex flex-col items-center justify-center py-24 space-y-6"
              >
                 <Loader2 className="w-12 h-12 text-primary/30 animate-spin" />
-                <p className="font-label text-xs tracking-[0.2em] uppercase text-primary/50 animate-pulse">Syncing with global reflections...</p>
+                <p className="font-label text-xs tracking-[0.2em] uppercase text-primary/50 animate-pulse">{t('syncingPulse', isoCode)}</p>
              </motion.div>
           ) : error ? (
              <motion.div
@@ -66,7 +69,7 @@ export default function UmmahPulsePage() {
                className="flex flex-col items-center justify-center py-24 space-y-6"
              >
                 <p className="text-red-500 font-body text-lg max-w-md text-center">{error}</p>
-                <Button onClick={fetchPulse} className="rounded-full editorial-shadow px-8 py-6 silk-gradient text-white">Try Again</Button>
+                <Button onClick={fetchPulse} className="rounded-full editorial-shadow px-8 py-6 silk-gradient text-white">{t('tryAgain', isoCode)}</Button>
              </motion.div>
           ) : pulseData && (
              <motion.div
@@ -104,8 +107,8 @@ export default function UmmahPulsePage() {
                 {/* Trending List */}
                 <div className="max-w-4xl mx-auto pt-12 space-y-10">
                    <div className="text-center space-y-4 mb-16">
-                      <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl text-primary">Trending with the Ummah</h2>
-                      <p className="font-label text-xs tracking-[0.2em] uppercase text-on-surface-variant font-bold">Collective echoes from global reflections</p>
+                      <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl text-primary">{t('trendingWithUmmah', isoCode)}</h2>
+                      <p className="font-label text-xs tracking-[0.2em] uppercase text-on-surface-variant font-bold">{t('collectiveEchoes', isoCode)}</p>
                    </div>
 
                    <div className="space-y-6">

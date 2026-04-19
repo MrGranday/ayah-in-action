@@ -97,12 +97,13 @@ export default async function HistoryPage({
   const fetchedVerses: Record<string, { arabic: string; translation: string }> = {};
 
   const translationId = session.translationResourceId || 131;
+  const isoCode = session.isoCode || 'en';
 
   if (uniqueVerseKeys.length > 0) {
     await Promise.all(
       uniqueVerseKeys.map(async (key) => {
         try {
-          const res = await fetch(`https://api.quran.com/api/v4/verses/by_key/${key}?translations=${translationId},20&fields=text_uthmani,text_uthmani_simple`, {
+          const res = await fetch(`https://api.quran.com/api/v4/verses/by_key/${key}?translations=${translationId},20&language=${isoCode}&fields=text_uthmani,text_uthmani_simple`, {
             next: { revalidate: 86400 }
           });
           if (res.ok) {

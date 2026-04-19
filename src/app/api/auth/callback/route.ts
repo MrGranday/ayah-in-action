@@ -219,7 +219,11 @@ export async function GET(request: NextRequest) {
       const { getPreferences } = await import('@/lib/api');
       const prefsRes = await getPreferences(tokens.access_token as string);
       
-      let translationId = 131; // Default to The Clear Quran
+      // Use dynamic session defaults (131 is Clear Quran English fallback)
+      let translationId = 131; 
+      let isoCode = 'en';
+      let direction: 'ltr' | 'rtl' = 'ltr';
+      let nativeName = 'English';
       const data = prefsRes.data as any;
       
       if (Array.isArray(data)) {

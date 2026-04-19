@@ -7,19 +7,23 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguageStore } from '@/stores/useLanguageStore';
+import { t } from '@/lib/i18n/uiStrings';
 
 export function NavSidebar() {
   const pathname = usePathname();
   const { user, clearUser } = useAuthStore();
   const { theme, setTheme, sidebarOpen, toggleSidebar } = useUIStore();
 
+  const isoCode = useLanguageStore((state) => state.isoCode);
+  
   const navItems = [
-    { href: '/dashboard', label: 'Sanctuary', icon: Home },
-    { href: '/pulse', label: 'Ummah Pulse', icon: Globe },
-    { href: '/whisper', label: 'Life Whisper Guidance', icon: Sparkles },
-    { href: '/history', label: 'The Archive', icon: ScrollText },
-    { href: '/impact', label: 'The Influence', icon: BarChart3 },
-    { href: '/settings', label: 'The Atelier', icon: UserIcon },
+    { href: '/dashboard', label: t('navSanctuary', isoCode), icon: Home },
+    { href: '/pulse', label: t('navPulse', isoCode), icon: Globe },
+    { href: '/whisper', label: t('navWhisper', isoCode), icon: Sparkles },
+    { href: '/history', label: t('navArchive', isoCode), icon: ScrollText },
+    { href: '/impact', label: t('navInfluence', isoCode), icon: BarChart3 },
+    { href: '/settings', label: t('navAtelier', isoCode), icon: UserIcon },
   ];
 
   const handleLogout = async () => {
@@ -177,7 +181,7 @@ export function NavSidebar() {
               <button
                 onClick={toggleTheme}
                 className="p-3 rounded-2xl text-primary/40 hover:text-primary hover:bg-primary/5 transition-all group flex-1"
-                title="Toggle Theme"
+                title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
               >
                 {theme === 'dark' ? <Sun className="w-4 h-4 mx-auto" /> : <Moon className="w-4 h-4 mx-auto" />}
               </button>
@@ -204,7 +208,7 @@ export function NavSidebar() {
               <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
               {sidebarOpen && (
                 <span className="font-label text-[9px] tracking-[0.2em] uppercase text-primary/30 font-bold whitespace-nowrap">
-                  Quran.com Active
+                  {t('quranActive', isoCode)}
                 </span>
               )}
            </div>

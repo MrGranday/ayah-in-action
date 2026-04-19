@@ -40,9 +40,11 @@ export async function suggestAyahFromChallenge(challenge: string): Promise<Proce
 
     // 2. Fetch Full Verse Details (similar to getRandomAyah in page.tsx)
     // We need translations, uthmani text, and audio.
+    const session = await import('@/lib/session').then(m => m.getServerSession());
+    const tId = session.translationResourceId || 131;
     const [chapRes, verseRes] = await Promise.all([
       fetch(`https://api.quran.com/api/v4/chapters/${chapterId}`),
-      fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?translations=131,20&audio=1&fields=text_uthmani,text_uthmani_simple`)
+      fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?translations=${tId},20&audio=1&fields=text_uthmani,text_uthmani_simple`)
     ]);
 
     if (!chapRes.ok || !verseRes.ok) {

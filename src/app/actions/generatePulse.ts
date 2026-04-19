@@ -119,7 +119,7 @@ export async function generatePulse() {
 
     const { getLanguageInstruction } = await import('@/lib/ai/languageInstruction');
     
-    const SYSTEM_PROMPT = `${getLanguageInstruction(session.isoCode, session.direction)}You are 'The Ummah Pulse', the collective heartbeat of the Muslim community. You find the intersection between what the global Ummah is reflecting on today, and what the user is carrying in their heart (via their bookmarks).
+    const SYSTEM_PROMPT = `${getLanguageInstruction(session.isoCode || 'en', session.direction || 'ltr')}You are 'The Ummah Pulse', the collective heartbeat of the Muslim community. You find the intersection between what the global Ummah is reflecting on today, and what the user is carrying in their heart (via their bookmarks).
     
     Data provided:
     1. The top 3 verses the Ummah is reflecting on today (with snippets of what they wrote).
@@ -211,8 +211,8 @@ export async function generatePulse() {
     // Now enrich the verses with metadata from public API
     const fetchMetadata = async (verseKey: string) => {
        try {
-         const tId = session.translationResourceId || 131;
-         const isoCode = session.isoCode || 'en';
+        const tId = session.translationResourceId || 131;
+        const isoCode = session.isoCode || 'en';
          const [chapterId] = verseKey.split(':');
          const chapRes = await fetch(`https://api.quran.com/api/v4/chapters/${chapterId}?language=${isoCode}`);
          const verseRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?translations=${tId},20&audio=1&fields=text_uthmani`);

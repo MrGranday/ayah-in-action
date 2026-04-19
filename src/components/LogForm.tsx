@@ -11,6 +11,8 @@ import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
 import { Sparkles, Edit3, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useAyahStore } from '@/stores/useAyahStore';
+import { useLanguageStore } from '@/stores/useLanguageStore';
+import { t } from '@/lib/i18n/uiStrings';
 
 interface LogFormProps {
   hasLoggedToday: boolean;
@@ -28,6 +30,7 @@ export function LogForm({
   onSaveSuccess,
 }: LogFormProps) {
   const { currentAyah, setHasLoggedToday } = useAyahStore();
+  const isoCode = useLanguageStore((state) => state.isoCode);
   const effectiveVerseKey = currentAyah?.verse_key || verseKey;
 
   const [logText, setLogText] = useState(existingLogText);
@@ -117,11 +120,11 @@ export function LogForm({
       <div className="relative overflow-hidden bg-surface-container-high rounded-2xl border border-primary/10 editorial-shadow p-5 md:p-6 parchment-texture">
         <div className="flex items-center gap-2 mb-4">
           <CheckCircle2 className="text-primary w-5 h-5" />
-          <h3 className="font-serif text-xl text-primary">Preserved Reflection</h3>
+          <h3 className="font-serif text-xl text-primary">{t('preservedReflection', isoCode)}</h3>
         </div>
 
         <div className="mb-6">
-          <span className="font-label text-[10px] tracking-widest text-on-surface-variant uppercase mb-2 block">Source Ayah</span>
+          <span className="font-label text-[10px] tracking-widest text-on-surface-variant uppercase mb-2 block">{t('sourceAyah', isoCode)}</span>
           <Badge className="bg-tertiary-fixed text-on-tertiary-fixed border-none px-3 py-1">{effectiveVerseKey}</Badge>
         </div>
 
@@ -139,14 +142,14 @@ export function LogForm({
 
         <div className="flex items-center justify-between pt-6 border-t border-outline-variant/10">
           <p className="text-[10px] text-on-surface-variant/70 italic uppercase tracking-widest">
-            Your legacy is secure.
+            {t('legacySecure', isoCode)}
           </p>
           <button
             onClick={() => setIsEditing(true)}
             className="flex items-center gap-2 font-label text-[10px] tracking-widest uppercase text-primary hover:text-primary/70 transition-colors font-bold"
           >
             <Edit3 className="w-3.5 h-3.5" />
-            Amend Entry
+            {t('amendEntry', isoCode)}
           </button>
         </div>
       </div>
@@ -157,17 +160,17 @@ export function LogForm({
     <div className="bg-surface-container-low rounded-2xl border border-outline-variant/10 editorial-shadow p-5 md:p-6 parchment-texture">
       <div className="flex items-center gap-2 mb-4">
         <Sparkles className="text-primary w-3.5 h-3.5" />
-        <h3 className="font-serif text-lg text-primary">Capture the Insight</h3>
+        <h3 className="font-serif text-lg text-primary">{t('captureInsight', isoCode)}</h3>
       </div>
 
       <div className="mb-6 group">
         <span className="font-label text-[10px] tracking-widest text-on-surface-variant uppercase mb-2 block group-focus-within:text-primary transition-colors">
-          The Living Experience
+          {t('livingExperience', isoCode)}
         </span>
         <Textarea
           value={logText}
           onChange={(e) => setLogText(e.target.value)}
-          placeholder="Manifested here..."
+          placeholder={t('whisperPlaceholder', isoCode)}
           maxLength={maxChars}
           className="min-h-[100px] bg-surface-container-lowest/50 border-outline-variant/20 rounded-xl p-3 text-sm font-body leading-relaxed focus:bg-surface-container-lowest focus:border-primary/30 transition-all placeholder:italic placeholder:text-on-surface-variant/40"
         />
@@ -179,7 +182,7 @@ export function LogForm({
       </div>
 
       <div className="mb-6">
-        <span className="font-label text-[10px] tracking-widest text-on-surface-variant uppercase mb-3 block">Manifested Virtues</span>
+        <span className="font-label text-[10px] tracking-widest text-on-surface-variant uppercase mb-3 block">{t('manifestedVirtues', isoCode)}</span>
         <div className="flex flex-wrap gap-2">
           {CATEGORIES.map((category) => {
             const isSelected = selectedCategories.includes(category);
@@ -217,11 +220,11 @@ export function LogForm({
         {isSaving ? (
           <span className="flex items-center gap-3">
             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            Preserving...
+            {t('preserving', isoCode)}
           </span>
         ) : (
           <span className="flex items-center gap-2">
-            Preserve to Archive
+            {t('preserveInsight', isoCode)}
             <ArrowRight className="w-4 h-4" />
           </span>
         )}
