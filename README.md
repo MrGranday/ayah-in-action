@@ -34,7 +34,7 @@ Follow these instructions to set up the project locally.
 Clone the repository and install the dependencies:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/MrGranday/ayah-in-action.git
 cd ayah-in-action
 npm install
 # or yarn install / pnpm install
@@ -94,4 +94,4 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 - `npm run lint` - Runs ESLint to catch and fix code issues.
 
 ## 📦 Deployment
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new). When deploying, remember to switch the `QF_ENV` to `production` and provide the live `QURAN_CLIENT_ID` and `QURAN_CLIENT_SECRET`.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://ayah-in-action.vercel.app/). When deploying, remember to switch the `QF_ENV` to `production` and provide the live `QURAN_CLIENT_ID` and `QURAN_CLIENT_SECRET`.
