@@ -2,12 +2,75 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Key, Shield, Check, AlertCircle, Trash2, Cpu, Info, X } from 'lucide-react';
+import { Key, Shield, Check, AlertCircle, Trash2, Cpu, Info, X, ExternalLink, HelpCircle, ChevronDown } from 'lucide-react';
 import { saveApiKeys, clearApiKeys, getApiKeyStatus } from '@/app/actions/keys';
 import { Button } from './ui/button';
 import { toast } from 'sonner';
 
 type PreferredModel = 'claude' | 'gpt4o' | 'gemini' | 'groq' | 'hf';
+
+function ApiKeyGuide() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const guides = [
+    { name: 'Anthropic (Claude)', url: 'https://console.anthropic.com/settings/keys', steps: 'Sign up or log in, click "Create Key", and copy the generated key.' },
+    { name: 'OpenAI (GPT-4o)', url: 'https://platform.openai.com/api-keys', steps: 'Log in to the platform, navigate to "API Keys", and create a new secret key.' },
+    { name: 'Google Gemini', url: 'https://aistudio.google.com/app/apikey', steps: 'Go to Google AI Studio, click "Get API key", and create a new key.' },
+    { name: 'Groq', url: 'https://console.groq.com/keys', steps: 'Log in to the Groq Console, select "API Keys", and create a new key.' },
+    { name: 'Hugging Face', url: 'https://huggingface.co/settings/tokens', steps: 'Go to settings, select "Access Tokens", and create a new token (Read or Write).' },
+  ];
+
+  return (
+    <div className="mb-8 bg-surface-container-low border border-outline-variant/10 rounded-2xl overflow-hidden transition-all relative z-10">
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between p-4 hover:bg-surface-container-high transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+            <HelpCircle className="w-4 h-4" />
+          </div>
+          <div className="text-left">
+            <span className="font-serif text-sm text-primary block">How to get an API Key?</span>
+            <span className="text-[10px] text-on-surface-variant/60 uppercase tracking-widest">Beginner's Guide</span>
+          </div>
+        </div>
+        <ChevronDown className={`w-5 h-5 text-on-surface-variant/50 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="p-4 pt-0 space-y-4">
+              <p className="text-xs text-on-surface-variant/80 leading-relaxed italic border-t border-outline-variant/5 pt-4">
+                If you don't have a technical background, don't worry! Getting an API key is easy. Click the links below, create an account if prompted, generate a new key, and paste it into the fields below.
+              </p>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {guides.map(guide => (
+                  <div key={guide.name} className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/5 hover:border-primary/20 transition-colors group">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-bold text-xs text-primary">{guide.name}</span>
+                      <a href={guide.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-[9px] uppercase tracking-wider text-blue-500 hover:text-blue-600 font-bold transition-colors">
+                        Link <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                      </a>
+                    </div>
+                    <p className="text-[11px] text-on-surface-variant/70 leading-relaxed">
+                      {guide.steps}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export function ApiKeySettings() {
   const [keys, setKeys] = useState<{
@@ -179,6 +242,8 @@ export function ApiKeySettings() {
               </p>
             </div>
           </div>
+
+          <ApiKeyGuide />
 
           {/* Per-provider key inputs */}
           <div className="grid md:grid-cols-3 gap-8">
