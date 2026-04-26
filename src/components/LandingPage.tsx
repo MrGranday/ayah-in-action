@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Mic, BookOpen, LineChart, ChevronRight, Sparkles, Star, Shield, Zap, Heart, ArrowRight } from 'lucide-react';
+import { Mic, BookOpen, LineChart, ChevronRight, Sparkles, Star, Shield, Zap, Heart, ArrowRight, Globe, Cpu, History, LayoutDashboard } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 /* ─── Floating particle canvas ─────────────────────────────────────── */
@@ -131,38 +131,7 @@ export function LandingPage() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const features = [
-    {
-      icon: <BookOpen className="w-5 h-5" />,
-      title: 'Divine Prompting',
-      description: 'Every day begins with a selected Ayah that acts as a mirror to your state.',
-    },
-    {
-      icon: <Mic className="w-5 h-5" />,
-      title: 'Voice Journals',
-      description: 'Capture the whispers of your heart naturally. Transcribed into your archive.',
-    },
-    {
-      icon: <LineChart className="w-5 h-5" />,
-      title: 'Visual Lineage',
-      description: 'Watch your consistency grow through elegant, editorial-style data views.',
-    },
-    {
-      icon: <Shield className="w-5 h-5" />,
-      title: 'Sacred Privacy',
-      description: 'Synced with Quran.com—private, secure, and eternally yours.',
-    },
-    {
-      icon: <Heart className="w-5 h-5" />,
-      title: 'Virtue Tagging',
-      description: 'Organize by Patience, Gratitude, or Sabr to see your spiritual themes.',
-    },
-    {
-      icon: <Zap className="w-5 h-5" />,
-      title: 'Export Legacy',
-      description: 'Transform your digital archive into a beautiful PDF keepsake.',
-    },
-  ];
+  // Capabilities are defined inline in the JSX below
 
   return (
     <div className="min-h-screen parchment-texture bg-surface text-on-surface font-body selection:bg-tertiary-fixed selection:text-on-surface">
@@ -184,8 +153,9 @@ export function LandingPage() {
           
           <nav className="hidden md:flex items-center gap-12">
             {[
-              { label: 'Journal', href: '#features' },
               { label: 'Reflection', href: '#ritual' },
+              { label: 'The Archive', href: '#archive' },
+              { label: 'Features', href: '#capabilities' },
               { label: 'Community', href: '#philosophy' },
             ].map((item) => (
               <a 
@@ -324,7 +294,7 @@ export function LandingPage() {
       </section>
 
       {/* ── Archive stats (Journal) ─────────────────────────────────── */}
-      <section id="features" className="py-32 px-8 overflow-hidden z-10 relative">
+      <section id="archive" className="py-32 px-8 overflow-hidden z-10 relative">
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-24 items-center">
             <Reveal className="order-2 lg:order-1 relative">
@@ -378,6 +348,38 @@ export function LandingPage() {
                 </div>
               </Reveal>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Capabilities Section ─────────────────────────────────────────── */}
+      <section id="capabilities" className="py-32 px-8 bg-surface-container-lowest text-on-surface relative z-10">
+        <div className="container mx-auto">
+          <Reveal className="text-center mb-24 max-w-2xl mx-auto">
+            <span className="font-label text-xs tracking-[0.3em] uppercase text-on-surface-variant block mb-4">The Toolkit</span>
+            <h2 className="font-serif text-4xl md:text-5xl text-primary mb-8">Every feature, designed with intention.</h2>
+            <p className="text-on-surface-variant leading-relaxed text-lg">
+              A comprehensive suite of tools built to honor your spiritual journey.
+            </p>
+          </Reveal>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { icon: <LayoutDashboard className="text-gold" />, title: 'Quranic Dashboard', desc: 'Engage with daily Ayahs, deep translations, and tafsir seamlessly integrated into your workflow.' },
+              { icon: <Mic className="text-primary" />, title: 'Whisper Journals', desc: 'Speak your reflections naturally. We transcribe and weave them perfectly into your archive.' },
+              { icon: <LineChart className="text-primary" />, title: 'Visual Pulse', desc: 'Watch your consistency and spiritual themes grow through elegant, editorial-style data visualizations.' },
+              { icon: <Globe className="text-gold" />, title: 'Global Ummah Plus', desc: 'See the collective impact and heartbeat of a worldwide community striving together.' },
+              { icon: <History className="text-primary" />, title: 'The Archive', desc: 'A deeply searchable, taggable history of every thought, prayer, and milestone you\'ve recorded.' },
+              { icon: <Cpu className="text-gold" />, title: 'The Atelier', desc: 'Bring your own AI intelligence. Securely add your API keys for custom spiritual guidance.' },
+            ].map((feat, i) => (
+              <Reveal key={i} delay={i * 100} className="bg-surface-container-low p-10 rounded-[2rem] editorial-shadow border border-outline-variant/10 hover:border-primary/20 transition-all duration-500 hover:-translate-y-1">
+                <div className="w-12 h-12 rounded-2xl bg-surface-container-high flex items-center justify-center mb-8">
+                  {feat.icon}
+                </div>
+                <h3 className="font-serif text-xl mb-3 text-primary">{feat.title}</h3>
+                <p className="text-on-surface-variant text-sm leading-relaxed">{feat.desc}</p>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
