@@ -1,3 +1,5 @@
+'use client';
+
 import { ApiKeySettings } from '@/components/ApiKeySettings';
 import { LanguagePicker } from '@/components/LanguagePicker';
 import { useLanguageStore } from '@/stores/useLanguageStore';
