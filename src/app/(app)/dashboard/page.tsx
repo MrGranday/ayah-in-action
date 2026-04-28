@@ -73,7 +73,7 @@ export default async function DashboardPage() {
     }
 
     const isoCode = session.isoCode || 'en';
-    
+
     // Use the centralized fetchVerse utility for consistency
     const { fetchVerse } = await import('@/lib/quran/fetchVerse');
     const chapterId = Math.floor(Math.random() * 114) + 1;
@@ -81,7 +81,7 @@ export default async function DashboardPage() {
     const chapData = await chapRes.json();
     const versesCount = chapData.chapter.verses_count;
     const verseNum = Math.floor(Math.random() * versesCount) + 1;
-    
+
     const verseData = await fetchVerse(`${chapterId}:${verseNum}`, isoCode);
     const verse = verseData.verse;
 
@@ -152,7 +152,7 @@ export default async function DashboardPage() {
               hasLoggedToday={hasLoggedThisAyah}
               verseKey={ayah?.verse_key || '1:1'}
               existingLogText={existingLogText}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any this is for the test 
               existingCategories={existingCategories as any}
             />
           </div>
@@ -168,7 +168,7 @@ export default async function DashboardPage() {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const session = await getTypedSession(cookieStore);
     const isoCode = session?.isoCode || 'en';
-    
+
     return (
       <div className="p-8 text-center text-red-500">
         <h1 className="text-2xl font-bold mb-4">{t('error', isoCode)}</h1>
