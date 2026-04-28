@@ -12,7 +12,7 @@ export function ShuffleAyahButton() {
   const router = useRouter();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const resetCurrentAyah = useAyahStore((state) => state.resetCurrentAyah);
-  const isoCode = useLanguageStore((state) => state.isoCode);
+  const isoCode = useLanguageStore((state) => state.activeIsoCode);
 
   const handleShuffle = () => {
     setIsRefreshing(true);

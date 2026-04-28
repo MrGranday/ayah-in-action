@@ -98,22 +98,19 @@ export default async function HistoryPage({
 
   const translationId = session.translationResourceId || 131;
   const isoCode = session.isoCode || 'en';
+  const { t } = await import('@/lib/i18n/uiStrings');
+  const { fetchVerse } = await import('@/lib/quran/fetchVerse');
 
   if (uniqueVerseKeys.length > 0) {
     await Promise.all(
       uniqueVerseKeys.map(async (key) => {
         try {
-          const res = await fetch(`https://api.quran.com/api/v4/verses/by_key/${key}?translations=${translationId},20&language=${isoCode}&fields=text_uthmani,text_uthmani_simple`, {
-            next: { revalidate: 86400 }
-          });
-          if (res.ok) {
-            const data = await res.json();
-            const verse = data.verse;
-            fetchedVerses[key as string] = {
-              arabic: String(verse.text_uthmani || verse.text_uthmani_simple || ''),
-              translation: String(verse.translations?.[0]?.text || '').replace(/<[^>]*>?/gm, '')
-            };
-          }
+          const data = await fetchVerse(key as string, isoCode);
+          const verse = data.verse;
+          fetchedVerses[key as string] = {
+            arabic: String(verse.text_uthmani || ''),
+            translation: String(verse.translations?.[0]?.text || '').replace(/<[^>]*>?/gm, '')
+          };
         } catch {
           // fail silently
         }
@@ -147,8 +144,8 @@ export default async function HistoryPage({
     return (
       <div className="max-w-3xl mx-auto py-12">
         <div className="space-y-2 mb-12">
-          <span className="font-label text-xs tracking-[0.3em] uppercase text-primary/40 font-bold">Chronology of Wisdom</span>
-          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-primary">The Archive</h1>
+          <span className="font-label text-xs tracking-[0.3em] uppercase text-primary/40 font-bold">{t('impactTitle', isoCode)}</span>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-primary">{t('archiveTitle', isoCode)}</h1>
         </div>
         
         <div className="bg-white rounded-[2.5rem] p-12 md:p-20 border border-outline-variant/10 editorial-shadow parchment-texture text-center space-y-8">
@@ -157,9 +154,9 @@ export default async function HistoryPage({
           </div>
           
           <div className="space-y-4 max-w-sm mx-auto">
-            <h2 className="font-serif text-2xl md:text-3xl text-primary">The first entry awaits.</h2>
+            <h2 className="font-serif text-2xl md:text-3xl text-primary">{t('noBookmarks', isoCode)}</h2>
             <p className="font-body text-on-surface-variant leading-relaxed">
-              Every legacy begins with a single reflection. Return to the Sanctuary to preserve your first moment of transcendence.
+              {isoCode === 'en' ? 'Every legacy begins with a single reflection. Return to the Sanctuary to preserve your first moment of transcendence.' : 'كل إرث يبدأ بتأمل واحد. عد إلى المحراب لحفظ أولى لحظاتك الإيمانية.'}
             </p>
           </div>
 
@@ -168,7 +165,7 @@ export default async function HistoryPage({
               href="/dashboard"
               className="inline-flex items-center gap-3 px-8 h-14 rounded-2xl silk-gradient text-white font-label text-xs tracking-[0.2em] uppercase font-bold editorial-shadow hover:scale-[1.02] transition-transform"
             >
-              Return to Sanctuary
+              {t('navSanctuary', isoCode)}
             </Link>
           </div>
         </div>

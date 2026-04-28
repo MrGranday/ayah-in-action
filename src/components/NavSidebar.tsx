@@ -15,7 +15,7 @@ export function NavSidebar() {
   const { user, clearUser } = useAuthStore();
   const { theme, setTheme, sidebarOpen, toggleSidebar } = useUIStore();
 
-  const isoCode = useLanguageStore((state) => state.isoCode);
+  const isoCode = useLanguageStore((state) => state.activeIsoCode);
   
   const navItems = [
     { href: '/dashboard', label: t('navSanctuary', isoCode), icon: Home },
@@ -160,10 +160,10 @@ export function NavSidebar() {
                   {sidebarOpen && (
                     <div className="min-w-0">
                       <p className="text-xs font-serif text-primary truncate">
-                        {user.name?.split(' ')[0] || 'Seeker'}
+                        {user.name?.split(' ')[0] || t('seeker', isoCode)}
                       </p>
                       <p className="text-[9px] font-label tracking-widest uppercase text-on-surface-variant/40 truncate">
-                        {user.email || 'Preserving Wisdom'}
+                        {user.email || t('legacySecure', isoCode)}
                       </p>
                     </div>
                   )}
@@ -181,7 +181,7 @@ export function NavSidebar() {
               <button
                 onClick={toggleTheme}
                 className="p-3 rounded-2xl text-primary/40 hover:text-primary hover:bg-primary/5 transition-all group flex-1"
-                title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                title={theme === 'dark' ? t('lightMode', isoCode) : t('darkMode', isoCode)}
               >
                 {theme === 'dark' ? <Sun className="w-4 h-4 mx-auto" /> : <Moon className="w-4 h-4 mx-auto" />}
               </button>
@@ -189,7 +189,7 @@ export function NavSidebar() {
               <button
                 onClick={handleLogout}
                 className="p-3 rounded-2xl text-primary/40 hover:text-red-500 hover:bg-red-50 transition-all group flex-1"
-                title="Logout"
+                title={t('logout', isoCode)}
               >
                 <LogOut className="w-4 h-4 mx-auto" />
               </button>

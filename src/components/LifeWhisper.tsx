@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, Sparkles, Send, X, BookOpen, ChevronRight, Loader2 } from 'lucide-react';
 import { suggestAyahFromChallenge } from '@/app/actions/whisper';
 import { useAyahStore } from '@/stores/useAyahStore';
+import { useLanguageStore } from '@/stores/useLanguageStore';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -19,6 +20,8 @@ export const LifeWhisper = () => {
     setIsWhisperLoading,
     setCurrentAyah 
   } = useAyahStore();
+  const activeIsoCode = useLanguageStore((state) => state.activeIsoCode);
+  const activeDirection = useLanguageStore((state) => state.config.direction);
   
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -150,12 +153,16 @@ export const LifeWhisper = () => {
                        <BookOpen className="w-4 h-4 text-primary/30" />
                     </div>
                     
-                    <p className="font-amiri text-2xl text-right leading-loose mb-4 text-primary">
-                      {whisperAyah.text_uthmani}
+                    <p className="text-right mb-4">
+                      <span className="quran-text text-primary" dir="rtl" lang="ar">
+                        {whisperAyah.text_uthmani}
+                      </span>
                     </p>
                     
                     <p className="font-serif text-base text-on-surface/90 leading-relaxed italic border-l-2 border-gold/30 pl-4 py-1">
-                      {whisperAyah.translation}
+                      <span dir={activeDirection} lang={activeIsoCode}>
+                        {whisperAyah.translation}
+                      </span>
                     </p>
                   </div>
 

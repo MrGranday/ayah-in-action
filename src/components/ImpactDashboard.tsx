@@ -10,6 +10,9 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { EmptyState } from './EmptyState';
 import { computeAppStreak, parseNoteBody, isAyahInActionNote } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { useLanguageStore } from '@/stores/useLanguageStore';
+import { t } from '@/lib/i18n/uiStrings';
+import { formatNumber } from '@/config/languageConfig';
 
 interface Note {
   id: string;
@@ -116,13 +119,14 @@ export function ImpactDashboard({ notes, heatmapValues: heatmapValuesProp }: Imp
     }, []);
 
   const appNotesCount = notes.filter(n => isAyahInActionNote(n)).length;
+  const isoCode = useLanguageStore((state) => state.activeIsoCode);
 
   if (appNotesCount === 0) {
     return (
       <div className="bg-surface-container-low rounded-[3rem] p-16 md:p-24 border border-outline-variant/10 text-center parchment-texture">
         <EmptyState 
-          title="The Archive Awaits Your Legacy" 
-          description="Your spiritual growth and consistency will be visualized here as you begin preserving your daily reflections."
+          title={t('archiveTitle', isoCode)} 
+          description={t('legacySecure', isoCode)}
         />
       </div>
     );
@@ -132,8 +136,8 @@ export function ImpactDashboard({ notes, heatmapValues: heatmapValuesProp }: Imp
     <div className="space-y-8 max-w-6xl mx-auto pb-12">
       {/* ── Header ── */}
       <div className="text-center space-y-1">
-        <span className="font-label text-[9px] tracking-[0.4em] uppercase text-primary/60 block">Spiritual Momentum</span>
-        <h1 className="font-serif text-2xl md:text-3xl text-primary">The Influence of Wisdom</h1>
+        <span className="font-label text-[9px] tracking-[0.4em] uppercase text-primary/60 block">{t('spiritualMomentum', isoCode)}</span>
+        <h1 className="font-serif text-2xl md:text-3xl text-primary">{t('impactTitle', isoCode)}</h1>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
@@ -154,18 +158,18 @@ export function ImpactDashboard({ notes, heatmapValues: heatmapValuesProp }: Imp
               </div>
               <div>
                 <h2 className="font-serif text-2xl text-primary">
-                  {stats.currentStreak} Day Streak
+                  {formatNumber(stats.currentStreak, isoCode)} {t('dayStreak', isoCode)}
                 </h2>
                 <p className="font-body text-xs text-on-surface-variant italic">
-                  Consistent reflection builds the character of the believer.
+                  {t('legacySecure', isoCode)}
                 </p>
               </div>
             </div>
 
             <div className="space-y-4">
               <div className="flex justify-between items-end">
-                <span className="font-label text-[9px] tracking-widest uppercase text-on-surface-variant font-bold">Monthly Commitment</span>
-                <span className="font-serif text-lg text-primary">{stats.monthlyLogs} <span className="text-sm text-on-surface-variant/50">/ 60</span></span>
+                <span className="font-label text-[9px] tracking-widest uppercase text-on-surface-variant font-bold">{t('streakLabel', isoCode)}</span>
+                <span className="font-serif text-lg text-primary">{formatNumber(stats.monthlyLogs, isoCode)} <span className="text-sm text-on-surface-variant/50">/ {formatNumber(60, isoCode)}</span></span>
               </div>
               <div className="w-full bg-surface-container-highest/50 border border-outline-variant/10 rounded-full h-2 overflow-hidden">
                 <motion.div
@@ -175,9 +179,6 @@ export function ImpactDashboard({ notes, heatmapValues: heatmapValuesProp }: Imp
                   className="silk-gradient h-full rounded-full"
                 />
               </div>
-              <p className="text-[10px] font-label tracking-widest uppercase text-on-surface-variant/40 italic">
-                {stats.monthlyLogs >= 60 ? 'MashaAllah, you have reached your monthly pinnacle.' : `Maintain your pace to reach the goal of 60 reflections.`}
-              </p>
             </div>
           </div>
         </motion.div>
@@ -185,9 +186,9 @@ export function ImpactDashboard({ notes, heatmapValues: heatmapValuesProp }: Imp
         {/* Small Stats Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-4 lg:gap-6">
           {[
-            { label: 'Total Legacy', value: stats.totalLogs, icon: <BookOpen className="w-4 h-4" />, color: 'bg-primary/5 text-primary' },
-            { label: 'Prime Virtue', value: stats.topCategory, icon: <Trophy className="w-4 h-4" />, color: 'bg-gold/10 text-gold' },
-            { label: 'Peak Consistency', value: `${stats.longestStreak} Days`, icon: <Star className="w-4 h-4" />, color: 'bg-tertiary-fixed text-on-tertiary-fixed' },
+            { label: t('totalLegacy', isoCode), value: formatNumber(stats.totalLogs, isoCode), icon: <BookOpen className="w-4 h-4" />, color: 'bg-primary/5 text-primary' },
+            { label: t('primeVirtue', isoCode), value: stats.topCategory !== 'None' ? t(`cat${stats.topCategory}` as any, isoCode) : t('none', isoCode), icon: <Trophy className="w-4 h-4" />, color: 'bg-gold/10 text-gold' },
+            { label: t('peakConsistency', isoCode), value: `${formatNumber(stats.longestStreak, isoCode)} ${t('days', isoCode)}`, icon: <Star className="w-4 h-4" />, color: 'bg-tertiary-fixed text-on-tertiary-fixed' },
           ].map((item, i) => (
               <motion.div
                 key={item.label}
@@ -220,9 +221,9 @@ export function ImpactDashboard({ notes, heatmapValues: heatmapValuesProp }: Imp
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <Target className="text-primary w-4 h-4" />
-            <h3 className="font-serif text-xl text-primary">The Tapestry of Action</h3>
+            <h3 className="font-serif text-xl text-primary">{t('tapestryOfAction', isoCode)}</h3>
           </div>
-          <span className="font-label text-[9px] tracking-widest uppercase text-on-surface-variant/40">Past 52 Weeks</span>
+          <span className="font-label text-[9px] tracking-widest uppercase text-on-surface-variant/40">{t('past52Weeks', isoCode)}</span>
         </div>
         <StreakHeatmap values={heatmapValues} />
       </motion.div>
@@ -249,11 +250,10 @@ export function ImpactDashboard({ notes, heatmapValues: heatmapValuesProp }: Imp
               <Sparkles className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h3 className="font-serif text-xl text-primary">Echoes of Transformation</h3>
+              <h3 className="font-serif text-xl text-primary">{t('echoesOfTransformation', isoCode)}</h3>
               <p className="font-body text-[11px] text-on-surface-variant/60 italic">
-                Poetic reflections woven from your real-life applications of the Quran
-              </p>
-            </div>
+               {t('echoesSubtitle', isoCode)}
+              </p>            </div>
           </div>
         </div>
         <div className="p-6 md:p-8">

@@ -5,6 +5,9 @@ import { Search, Filter, X, BookOpen, Mic, Sparkles, Star, Calendar, ArrowRight,
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useLanguageStore } from '@/stores/useLanguageStore';
+import { t } from '@/lib/i18n/uiStrings';
+import { formatNumber } from '@/config/languageConfig';
 
 const CATEGORIES = [
   'Patience', 'Gratitude', 'Family', 'Work', 'Anger',
@@ -186,17 +189,19 @@ export function HistoryClient({ notes }: HistoryClientProps) {
   };
   const clearFilters = () => { setSearch(''); setSelectedCats([]); };
 
+  const isoCode = useLanguageStore((state) => state.activeIsoCode);
+
   return (
     <div className="max-w-4xl mx-auto space-y-12">
       {/* â”€â”€ Header Area â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <span className="font-label text-[10px] tracking-[0.4em] uppercase text-primary/60 block mb-4">
-            Personal Narrative
+            {t('personalNarrative', isoCode)}
           </span>
-          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-primary">The Archive</h1>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-primary">{t('archiveTitle', isoCode)}</h1>
           <p className="font-body text-on-surface-variant italic mt-2">
-            {notes.length} sacred moment{notes.length !== 1 ? 's' : ''} preserved.
+            {formatNumber(notes.length, isoCode)} {t('archiveDescription', isoCode)}
           </p>
         </div>
 
@@ -209,7 +214,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
           }`}
         >
           <Filter className="w-3.5 h-3.5" />
-          Filter Archive
+          {t('filterArchive', isoCode)}
           {selectedCats.length > 0 && (
             <span className="ml-2 w-5 h-5 rounded-full bg-white text-primary flex items-center justify-center font-bold">
               {selectedCats.length}
@@ -224,7 +229,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
         <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant/40 group-focus-within:text-primary transition-colors" />
         <input
           type="text"
-          placeholder="Search reflections, citations, or virtues..."
+          placeholder={t('searchPlaceholder', isoCode)}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full pl-14 pr-6 py-5 rounded-2xl bg-surface-container-lowest border border-outline-variant/10 text-lg font-body outline-none focus:border-primary/30 transition-all placeholder:italic placeholder:text-on-surface-variant/30 editorial-shadow"
@@ -250,19 +255,19 @@ export function HistoryClient({ notes }: HistoryClientProps) {
           >
             <div className="bg-surface-container-low rounded-3xl p-8 border border-outline-variant/5 parchment-texture">
               <div className="flex items-center justify-between mb-6">
-                <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">Filter by Source</span>
+                <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">{t('filterBySource', isoCode)}</span>
                 <div className="flex gap-2">
-                   {(['all', 'journal', 'whisper', 'qf'] as const).map(t => (
+                   {(['all', 'journal', 'whisper', 'qf'] as const).map(tKey => (
                       <button
-                        key={t}
-                        onClick={() => setFilterType(t)}
+                        key={tKey}
+                        onClick={() => setFilterType(tKey)}
                         className={`px-4 py-2 rounded-xl text-[9px] font-bold tracking-widest uppercase transition-all ${
-                          filterType === t 
+                          filterType === tKey 
                             ? 'bg-primary text-white' 
                             : 'bg-surface-container-highest text-on-surface-variant/60 hover:text-primary'
                         }`}
                       >
-                        {t === 'qf' ? 'Quran.com' : t}
+                        {tKey === 'qf' ? t('quranNote', isoCode) : t(tKey as any, isoCode)}
                       </button>
                    ))}
                 </div>
@@ -270,22 +275,22 @@ export function HistoryClient({ notes }: HistoryClientProps) {
               
               <div className="grid md:grid-cols-2 gap-8 mb-8 pt-4 border-t border-outline-variant/5">
                 <div className="space-y-4">
-                  <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">Archival Month</span>
+                  <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">{t('archivalMonth', isoCode)}</span>
                   <HeirloomSelect 
                     value={selectedMonth}
                     placeholder="All Months"
                     onChange={(val) => updateParams({ month: val })}
                     options={[
                       { label: 'All Months', value: 'all' },
-                      ...['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((m, i) => ({
-                        label: m,
+                      ...(['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']).map((m, i) => ({
+                        label: t(m as any, isoCode),
                         value: (i + 1).toString()
                       }))
                     ]}
                   />
                 </div>
                 <div className="space-y-4">
-                  <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">Year</span>
+                  <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">{t('impactTitle', isoCode)} Year</span>
                   <HeirloomSelect 
                     value={selectedYear}
                     placeholder="Any Year"
@@ -302,10 +307,10 @@ export function HistoryClient({ notes }: HistoryClientProps) {
               </div>
 
               <div className="flex items-center justify-between mb-6">
-                <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">Filter by Virtue</span>
+                <span className="font-label text-xs tracking-widest uppercase text-on-surface-variant">{t('filterByVirtue', isoCode)}</span>
                 {selectedCats.length > 0 && (
                   <button onClick={clearFilters} className="text-[10px] font-bold tracking-widest uppercase text-primary hover:underline">
-                    Clear Selection
+                    {t('clearSelection', isoCode)}
                   </button>
                 )}
               </div>
@@ -322,7 +327,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                           : 'bg-surface-container-lowest border-outline-variant/10 text-on-surface-variant hover:border-primary/30'
                       }`}
                     >
-                      {cat}
+                      {t(`cat${cat}` as any, isoCode)}
                     </button>
                   );
                 })}
@@ -340,13 +345,13 @@ export function HistoryClient({ notes }: HistoryClientProps) {
         {filtered.length === 0 ? (
           <div className="text-center py-24 bg-surface-container-low rounded-[3rem] border border-outline-variant/5 parchment-texture">
             <BookOpen className="w-12 h-12 mx-auto mb-6 text-primary/20" />
-            <p className="font-serif italic text-xl text-on-surface-variant">The archive remains silent for these criteria.</p>
+            <p className="font-serif italic text-xl text-on-surface-variant">{t('archiveSilent', isoCode)}</p>
           </div>
         ) : (
           <div className="space-y-12">
             {filtered.map((note, index) => {
               const noteDate = new Date(note.date); // parse ISO string client-side
-              const formattedDate = noteDate.toLocaleDateString('en-US', {
+              const formattedDate = noteDate.toLocaleDateString(isoCode, {
                 month: 'short', day: 'numeric', year: 'numeric',
               });
               const isEven = index % 2 === 0;
@@ -363,9 +368,15 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                     <div className={`hidden md:block h-px flex-1 bg-gradient-to-r ${isEven ? 'from-transparent to-primary/20' : 'from-primary/20 to-transparent'}`} />
                     <div className="text-center px-6">
                       <span className="font-label text-[10px] tracking-[0.3em] uppercase text-primary/40 block mb-1">
-                        {noteDate.toLocaleDateString('en-US', { weekday: 'short' })}
+                        <span dir={isoCode === 'ar' || isoCode === 'fa' || isoCode === 'ur' ? 'rtl' : 'ltr'}>
+                          {noteDate.toLocaleDateString(isoCode, { weekday: 'short' })}
+                        </span>
                       </span>
-                      <span className="font-serif text-lg text-primary">{formattedDate}</span>
+                      <span className="font-serif text-lg text-primary">
+                        <span dir={isoCode === 'ar' || isoCode === 'fa' || isoCode === 'ur' ? 'rtl' : 'ltr'}>
+                          {formattedDate}
+                        </span>
+                      </span>
                     </div>
                     <div className={`hidden md:block h-px flex-1 bg-gradient-to-r ${isEven ? 'from-primary/20 to-transparent' : 'from-transparent to-primary/20'}`} />
                   </div>
@@ -391,12 +402,14 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                       
                       <div className="flex items-center gap-3 mb-6">
                         <div className="w-8 h-8 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center text-[10px] font-bold">
-                          {note.metadata?.verse_key || note.metadata?.verseKey || 'â€”'}
+                          <span dir="ltr">
+                            {note.metadata?.verse_key || note.metadata?.verseKey || '—'}
+                          </span>
                         </div>
                         <div className="flex gap-1.5">
                            {(note.metadata?.categories || []).slice(0, 2).map((cat) => (
                               <span key={cat} className="text-[8px] font-bold uppercase tracking-widest text-primary/60 border border-primary/10 px-2 py-0.5 rounded-full">
-                                {cat}
+                                {t(`cat${cat}` as any, isoCode)}
                               </span>
                            ))}
                         </div>
@@ -419,7 +432,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                       {note.metadata?.voiceTranscript && (
                         <div className="flex items-center gap-2 text-primary/60">
                           <Mic className="w-3.5 h-3.5" />
-                          <span className="text-[10px] font-bold uppercase tracking-widest italic">Recorded Session</span>
+                          <span className="text-[10px] font-bold uppercase tracking-widest italic">{t('recordedSession', isoCode)}</span>
                         </div>
                       )}
                     </button>
@@ -438,7 +451,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                     <Plus className="w-6 h-6 group-hover:rotate-90 transition-transform duration-500" />
                  </div>
                  <span className="font-label text-[10px] tracking-[0.3em] uppercase text-primary/40 font-bold group-hover:text-primary transition-colors">
-                   Load Older Archives
+                   {t('loadOlder', isoCode)}
                  </span>
                </button>
             </div>
@@ -446,7 +459,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
         )}
       </div>
 
-      {/* â”€â”€ Detail Archive Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Detail Archive Modal ── */}
       <AnimatePresence>
         {selectedNote && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 md:p-8">
@@ -471,11 +484,17 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                     <Star className="w-5 h-5 md:w-6 md:h-6 fill-current" />
                   </div>
                   <div className="min-w-0">
-                    <h2 className="font-serif text-2xl md:text-3xl text-primary truncate">{selectedNote.metadata?.verse_key || selectedNote.metadata?.verseKey || 'Source Citation'}</h2>
+                    <h2 className="font-serif text-2xl md:text-3xl text-primary truncate">
+                      <span dir="ltr">
+                        {selectedNote.metadata?.verse_key || selectedNote.metadata?.verseKey || t('sourceCitation', isoCode)}
+                      </span>
+                    </h2>
                     <div className="flex items-center gap-2 text-on-surface-variant/70 overflow-hidden">
                       <Calendar className="w-3.5 h-3.5 shrink-0" />
                       <span className="font-label text-[9px] md:text-[10px] tracking-widest uppercase truncate">
-                        {new Date(selectedNote.date).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' })}
+                        <span dir={isoCode === 'ar' || isoCode === 'fa' || isoCode === 'ur' ? 'rtl' : 'ltr'}>
+                          {new Date(selectedNote.date).toLocaleDateString(isoCode, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' })}
+                        </span>
                       </span>
                     </div>
                   </div>
@@ -497,12 +516,16 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                   
                   {selectedNote.ayahTextArabic && (
                     <div className="mb-10 text-center space-y-4 px-4 bg-primary/5 py-8 rounded-3xl border border-primary/10 relative z-10">
-                      <p className="font-arabic text-3xl leading-[2.5] text-primary" dir="rtl">
-                        {selectedNote.ayahTextArabic}
+                      <p className="quran-text text-3xl leading-[2.5] text-primary">
+                        <span dir="rtl" lang="ar">
+                          {selectedNote.ayahTextArabic}
+                        </span>
                       </p>
                       {selectedNote.ayahTextTranslation && (
                         <p className="font-body text-sm text-on-surface-variant italic leading-relaxed max-w-xl mx-auto">
-                          {selectedNote.ayahTextTranslation}
+                          <span dir={isoCode === 'ar' || isoCode === 'fa' || isoCode === 'ur' ? 'rtl' : 'ltr'} lang={isoCode}>
+                            {selectedNote.ayahTextTranslation}
+                          </span>
                         </p>
                       )}
                     </div>
@@ -511,19 +534,19 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                   <div className="p-1 w-full bg-gradient-to-b from-primary/10 to-transparent rounded-2xl mb-8 opacity-40" />
                   
                   <span className="font-label text-[10px] tracking-widest text-on-surface-variant uppercase mb-4 block relative z-10">
-                    {selectedNote.metadata?.type === 'whisper' ? 'Spiritual Insight' : 'Preserved Insight'}
+                    {selectedNote.metadata?.type === 'whisper' ? t('spiritualInsight', isoCode) : t('preservedReflection', isoCode)}
                   </span>
 
                   {selectedNote.metadata?.type === 'whisper' ? (
                     <div className="space-y-8 relative z-10">
                        <div className="space-y-4">
-                          <h5 className="font-label text-[10px] tracking-[0.3em] uppercase text-primary font-bold px-1 border-s-2 border-primary/20">The Gaze</h5>
+                          <h5 className="font-label text-[10px] tracking-[0.3em] uppercase text-primary font-bold px-1 border-s-2 border-primary/20">{t('theGaze', isoCode)}</h5>
                           <p className="font-body text-base text-on-surface/80 leading-relaxed italic">
                              {selectedNote.metadata.guidance || selectedNote.logText.split(' | ')[0]}
                           </p>
                        </div>
                        <div className="space-y-4">
-                          <h5 className="font-label text-[10px] tracking-[0.3em] uppercase text-secondary font-bold px-1 border-s-2 border-secondary/40">The Manifestation</h5>
+                          <h5 className="font-label text-[10px] tracking-[0.3em] uppercase text-secondary font-bold px-1 border-s-2 border-secondary/40">{t('theManifestation', isoCode)}</h5>
                           <p className="font-body text-base text-on-surface-variant leading-relaxed">
                              {selectedNote.metadata.reflection || selectedNote.logText.split(' | ')[1]}
                           </p>
@@ -532,7 +555,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                          <div className="flex items-start gap-3 bg-primary/5 rounded-2xl px-5 py-4 border border-primary/10">
                            <Sparkles className="w-4 h-4 text-primary/50 mt-0.5 shrink-0" />
                            <div>
-                             <span className="font-label text-[9px] tracking-[0.2em] uppercase text-primary/40 block mb-1">Echo of Transformation</span>
+                             <span className="font-label text-[9px] tracking-[0.2em] uppercase text-primary/40 block mb-1">{t('echoOfTransformation', isoCode)}</span>
                              <p className="font-serif text-base text-primary italic leading-relaxed">
                                &ldquo;{selectedNote.metadata.echo}&rdquo;
                              </p>
@@ -547,7 +570,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                       </p>
                       <div className="flex items-center gap-1.5 px-3 py-1 w-fit rounded-full bg-blue-500/10 border border-blue-300/30">
                         <BookOpen className="w-3 h-3 text-blue-500" />
-                        <span className="text-[8px] font-bold tracking-widest uppercase text-blue-500">Quran.com Note</span>
+                        <span className="text-[8px] font-bold tracking-widest uppercase text-blue-500">{t('quranNote', isoCode)}</span>
                       </div>
                     </div>
                   ) : (
@@ -559,7 +582,7 @@ export function HistoryClient({ notes }: HistoryClientProps) {
                         <div className="flex items-start gap-3 bg-primary/5 rounded-2xl px-5 py-4 border border-primary/10">
                           <Sparkles className="w-4 h-4 text-primary/50 mt-0.5 shrink-0" />
                           <div>
-                            <span className="font-label text-[9px] tracking-[0.2em] uppercase text-primary/40 block mb-1">Echo of Transformation</span>
+                            <span className="font-label text-[9px] tracking-[0.2em] uppercase text-primary/40 block mb-1">{t('echoOfTransformation', isoCode)}</span>
                             <p className="font-serif text-base text-primary italic leading-relaxed">
                               &ldquo;{selectedNote.metadata.echo}&rdquo;
                             </p>
@@ -572,11 +595,11 @@ export function HistoryClient({ notes }: HistoryClientProps) {
 
                 <div className="grid md:grid-cols-2 gap-8 pt-8 border-t border-outline-variant/10">
                   <div>
-                    <span className="font-label text-[10px] tracking-widest uppercase text-on-surface-variant/60 block mb-4">Manifested Virtues</span>
+                    <span className="font-label text-[10px] tracking-widest uppercase text-on-surface-variant/60 block mb-4">{t('manifestedVirtues', isoCode)}</span>
                     <div className="flex flex-wrap gap-2">
                        {(selectedNote.metadata?.categories || []).map((cat) => (
                           <span key={cat} className="px-4 py-1.5 border border-primary/20 rounded-full text-[10px] font-bold tracking-widest uppercase text-primary bg-primary/5">
-                            {cat}
+                            {t(`cat${cat}` as any, isoCode)}
                           </span>
                        ))}
                     </div>
@@ -584,11 +607,11 @@ export function HistoryClient({ notes }: HistoryClientProps) {
 
                   {selectedNote.metadata?.voiceTranscript && (
                     <div>
-                      <span className="font-label text-[10px] tracking-widest uppercase text-on-surface-variant/60 block mb-4">Voice Archive Data</span>
+                      <span className="font-label text-[10px] tracking-widest uppercase text-on-surface-variant/60 block mb-4">{t('voiceArchiveData', isoCode)}</span>
                       <div className="bg-surface-container-low rounded-2xl p-6 border border-outline-variant/5">
                         <div className="flex items-center gap-3 mb-3 text-primary">
                           <Mic className="w-4 h-4" />
-                          <span className="font-label text-[9px] tracking-widest uppercase font-bold text-primary/80">Transcript Fragment</span>
+                          <span className="font-label text-[9px] tracking-widest uppercase font-bold text-primary/80">{t('transcriptFragment', isoCode)}</span>
                         </div>
                         <p className="text-sm italic leading-relaxed text-on-surface-variant/80">
                           {selectedNote.metadata.voiceTranscript}

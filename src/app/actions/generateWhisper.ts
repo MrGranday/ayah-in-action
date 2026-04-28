@@ -5,6 +5,8 @@ import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
 import { GoogleGenerativeAI, FunctionDeclaration, SchemaType } from '@google/generative-ai';
 import { ProcessedVerse } from '@/types/quran';
+import { withScriptValidation } from '@/lib/ai/scriptGuard';
+import { buildLanguageSystemBlock } from '@/lib/ai/languageInstruction';
 
 /**
  * TOOLS for the LLM to call during the guidance generation process.
@@ -23,20 +25,20 @@ async function searchQuran(query: string) {
 async function getVerseDetails(verseKey: string) {
   try {
     const session = await import('@/lib/session').then(m => m.getServerSession());
-    const tId = session.translationResourceId || 131;
-    const response = await fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?text_uthmani=true&translations=${tId}&audio=7`);
-    if (!response.ok) return '{}';
-    const data = await response.json();
+    const isoCode = session.isoCode || 'en';
+    const { fetchVerse } = await import('@/lib/quran/fetchVerse');
+    const data = await fetchVerse(verseKey, isoCode);
     return JSON.stringify(data.verse || {});
   } catch { return '{}'; }
 }
 
 async function getTafsir(verseKey: string) {
   try {
-    const response = await fetch(`https://api.quran.com/api/v4/tafsirs/169/by_verse_key/${verseKey}`);
-    if (!response.ok) return '{}';
-    const data = await response.json();
-    return JSON.stringify(data.tafsir || {});
+    const session = await import('@/lib/session').then(m => m.getServerSession());
+    const isoCode = session.isoCode || 'en';
+    const { fetchTafsir } = await import('@/lib/quran/fetchTafsir');
+    const data = await fetchTafsir(verseKey, isoCode);
+    return JSON.stringify(data || {});
   } catch { return '{}'; }
 }
 
@@ -55,16 +57,21 @@ async function dispatchTool(name: string, args: Record<string, string>): Promise
  */
 async function fetchFullVerseDetails(verseKey: string): Promise<Partial<ProcessedVerse>> {
   const session = await getServerSession();
-  const tId = session.translationResourceId || 131;
   const isoCode = session.isoCode || 'en';
+  const { getLanguageConfig } = await import('@/config/languageConfig');
+  const config = getLanguageConfig(isoCode);
+  const tId = config.quranTranslationId;
   
   const [chapterId, verseNumber] = verseKey.split(':');
   
   try {
     // Stage 1: Fetch Chapter info (for localized names)
     const chapRes = await fetch(`https://api.quran.com/api/v4/chapters/${chapterId}?language=${isoCode}`);
+    
     // Stage 2: Fetch Verse data (Arabic, Translatable texts)
-    const verseRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?translations=${tId},20&audio=1&fields=text_uthmani,text_uthmani_simple`, { cache: 'no-store' });
+    // For Arabic (tId=null), we don't fetch a translation resource
+    const translationParam = tId ? `&translations=${tId}` : '';
+    const verseRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?audio=1&fields=text_uthmani,text_uthmani_simple${translationParam}`, { cache: 'no-store' });
 
     if (!chapRes.ok || !verseRes.ok) throw new Error("API Connection Error");
 
@@ -72,7 +79,8 @@ async function fetchFullVerseDetails(verseKey: string): Promise<Partial<Processe
     const verseData = await verseRes.json();
     const verse = verseData.verse;
 
-    // Translation logic: Take the first available translation and strip HTML tags
+    // Translation logic: Take the first available translation and strip HTML tags.
+    // If Arabic, there is no translations array, so we use an empty string or the Arabic text itself.
     const translationText = verse.translations?.[0]?.text || '';
 
     return {
@@ -181,20 +189,45 @@ const TOOLS_GEMINI: FunctionDeclaration[] = [
  */
 const SYNTHESIS_PROMPT = `Based on the Quranic search results and Tafsir provided in the conversation history, finalize the spiritual guidance. 
 You MUST output strictly a JSON object with this structure:
-{ "verse_key": "...", "guidance": "...", "reflection": "..." }
+{ "_lang_audit": "...", "verse_key": "...", "guidance": "...", "reflection": "..." }
 Do not provide any conversational text before or after the JSON.`;
 
 export async function generateWhisper(challenge: string) {
   const session = await getServerSession();
-  const model = session.preferredModel || 'claude';
+  const isoCode = session.isoCode || 'en';
+  const { validateResponseScript } = await import('@/lib/ai/scriptGuard');
+  const { wrapUserPrompt } = await import('@/lib/ai/wrapUserPrompt');
   
-  const { getLanguageInstruction } = await import('@/lib/ai/languageInstruction');
-  const SYSTEM_PROMPT = `${getLanguageInstruction(session.isoCode || 'en', session.direction || 'ltr')}You are 'The Whisper', a compassionate spiritual guide for the Ayah in Action app. Your goal is to provide grounded Quranic guidance for a user's life challenge.
+  const wrappedChallenge = wrapUserPrompt(challenge, isoCode);
+  
+  let attempt = 0;
+  while (attempt < 2) {
+    const result = await generateWhisperInner(wrappedChallenge, session);
+    if (result.error || !result.data) return result;
+
+    const combinedText = result.data.guidance + ' ' + result.data.reflection;
+    const { valid } = validateResponseScript(combinedText, isoCode);
+    
+    if (valid) return result;
+    console.warn(`[ScriptGuard] Failed for ${isoCode} on attempt ${attempt + 1}. Retrying once.`);
+    attempt++;
+  }
+  
+  return await generateWhisperInner(wrappedChallenge, session);
+}
+
+async function generateWhisperInner(challenge: string, session: any) {
+  const model = session.preferredModel || 'claude';
+  const isoCode = session.isoCode || 'en';
+  
+  const { buildLanguageSystemBlock, buildLangAuditDescription } = await import('@/lib/ai/languageInstruction');
+  const SYSTEM_PROMPT = `${buildLanguageSystemBlock(isoCode)}\n\nYou are 'The Whisper', a compassionate spiritual guide for the Ayah in Action app. Your goal is to provide grounded Quranic guidance for a user's life challenge.
 
 IMPORTANT: You MUST use the search_quran tool to find relevant verses. Do not rely solely on your internal knowledge. Once you find a verse, use get_verse_details and get_tafsir to provide a deeply grounded explanation.
 
 Output your final response in this exact JSON structure:
-{ "verse_key": "...", "guidance": "A short, empathetic explanation of why this verse applies", "reflection": "A daily application prompt for the user" }`;
+{ "_lang_audit": "${buildLangAuditDescription(isoCode)}", "verse_key": "...", "guidance": "A short, empathetic explanation of why this verse applies", "reflection": "A daily application prompt for the user" }`;
+
 
   // ─── Resolve the correct API key ──────────────────────────────────────────
   let key: string | undefined;

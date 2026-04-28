@@ -2,41 +2,42 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { LANGUAGE_CONFIGS, getLanguageConfig, LanguageConfig } from '@/config/languageConfig';
 
-export interface LanguageOption {
-  isoCode: string;
-  direction: 'ltr' | 'rtl';
-  translationResourceId: number;
-  nativeName: string;
-}
-
-interface LanguageState extends LanguageOption {
-  setLanguage: (lang: LanguageOption) => Promise<void>;
+interface LanguageState {
+  activeIsoCode: string;
+  config: LanguageConfig;
+  setLanguage: (isoCode: string) => Promise<void>;
 }
 
 export const useLanguageStore = create<LanguageState>()(
   persist(
     (set) => ({
-      isoCode: 'en',
-      direction: 'ltr',
-      translationResourceId: 131, // Clear Quran English default
-      nativeName: 'English',
+      activeIsoCode: 'en',
+      config: LANGUAGE_CONFIGS['en'],
 
-      setLanguage: async (lang) => {
-        // 1. Update Zustand store instantly for client reactivity
-        set({
-          isoCode: lang.isoCode,
-          direction: lang.direction,
-          translationResourceId: lang.translationResourceId,
-          nativeName: lang.nativeName,
-        });
+      setLanguage: async (isoCode: string) => {
+        const config = getLanguageConfig(isoCode);
+        
+        // DOM Sync
+        document.documentElement.setAttribute('lang', config.htmlLang);
+        document.documentElement.setAttribute('dir', config.direction);
+        document.documentElement.style.setProperty('--app-font', config.fontFamily);
+        
+        // Zustand state update
+        set({ activeIsoCode: isoCode, config });
 
-        // 2. Sync to Server Session Cookie for SSR components
+        // Sync to Server Session Cookie for SSR components
         try {
           await fetch('/api/language', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(lang),
+            body: JSON.stringify({ 
+              isoCode: config.isoCode,
+              direction: config.direction,
+              translationResourceId: config.quranTranslationId,
+              nativeName: config.nativeName
+            }),
           });
         } catch (error) {
           console.error('[LanguageStore] Failed to sync session cookie:', error);
@@ -44,7 +45,7 @@ export const useLanguageStore = create<LanguageState>()(
       },
     }),
     {
-      name: 'language-store',
+      name: 'aya-language-store',
     }
   )
 );

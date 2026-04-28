@@ -6,11 +6,14 @@ import { Key, Shield, Check, AlertCircle, Trash2, Cpu, Info, X, ExternalLink, He
 import { saveApiKeys, clearApiKeys, getApiKeyStatus } from '@/app/actions/keys';
 import { Button } from './ui/button';
 import { toast } from 'sonner';
+import { useLanguageStore } from '@/stores/useLanguageStore';
+import { t } from '@/lib/i18n/uiStrings';
 
 type PreferredModel = 'claude' | 'gpt4o' | 'gemini' | 'groq' | 'hf';
 
 function ApiKeyGuide() {
   const [isOpen, setIsOpen] = useState(false);
+  const isoCode = useLanguageStore((state) => state.activeIsoCode);
 
   const guides = [
     { name: 'Anthropic (Claude)', url: 'https://console.anthropic.com/settings/keys', steps: 'Sign up or log in, click "Create Key", and copy the generated key.' },
@@ -31,8 +34,8 @@ function ApiKeyGuide() {
             <HelpCircle className="w-4 h-4" />
           </div>
           <div className="text-left">
-            <span className="font-serif text-sm text-primary block">How to get an API Key?</span>
-            <span className="text-[10px] text-on-surface-variant/60 uppercase tracking-widest">Beginner's Guide</span>
+            <span className="font-serif text-sm text-primary block">{t('apiKeyGuide', isoCode)}</span>
+            <span className="text-[10px] text-on-surface-variant/60 uppercase tracking-widest">{t('beginnerGuide', isoCode)}</span>
           </div>
         </div>
         <ChevronDown className={`w-5 h-5 text-on-surface-variant/50 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
@@ -47,7 +50,7 @@ function ApiKeyGuide() {
           >
             <div className="p-4 pt-0 space-y-4">
               <p className="text-xs text-on-surface-variant/80 leading-relaxed italic border-t border-outline-variant/5 pt-4">
-                If you don't have a technical background, don't worry! Getting an API key is easy. Click the links below, create an account if prompted, generate a new key, and paste it into the fields below.
+                If you don&apos;t have a technical background, don&apos;t worry! Getting an API key is easy. Click the links below, create an account if prompted, generate a new key, and paste it into the fields below.
               </p>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {guides.map(guide => (
@@ -93,6 +96,7 @@ export function ApiKeySettings() {
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
   const [deletingKey, setDeletingKey] = useState<'claude' | 'openai' | 'gemini' | 'groq' | 'hf' | null>(null);
+  const isoCode = useLanguageStore((state) => state.activeIsoCode);
 
   useEffect(() => {
     getApiKeyStatus().then(res => {
@@ -113,9 +117,9 @@ export function ApiKeySettings() {
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
       await refreshStatus();
-      toast.success('AI configuration secured to your session.');
+      toast.success(t('configSecured', isoCode));
     } catch {
-      toast.error('Failed to save configuration. Please try again.');
+      toast.error(t('configFailed', isoCode));
     } finally {
       setLoading(false);
     }
@@ -141,23 +145,23 @@ export function ApiKeySettings() {
         :                         { ...prev, hfKey: '' }
       );
       await refreshStatus();
-      toast.warning(`${providerName} key removed from your session.`);
+      toast.warning(`${providerName} ${t('keyRemoved', isoCode)}`);
     } catch {
-      toast.error(`Failed to remove ${providerName} key.`);
+      toast.error(`${t('removeKeyFailed', isoCode)} ${providerName}`);
     } finally {
       setDeletingKey(null);
     }
   };
 
   const handleClearAll = async () => {
-    toast.warning('All API keys will be removed from your session.', {
+    toast.warning(t('clearAllWarning', isoCode), {
       action: {
-        label: 'Confirm',
+        label: t('confirm', isoCode),
         onClick: async () => {
           await clearApiKeys();
           setKeys({ claudeKey: '', openaiKey: '', geminiKey: '', groqKey: '', hfKey: '', preferredModel: 'claude' });
           setStatus({ hasClaude: false, hasOpenAI: false, hasGemini: false, hasGroq: false, hasHf: false });
-          toast.success('All keys cleared from session.');
+          toast.success(t('allKeysCleared', isoCode));
         },
       },
       duration: 8000,
@@ -236,9 +240,9 @@ export function ApiKeySettings() {
               <Shield className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="font-serif text-2xl text-primary">Intelligence & Keys</h2>
+              <h2 className="font-serif text-2xl text-primary">{t('intelligenceKeys', isoCode)}</h2>
               <p className="font-label text-[10px] tracking-widest uppercase text-on-surface-variant/60">
-                Secure Personal AI Configuration
+                {t('secureConfig', isoCode)}
               </p>
             </div>
           </div>
@@ -268,7 +272,7 @@ export function ApiKeySettings() {
                         className="flex items-center gap-1.5"
                       >
                         <span className="flex items-center gap-1.5 px-2.5 py-1 bg-green-500/10 text-green-600 rounded-full text-[9px] font-bold uppercase tracking-widest">
-                          <Check className="w-3 h-3" /> Active
+                          <Check className="w-3 h-3" /> {t('active', isoCode)}
                         </span>
                         {/* Per-key delete */}
                         <button
@@ -349,10 +353,10 @@ export function ApiKeySettings() {
                   <button
                     onClick={handleClearAll}
                     className="flex items-center gap-2 px-4 py-3 rounded-2xl text-red-500 hover:bg-red-50 transition-all border border-transparent hover:border-red-100 text-[10px] font-bold tracking-widest uppercase"
-                    title="Remove all keys"
+                    title={t('clearAll', isoCode)}
                   >
                     <Trash2 className="w-4 h-4" />
-                    Clear All
+                    {t('clearAll', isoCode)}
                   </button>
                 )}
                 <Button
@@ -360,7 +364,7 @@ export function ApiKeySettings() {
                   disabled={loading}
                   className="px-8 py-6 rounded-2xl silk-gradient text-white font-label text-[10px] tracking-widest uppercase font-bold editorial-shadow hover:scale-[1.02] active:scale-[0.98] transition-all"
                 >
-                  {loading ? 'Securing...' : saved ? '✓ Saved' : 'Apply Configuration'}
+                  {loading ? t('securing', isoCode) : saved ? `\u2713 ${t('saved', isoCode)}` : t('applyConfig', isoCode)}
                 </Button>
               </div>
             </div>
@@ -399,10 +403,9 @@ export function ApiKeySettings() {
       <div className="bg-primary/5 rounded-3xl p-6 border border-primary/10 flex gap-4 items-start">
         <AlertCircle className="w-5 h-5 text-primary mt-1 shrink-0" />
         <div>
-          <p className="text-xs font-serif text-primary mb-1">Privacy & Architecture</p>
+          <p className="text-xs font-serif text-primary mb-1">{t('privacyArchitecture', isoCode)}</p>
           <p className="text-[10px] leading-relaxed text-on-surface-variant/70 italic">
-            Your keys are stored only in your encrypted session cookie. They are never saved to our database,
-            never stored in your browser's local storage, and are only used server-side to generate your guidance.
+            {t('privacyDescription', isoCode)}
           </p>
         </div>
       </div>

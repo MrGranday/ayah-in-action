@@ -13,6 +13,7 @@ import { Sparkles, Edit3, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useAyahStore } from '@/stores/useAyahStore';
 import { useLanguageStore } from '@/stores/useLanguageStore';
 import { t } from '@/lib/i18n/uiStrings';
+import { formatNumber } from '@/config/languageConfig';
 
 interface LogFormProps {
   hasLoggedToday: boolean;
@@ -30,7 +31,7 @@ export function LogForm({
   onSaveSuccess,
 }: LogFormProps) {
   const { currentAyah, setHasLoggedToday } = useAyahStore();
-  const isoCode = useLanguageStore((state) => state.isoCode);
+  const isoCode = useLanguageStore((state) => state.activeIsoCode);
   const effectiveVerseKey = currentAyah?.verse_key || verseKey;
 
   const [logText, setLogText] = useState(existingLogText);
@@ -73,7 +74,7 @@ export function LogForm({
 
       if (result.success) {
         // Primary success toast
-        toast.success('Reflection Preserved to the Archive.');
+        toast.success(t('reflectionPreserved', isoCode));
 
         // If an Echo was generated, show it in a special poetic toast
         if (result.echo) {
@@ -81,9 +82,9 @@ export function LogForm({
             ? result.echo.slice(0, 90) + '\u2026'
             : result.echo;
           setTimeout(() => {
-            toast.success(`\u2728 Echo\u2009\u2014\u2009\u201c${preview}\u201d`, {
+            toast.success(`\u2728 ${t('echoTitle', isoCode)}\u2009\u2014\u2009\u201c${preview}\u201d`, {
               duration: 7000,
-              description: 'Your poetic reflection has been woven into the Timeline.',
+              description: t('echoDescription', isoCode),
             });
           }, 600);
         }
@@ -99,16 +100,16 @@ export function LogForm({
         }
         setIsEditing(false);
       } else {
-        toast.error('The archive was unable to save your entry.');
+        toast.error(t('archiveError', isoCode));
       }
     } catch (err) {
       if ((err as { message?: string }).message === 'Unauthorized') {
-        toast.error('Session expired — reconnecting.');
+        toast.error(t('sessionExpired', isoCode));
         setTimeout(() => {
           window.location.href = '/api/auth/login';
         }, 1500);
       } else {
-        toast.error('An error occurred while saving your reflection.');
+        toast.error(t('saveError', isoCode));
       }
     } finally {
       setIsSaving(false);
@@ -125,7 +126,9 @@ export function LogForm({
 
         <div className="mb-6">
           <span className="font-label text-[10px] tracking-widest text-on-surface-variant uppercase mb-2 block">{t('sourceAyah', isoCode)}</span>
-          <Badge className="bg-tertiary-fixed text-on-tertiary-fixed border-none px-3 py-1">{effectiveVerseKey}</Badge>
+          <Badge className="bg-tertiary-fixed text-on-tertiary-fixed border-none px-3 py-1">
+            <span dir="ltr">{effectiveVerseKey}</span>
+          </Badge>
         </div>
 
         <p className="font-body text-sm text-on-surface leading-loose italic mb-4 border-s-2 border-primary/20 ps-4">
@@ -135,7 +138,7 @@ export function LogForm({
         <div className="flex flex-wrap gap-2 mb-8">
           {existingCategories.map((cat) => (
             <span key={cat} className="font-label text-[10px] tracking-widest uppercase px-3 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant/10 text-on-surface-variant">
-              {cat}
+              {t(`cat${cat}` as any, isoCode)}
             </span>
           ))}
         </div>
@@ -176,7 +179,7 @@ export function LogForm({
         />
         <div className="flex justify-end mt-2">
           <span className="font-label text-[10px] tracking-widest text-on-surface-variant/50">
-            {charCount} / {maxChars} Characters
+            {formatNumber(charCount, isoCode)} / {formatNumber(maxChars, isoCode)} {t('characters', isoCode)}
           </span>
         </div>
       </div>
@@ -195,7 +198,7 @@ export function LogForm({
                     : 'bg-surface-container-lowest border-outline-variant/10 text-on-surface-variant hover:border-primary/30'
                   }`}
               >
-                {category}
+                {t(`cat${category}` as any, isoCode)}
               </button>
             );
           })}

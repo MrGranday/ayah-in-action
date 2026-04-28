@@ -7,6 +7,7 @@ import { parseNoteBody, isAyahInActionNote } from '@/lib/utils';
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { withScriptValidation } from '@/lib/ai/scriptGuard';
 
 interface Reference {
   chapterId: number;
@@ -32,6 +33,25 @@ export async function generatePulse() {
   if (!session || !session.accessToken) {
     return { error: 'Not authenticated. Please log in.' };
   }
+  const isoCode = session.isoCode || 'en';
+  const { validateResponseScript } = await import('@/lib/ai/scriptGuard');
+  
+  let attempt = 0;
+  while (attempt < 2) {
+    const result = await generatePulseInner(session);
+    if (result.error || !result.data) return result;
+
+    const { valid } = validateResponseScript(result.data.personalized_message, isoCode);
+    
+    if (valid) return result;
+    console.warn(`[ScriptGuard] Failed for ${isoCode} on attempt ${attempt + 1}. Retrying once.`);
+    attempt++;
+  }
+  
+  return await generatePulseInner(session);
+}
+
+async function generatePulseInner(session: any) {
 
   // ----------------------------------------------------------------------------------
   // DYNAMIC AI SELECTION BASED ON "THE ATELIER" (SETTINGS)
@@ -146,9 +166,10 @@ export async function generatePulse() {
       user_personal_context: personalContext
     };
 
-    const { getLanguageInstruction } = await import('@/lib/ai/languageInstruction');
+    const { buildLanguageSystemBlock, buildLangAuditDescription } = await import('@/lib/ai/languageInstruction');
+    const isoCode = session.isoCode || 'en';
     
-    const SYSTEM_PROMPT = `${getLanguageInstruction(session.isoCode || 'en', session.direction || 'ltr')}You are 'The Ummah Pulse'. Your goal is to analyze current community trends and connect them to the user's personal context (bookmarks and private reflections) in a simple, clear, and detailed way.
+    const SYSTEM_PROMPT = `${buildLanguageSystemBlock(isoCode)}\n\nYou are 'The Ummah Pulse'. Your goal is to analyze current community trends and connect them to the user's personal context (bookmarks and private reflections) in a simple, clear, and detailed way.
      
     Core Objectives:
     1. Identify common themes in the provided community_reflections.
@@ -165,6 +186,7 @@ export async function generatePulse() {
     CRITICAL: YOU MUST strictly output ONLY valid JSON without Markdown blocks. 
     Format:
     {
+       "_lang_audit": "${buildLangAuditDescription(isoCode)}",
        "personalized_message": "A clear and detailed explanation of the connection...",
        "personal_verse": "chapter:verse",
        "trending": [
@@ -177,46 +199,50 @@ export async function generatePulse() {
     const challenge = JSON.stringify(promptData);
 
     try {
-      if (model === 'claude') {
-        const anthropic = new Anthropic({ apiKey: key });
-        const response = await anthropic.messages.create({
-          model: 'claude-3-5-sonnet-20240620',
-          max_tokens: 1024,
-          system: SYSTEM_PROMPT,
-          messages: [{ role: 'user', content: challenge }]
-        });
-        const textBlock = response.content.find(c => c.type === 'text') as any;
-        const jsonMatch = textBlock?.text.match(/\{.*\}/s);
-        finalJson = JSON.parse(jsonMatch ? jsonMatch[0] : textBlock?.text || '{}');
-      } else if (model === 'gpt4o' || model === 'groq' || model === 'hf') {
-        const isGroq = model === 'groq';
-        const isHf = model === 'hf';
-        const baseURL = isGroq ? 'https://api.groq.com/openai/v1' : isHf ? 'https://api-inference.huggingface.co/v1/' : undefined;
-        let aiModel = 'gpt-4o';
-        if (isGroq) aiModel = 'llama-3.3-70b-versatile';
-        if (isHf) aiModel = 'meta-llama/Meta-Llama-3-70B-Instruct';
+      const callModel = async () => {
+        if (model === 'claude') {
+          const anthropic = new Anthropic({ apiKey: key });
+          const response = await anthropic.messages.create({
+            model: 'claude-3-5-sonnet-20240620',
+            max_tokens: 1024,
+            system: SYSTEM_PROMPT,
+            messages: [{ role: 'user', content: challenge }]
+          });
+          const textBlock = response.content.find(c => c.type === 'text') as any;
+          return textBlock?.text || '{}';
+        } else if (model === 'gpt4o' || model === 'groq' || model === 'hf') {
+          const isGroq = model === 'groq';
+          const isHf = model === 'hf';
+          const baseURL = isGroq ? 'https://api.groq.com/openai/v1' : isHf ? 'https://api-inference.huggingface.co/v1/' : undefined;
+          let aiModel = 'gpt-4o';
+          if (isGroq) aiModel = 'llama-3.3-70b-versatile';
+          if (isHf) aiModel = 'meta-llama/Meta-Llama-3-70B-Instruct';
 
-        const openai = new OpenAI({ apiKey: key, baseURL });
-        const completion = await openai.chat.completions.create({
-          model: aiModel,
-          messages: [
-            { role: 'system', content: SYSTEM_PROMPT },
-            { role: 'user', content: challenge }
-          ],
-          response_format: { type: 'json_object' }
-        });
-        finalJson = JSON.parse(completion.choices[0].message.content || '{}');
-      } else if (model === 'gemini') {
-        const genAI = new GoogleGenerativeAI(key);
-        const geminiModel = genAI.getGenerativeModel({
-          model: 'gemini-2.0-flash',
-          systemInstruction: SYSTEM_PROMPT,
-        });
-        const result = await geminiModel.generateContent(challenge);
-        const text = result.response.text();
-        const jsonMatch = text.match(/\{.*\}/s);
-        finalJson = JSON.parse(jsonMatch ? jsonMatch[0] : text || '{}');
-      }
+          const openai = new OpenAI({ apiKey: key, baseURL });
+          const completion = await openai.chat.completions.create({
+            model: aiModel,
+            messages: [
+              { role: 'system', content: SYSTEM_PROMPT },
+              { role: 'user', content: challenge }
+            ],
+            response_format: { type: 'json_object' }
+          });
+          return completion.choices[0].message.content || '{}';
+        } else if (model === 'gemini') {
+          const genAI = new GoogleGenerativeAI(key);
+          const geminiModel = genAI.getGenerativeModel({
+            model: 'gemini-2.0-flash',
+            systemInstruction: SYSTEM_PROMPT,
+          });
+          const result = await geminiModel.generateContent(challenge);
+          return result.response.text();
+        }
+        return '{}';
+      };
+
+      const finalResponse = await withScriptValidation(await callModel(), isoCode, callModel);
+      const jsonMatch = finalResponse.match(/\{.*\}/s);
+      finalJson = JSON.parse(jsonMatch ? jsonMatch[0] : finalResponse || '{}');
     } catch(e) {
       console.error("AI Generation Error", e);
       finalJson = null;
@@ -229,17 +255,16 @@ export async function generatePulse() {
     // Now enrich the verses with metadata from public API
     const fetchMetadata = async (verseKey: string) => {
        try {
-        const tId = session.translationResourceId || 131;
         const isoCode = session.isoCode || 'en';
          const [chapterId] = verseKey.split(':');
          const chapRes = await fetch(`https://api.quran.com/api/v4/chapters/${chapterId}?language=${isoCode}`);
-         const verseRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?translations=${tId},20&audio=1&fields=text_uthmani`);
+         const { fetchVerse } = await import('@/lib/quran/fetchVerse');
+         const verseData = await fetchVerse(verseKey, isoCode);
          const chapData = await chapRes.json();
-         const verseData = await verseRes.json();
          const v = verseData.verse;
          return {
            verse_key: verseKey,
-           chapter_name_english: chapData.chapter?.name_simple,
+           chapter_name: chapData.chapter?.name_simple,
            text_uthmani: v.text_uthmani,
            translation: v.translations?.[0]?.text?.replace(/<[^>]*>?/gm, '')
          };

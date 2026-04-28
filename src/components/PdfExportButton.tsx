@@ -5,6 +5,7 @@ import { FileDown, Loader2, Sparkles } from 'lucide-react';
 import { format } from 'date-fns';
 import { parseNoteBody, isAyahInActionNote } from '@/lib/utils';
 import { useLanguageStore } from '@/stores/useLanguageStore';
+import { t } from '@/lib/i18n/uiStrings';
 
 interface Note {
   id: string;
@@ -14,6 +15,7 @@ interface Note {
 
 export function PdfExportButton({ notes }: { notes: Note[] }) {
   const [isExporting, setIsExporting] = useState(false);
+  const activeIsoCode = useLanguageStore((state) => state.activeIsoCode);
 
   const handleExport = async () => {
     setIsExporting(true);
@@ -38,21 +40,20 @@ export function PdfExportButton({ notes }: { notes: Note[] }) {
       const uniqueVerseKeys = [...new Set(appNotes.map(n => parseNoteBody(n.body).metadata?.verseKey).filter(Boolean))];
       const fetchedVerses: Record<string, { arabic: string; translation: string }> = {};
 
-      const translationId = useLanguageStore.getState().translationResourceId;
+      const activeIsoCode = useLanguageStore.getState().activeIsoCode;
+      const activeDirection = useLanguageStore.getState().config.direction;
+      const { fetchVerse } = await import('@/lib/quran/fetchVerse');
 
       if (uniqueVerseKeys.length > 0) {
         await Promise.all(
           uniqueVerseKeys.map(async (key) => {
             try {
-              const res = await fetch(`https://api.quran.com/api/v4/verses/by_key/${key}?translations=${translationId},20&fields=text_uthmani,text_uthmani_simple`);
-              if (res.ok) {
-                const data = await res.json();
-                const verse = data.verse;
-                fetchedVerses[key as string] = {
-                  arabic: String(verse.text_uthmani || verse.text_uthmani_simple || ''),
-                  translation: String(verse.translations?.[0]?.text || '').replace(/<[^>]*>?/gm, '')
-                };
-              }
+              const data = await fetchVerse(key as string, activeIsoCode);
+              const verse = data.verse;
+              fetchedVerses[key as string] = {
+                arabic: String(verse.text_uthmani || ''),
+                translation: String(verse.translations?.[0]?.text || '').replace(/<[^>]*>?/gm, '')
+              };
             } catch {
               // fail silently for individual verse fetches
             }
@@ -60,15 +61,17 @@ export function PdfExportButton({ notes }: { notes: Note[] }) {
         );
       }
       
+      const { t } = await import('@/lib/i18n/uiStrings');
+
       let html = `
-        <div style="text-align: center; margin-bottom: 60px; padding-bottom: 40px; border-bottom: 1px solid rgba(0, 76, 59, 0.1);">
+        <div style="text-align: center; margin-bottom: 60px; padding-bottom: 40px; border-bottom: 1px solid rgba(0, 76, 59, 0.1); direction: ltr;">
           <div style="font-family: serif; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: #004c3b; opacity: 0.6; margin-bottom: 16px;">The Digital Heirloom</div>
-          <h1 style="font-family: serif; font-size: 48px; color: #004c3b; margin: 0; font-style: italic;">My Quranic Archive</h1>
-          <p style="color: #3f4944; margin-top: 12px; font-size: 14px; letter-spacing: 0.05em;">Curated reflections exported on ${format(new Date(), 'MMMM d, yyyy')}</p>
+          <h1 style="font-family: serif; font-size: 48px; color: #004c3b; margin: 0; font-style: italic;">${t('archiveTitle', activeIsoCode)}</h1>
+          <p style="color: #3f4944; margin-top: 12px; font-size: 14px; letter-spacing: 0.05em;">${t('legacySecure', activeIsoCode)} ${format(new Date(), 'MMMM d, yyyy')}</p>
         </div>
       `;
 
-      html += '<div style="display: flex; flex-direction: column; gap: 48px;">';
+      html += `<div style="display: flex; flex-direction: column; gap: 48px; direction: ${activeDirection};">`;
       
       appNotes.forEach(note => {
         const { logText, metadata } = parseNoteBody(note.body);
@@ -77,15 +80,16 @@ export function PdfExportButton({ notes }: { notes: Note[] }) {
         const verseKey = metadata?.verseKey || 'Reflection';
         const verseSource = fetchedVerses[verseKey];
         const voiceData = metadata?.voiceTranscript;
+        const langConfig = useLanguageStore.getState().config;
         
         html += `
-          <div style="position: relative; padding-left: 24px; border-left: 2px solid #d4a017;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 20px; align-items: center;">
-              <div>
+          <div style="position: relative; padding-${activeDirection === 'rtl' ? 'right' : 'left'}: 24px; border-${activeDirection === 'rtl' ? 'right' : 'left'}: 2px solid #d4a017;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px; align-items: center; direction: ltr;">
+              <div style="text-align: ${activeDirection === 'rtl' ? 'right' : 'left'}; width: 100%;">
                 <span style="font-size: 10px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; color: #d4a017; display: block; margin-bottom: 4px;">Entry Asset</span>
-                <div style="font-family: serif; font-size: 24px; color: #004c3b;">Verse ${verseKey}</div>
+                <div style="font-family: serif; font-size: 24px; color: #004c3b;">${t('sourceAyah', activeIsoCode)} ${verseKey}</div>
               </div>
-              <div style="text-align: right;">
+              <div style="text-align: right; min-width: 200px;">
                  <div style="font-family: serif; font-size: 14px; color: #3f4944; font-style: italic;">${dateStr}</div>
               </div>
             </div>
@@ -95,25 +99,25 @@ export function PdfExportButton({ notes }: { notes: Note[] }) {
                 <div style="direction: rtl; font-family: sans-serif; font-size: 28px; line-height: 2; color: #004c3b; margin-bottom: 16px;">
                   ${verseSource.arabic}
                 </div>
-                <div style="font-size: 13px; color: #3f4944; font-style: italic; line-height: 1.6; max-width: 80%; margin: 0 auto;">
+                <div style="font-size: 13px; color: #3f4944; font-style: italic; line-height: 1.6; max-width: 80%; margin: 0 auto; font-family: ${langConfig.fontFamily};">
                   ${verseSource.translation}
                 </div>
               </div>
             ` : ''}
             
-            <div style="font-size: 16px; line-height: 1.8; color: #1b1c18; background: white; padding: 32px; border-radius: 24px; border: 1px solid rgba(0, 76, 59, 0.05); box-shadow: 0 4px 20px rgba(0,0,0,0.02); margin-bottom: 20px;">
+            <div style="font-size: 16px; line-height: 1.8; color: #1b1c18; background: white; padding: 32px; border-radius: 24px; border: 1px solid rgba(0, 76, 59, 0.05); box-shadow: 0 4px 20px rgba(0,0,0,0.02); margin-bottom: 20px; font-family: ${langConfig.fontFamily};">
               ${logText}
             </div>
 
             ${voiceData ? `
-              <div style="background: rgba(0, 76, 59, 0.02); padding: 16px 24px; border-radius: 16px; margin-bottom: 20px; border-left: 3px solid #004c3b;">
-                <div style="font-size: 9px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; color: #004c3b; margin-bottom: 8px;">🎤 Voice Transcript</div>
-                <div style="font-size: 14px; color: #3f4944; font-style: italic; line-height: 1.6;">${voiceData}</div>
+              <div style="background: rgba(0, 76, 59, 0.02); padding: 16px 24px; border-radius: 16px; margin-bottom: 20px; border-${activeDirection === 'rtl' ? 'right' : 'left'}: 3px solid #004c3b;">
+                <div style="font-size: 9px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; color: #004c3b; margin-bottom: 8px;">🎤 ${activeIsoCode === 'en' ? 'Voice Transcript' : 'نص صوتي'}</div>
+                <div style="font-size: 14px; color: #3f4944; font-style: italic; line-height: 1.6; font-family: ${langConfig.fontFamily};">${voiceData}</div>
               </div>
             ` : ''}
 
             ${categories.length > 0 ? `
-              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: ${activeDirection === 'rtl' ? 'flex-end' : 'flex-start'};">
                 ${categories.map((c: string) => `<span style="background: rgba(0, 76, 59, 0.05); padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase; color: #004c3b;">${c}</span>`).join('')}
               </div>
             ` : ''}
@@ -123,14 +127,14 @@ export function PdfExportButton({ notes }: { notes: Note[] }) {
 
       if (appNotes.length === 0) {
         html += `<div style="text-align: center; padding: 100px 0; border: 1px dashed rgba(0, 76, 59, 0.1); border-radius: 40px;">
-          <p style="color: #3f4944; font-style: italic; font-family: serif; font-size: 18px;">The pages of your journal remain unwritten.</p>
+          <p style="color: #3f4944; font-style: italic; font-family: serif; font-size: 18px;">${t('noBookmarks', activeIsoCode)}</p>
         </div>`;
       }
 
       html += '</div>';
       
       html += `
-        <div style="margin-top: 80px; text-align: center; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #004c3b; opacity: 0.3; border-top: 1px solid rgba(0, 76, 59, 0.05); padding-top: 40px;">
+        <div style="margin-top: 80px; text-align: center; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #004c3b; opacity: 0.3; border-top: 1px solid rgba(0, 76, 59, 0.05); padding-top: 40px; direction: ltr;">
           Preserved via Ayah in Action &bull; Digital Sanctuary Archive
         </div>
       `;
@@ -185,7 +189,7 @@ export function PdfExportButton({ notes }: { notes: Note[] }) {
           </>
         )}
         <span className="font-label text-xs font-bold tracking-[0.2em] uppercase">
-          {isExporting ? 'Curating...' : 'Export Archive'}
+          {isExporting ? t('preserving', activeIsoCode) : t('navArchive', activeIsoCode)}
         </span>
       </div>
     </button>

@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, BookOpen, CalendarDays } from 'lucide-react';
 import { parseNoteBody, isAyahInActionNote } from '@/lib/utils';
+import { useLanguageStore } from '@/stores/useLanguageStore';
+import { t } from '@/lib/i18n/uiStrings';
 
 interface Note {
   id: string;
@@ -23,6 +25,8 @@ interface EchoTimelineProps {
  */
 export function EchoTimeline({ notes }: EchoTimelineProps) {
   const [visibleCount, setVisibleCount] = useState(5);
+  const activeIsoCode = useLanguageStore((state) => state.activeIsoCode);
+  const activeDirection = useLanguageStore((state) => state.config.direction);
 
   // Parse notes and extract only those that have an echo
   const echoEntries = notes
@@ -91,7 +95,9 @@ export function EchoTimeline({ notes }: EchoTimelineProps) {
 
                 {/* Echo sentence */}
                 <blockquote className="font-serif text-base md:text-lg leading-relaxed text-primary italic mb-5 relative z-10 border-l-2 border-primary/20 pl-4">
-                  &ldquo;{echo}&rdquo;
+                  <span dir={activeDirection} lang={activeIsoCode}>
+                    &ldquo;{echo}&rdquo;
+                  </span>
                 </blockquote>
 
                 {/* Meta row */}
@@ -99,14 +105,16 @@ export function EchoTimeline({ notes }: EchoTimelineProps) {
                   {verseKey && (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-primary/70 border border-primary/10 font-label text-[10px] tracking-widest uppercase font-bold">
                       <BookOpen className="w-3 h-3" />
-                      {verseKey}
+                      <span dir="ltr">{verseKey}</span>
                     </span>
                   )}
 
                   {date.getTime() > 0 && (
                     <span className="inline-flex items-center gap-1.5 text-[10px] font-label tracking-widest uppercase text-on-surface-variant/50">
                       <CalendarDays className="w-3 h-3" />
-                      {date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      <span dir={activeDirection}>
+                        {date.toLocaleDateString(activeIsoCode, { day: 'numeric', month: 'short', year: 'numeric' })}
+                      </span>
                     </span>
                   )}
 
@@ -115,7 +123,7 @@ export function EchoTimeline({ notes }: EchoTimelineProps) {
                       key={cat}
                       className="px-2.5 py-1 rounded-full bg-tertiary-fixed/50 text-on-surface-variant font-label text-[9px] tracking-widest uppercase border border-outline-variant/10"
                     >
-                      {cat}
+                      {t(`cat${cat}` as any, activeIsoCode)}
                     </span>
                   ))}
                 </div>

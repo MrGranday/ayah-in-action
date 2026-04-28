@@ -5,6 +5,9 @@ import { Mic, RotateCcw, Square, Loader2, Sparkles, Volume2, AlertCircle } from 
 import type { SpeechRecognition, SpeechRecognitionEvent } from '@/types/pwa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import { useLanguageStore } from '@/stores/useLanguageStore';
+import { t } from '@/lib/i18n/uiStrings';
+import { formatNumber } from '@/config/languageConfig';
 
 type RecordingState = 'idle' | 'requesting' | 'recording' | 'transcribing' | 'done' | 'error' | 'permission-denied';
 
@@ -14,6 +17,7 @@ interface VoiceRecorderProps {
 }
 
 export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderProps) {
+  const { activeIsoCode, config } = useLanguageStore();
   const [state, setState] = useState<RecordingState>('idle');
   const [recordingTime, setRecordingTime] = useState(0);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -26,7 +30,6 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
   const streamRef = useRef<MediaStream | null>(null);
   const transcriptRef = useRef<string>('');
   const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const recognitionDoneRef = useRef(false);
 
   useEffect(() => {
     return () => {
@@ -45,11 +48,10 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
   }, [onTranscriptChange]);
 
   const startRecording = async () => {
-    // Check for microphone API
     if (!navigator.mediaDevices?.getUserMedia) {
       setState('error');
-      setErrorMessage('Microphone access is unavailable. Please use HTTPS or allow microphone permission.');
-      toast.error('Microphone not accessible. Make sure you are on HTTPS.');
+      setErrorMessage(t('micError', activeIsoCode));
+      toast.error(t('micError', activeIsoCode));
       return;
     }
 
@@ -58,7 +60,6 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
-      // Pick best audio format
       const mimeType =
         ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/mp4'].find((t) =>
           MediaRecorder.isTypeSupported(t)
@@ -67,19 +68,17 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
       const mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
-      recognitionDoneRef.current = false;
       transcriptRef.current = '';
       setLiveTranscript('');
 
-      // ── Web Speech API setup ─────────────────────────────────────────────────
       const RecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
 
       if (RecognitionClass) {
         const recognition = new RecognitionClass();
         recognitionRef.current = recognition;
         recognition.continuous = true;
-        recognition.interimResults = true; // enable interim so we update live display
-        recognition.lang = 'en-US';
+        recognition.interimResults = true;
+        recognition.lang = config.speechLang;
 
         recognition.onresult = (e: SpeechRecognitionEvent) => {
           let interim = '';
@@ -92,26 +91,16 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
               interim += result[0].transcript;
             }
           }
-          // Accumulate final parts + show interim live
           transcriptRef.current = final;
           setLiveTranscript(final + interim);
-        };
-
-        recognition.onend = () => {
-          // Speech recognition stopped (either manually or due to silence)
-          // Mark it done so onstop knows recognition has finished
-          recognitionDoneRef.current = true;
         };
 
         recognition.onerror = (e: any) => {
           console.warn('[SpeechRecognition] Error:', e.error);
           if (e.error === 'not-allowed') {
             setState('permission-denied');
-            setErrorMessage('Microphone permission denied for speech recognition.');
-            toast.error('Microphone permission denied.');
-          } else if (e.error !== 'aborted' && e.error !== 'no-speech') {
-            // no-speech is normal (silence), aborted is manual stop — ignore both
-            toast.warning(`Speech recognition issue: ${e.error}. The audio recording continues.`);
+            setErrorMessage(t('micDenied', activeIsoCode));
+            toast.error(t('micDenied', activeIsoCode));
           }
         };
 
@@ -119,35 +108,29 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
           recognition.start();
         } catch (recognitionErr) {
           console.warn('[SpeechRecognition] Could not start:', recognitionErr);
-          // Non-fatal — recording still works, just without transcript
         }
       }
 
-      // ── MediaRecorder setup ──────────────────────────────────────────────────
       mediaRecorder.ondataavailable = (e) => {
         if (e.data.size > 0) chunksRef.current.push(e.data);
       };
 
       mediaRecorder.onstop = () => {
-        // Build playback URL
         const actualMime = mimeType || 'audio/webm';
         const blob = new Blob(chunksRef.current, { type: actualMime });
         const url = URL.createObjectURL(blob);
         setAudioUrl(url);
 
-        // If SpeechRecognition has already fired onend, finalize immediately.
-        // Otherwise wait a tick for any remaining onresult events to fire.
         setState('transcribing');
         setTimeout(() => {
           finalizeTranscript();
         }, 800);
       };
 
-      mediaRecorder.start(100); // collect data every 100ms for smoother chunks
+      mediaRecorder.start(100);
       setState('recording');
       setRecordingTime(0);
 
-      // Auto-stop at 30 seconds
       timerRef.current = setInterval(() => {
         setRecordingTime((prev) => {
           if (prev >= 29) {
@@ -161,16 +144,16 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
       console.error('[VoiceRecorder] Error starting:', err);
       if (err?.name === 'NotAllowedError' || err?.name === 'PermissionDeniedError') {
         setState('permission-denied');
-        setErrorMessage('Microphone permission denied. Please allow microphone access in your browser settings.');
-        toast.error('Microphone permission denied. Check your browser settings.');
+        setErrorMessage(t('micDenied', activeIsoCode));
+        toast.error(t('micDenied', activeIsoCode));
       } else if (err?.name === 'NotFoundError') {
         setState('error');
-        setErrorMessage('No microphone found. Please connect a microphone and try again.');
-        toast.error('No microphone device found.');
+        setErrorMessage(t('noMic', activeIsoCode));
+        toast.error(t('noMic', activeIsoCode));
       } else {
         setState('error');
-        setErrorMessage('Could not start recording. Please try again.');
-        toast.error('Could not start microphone recording.');
+        setErrorMessage(t('micError', activeIsoCode));
+        toast.error(t('micError', activeIsoCode));
       }
     }
   };
@@ -204,7 +187,6 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
   return (
     <div className="space-y-4">
       <AnimatePresence mode="wait">
-        {/* ── IDLE ── */}
         {state === 'idle' && (
           <motion.button
             key="idle"
@@ -218,22 +200,20 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
               <Mic className="w-3.5 h-3.5" />
             </div>
             <span className="text-[10px] font-label tracking-[0.2em] uppercase font-bold text-primary/60">
-              Archive Voice Reflection
+              {t('archiveVoice', activeIsoCode)}
             </span>
           </motion.button>
         )}
 
-        {/* ── REQUESTING ── */}
         {state === 'requesting' && (
           <motion.div key="requesting" className="flex items-center gap-3 px-5 py-2.5">
             <Loader2 className="w-4 h-4 text-primary/40 animate-spin" />
             <span className="text-[10px] font-label tracking-widest uppercase text-primary/40 italic">
-              Requesting microphone access...
+              {t('micRequesting', activeIsoCode)}
             </span>
           </motion.div>
         )}
 
-        {/* ── RECORDING ── */}
         {state === 'recording' && (
           <motion.div
             key="recording"
@@ -255,28 +235,27 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
                 </div>
                 <div className="space-y-0.5">
                   <span className="block text-[10px] font-label tracking-widest uppercase text-red-500 font-bold">
-                    Recording
+                    {t('recording', activeIsoCode)}
                   </span>
                   <span className="text-lg font-serif text-primary">
-                    {Math.floor(recordingTime / 60)}:{String(recordingTime % 60).padStart(2, '0')}
-                    <span className="text-sm opacity-30 ml-1">/ 0:30</span>
+                    {formatNumber(Math.floor(recordingTime / 60), activeIsoCode)}:{formatNumber(recordingTime % 60, activeIsoCode).padStart(2, formatNumber(0, activeIsoCode))}
+                    <span className="text-sm opacity-30 ml-1">/ {formatNumber(0, activeIsoCode)}:{formatNumber(30, activeIsoCode)}</span>
                   </span>
                 </div>
               </div>
               <button
                 onClick={stopRecording}
                 className="w-11 h-11 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 hover:bg-red-500/20 transition-colors"
-                title="Stop recording"
+                title={t('stopRecording' as any, activeIsoCode)}
               >
                 <Square className="w-4 h-4 fill-current" />
               </button>
             </div>
 
-            {/* Live transcript preview */}
             {liveTranscript && (
               <div className="bg-primary/5 rounded-xl px-4 py-2.5 border border-primary/10">
                 <span className="text-[9px] font-label tracking-widest uppercase text-primary/40 block mb-1">
-                  Live Transcript
+                  {t('liveTranscript' as any, activeIsoCode)}
                 </span>
                 <p className="text-xs font-body italic text-on-surface-variant leading-relaxed line-clamp-2">
                   {liveTranscript}
@@ -286,17 +265,15 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
           </motion.div>
         )}
 
-        {/* ── TRANSCRIBING ── */}
         {state === 'transcribing' && (
           <motion.div key="transcribing" className="flex items-center gap-3 px-5 py-2.5">
             <Sparkles className="w-4 h-4 text-primary animate-pulse" />
             <span className="text-[10px] font-label tracking-widest uppercase text-primary font-bold">
-              Finalizing transcript...
+              {t('finalizingTranscript', activeIsoCode)}
             </span>
           </motion.div>
         )}
 
-        {/* ── ERROR / PERMISSION DENIED ── */}
         {(state === 'error' || state === 'permission-denied') && (
           <motion.div
             key="error"
@@ -307,20 +284,19 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
             <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
             <div className="space-y-2 flex-1">
               <p className="text-[10px] font-label tracking-widest uppercase text-red-600 font-bold">
-                {state === 'permission-denied' ? 'Permission Required' : 'Recording Error'}
+                {state === 'permission-denied' ? t('permissionRequired' as any, activeIsoCode) : t('error', activeIsoCode)}
               </p>
               <p className="text-xs font-body text-on-surface-variant leading-relaxed">{errorMessage}</p>
               <button
                 onClick={() => setState('idle')}
                 className="text-[10px] font-bold tracking-widest uppercase text-primary hover:underline"
               >
-                Try Again
+                {t('tryAgain', activeIsoCode)}
               </button>
             </div>
           </motion.div>
         )}
 
-        {/* ── DONE ── */}
         {state === 'done' && (
           <motion.div
             key="done"
@@ -333,7 +309,7 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
                 <div className="flex items-center gap-2 text-primary/60">
                   <Volume2 className="w-4 h-4" />
                   <span className="text-[10px] font-label tracking-widest uppercase font-bold">
-                    Voice Archive Preserved
+                    {t('voicePreserved', activeIsoCode)}
                   </span>
                 </div>
                 <button
@@ -341,7 +317,7 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
                   className="flex items-center gap-2 text-[10px] font-label tracking-widest uppercase text-primary hover:underline font-bold"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
-                  Reset
+                  {t('reset' as any, activeIsoCode)}
                 </button>
               </div>
 
@@ -353,12 +329,12 @@ export function VoiceRecorder({ onTranscriptChange, transcript }: VoiceRecorderP
 
               <div className="space-y-2">
                 <span className="text-[10px] font-label tracking-widest uppercase text-on-surface-variant/40 block">
-                  Digital Transcript {!transcript && <span className="text-on-surface-variant/30">(edit or add manually)</span>}
+                  {t('digitalTranscript', activeIsoCode)} {!transcript && <span className="text-on-surface-variant/30">({t('editOrAdd' as any, activeIsoCode)})</span>}
                 </span>
                 <textarea
                   value={transcript}
                   onChange={(e) => onTranscriptChange(e.target.value)}
-                  placeholder="The spoken word manifests here... (you can type or edit)"
+                  placeholder={t('transcriptPlaceholder', activeIsoCode)}
                   className="w-full bg-surface-container-lowest/40 border border-outline-variant/5 rounded-xl p-4 text-sm font-body italic text-on-surface-variant focus:bg-surface-container-lowest focus:border-primary/20 transition-all outline-none min-h-[80px] resize-none"
                 />
               </div>

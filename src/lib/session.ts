@@ -22,6 +22,7 @@ export interface SessionData {
   isoCode?: string;
   direction?: 'ltr' | 'rtl';
   translationResourceId?: number;
+  tafsirResourceId?: number;
   nativeName?: string;
   preferredModel?: string;
 }

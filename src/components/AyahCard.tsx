@@ -7,6 +7,9 @@ import { Badge } from './ui/badge';
 import { cn } from '@/lib/utils';
 import type { ProcessedVerse } from '@/types/quran';
 import { useAyahStore } from '@/stores/useAyahStore';
+import { useLanguageStore } from '@/stores/useLanguageStore';
+import { t } from '@/lib/i18n/uiStrings';
+import { formatNumber } from '@/config/languageConfig';
 
 interface AyahCardProps {
   ayah: ProcessedVerse;
@@ -18,6 +21,8 @@ export function AyahCard({ ayah }: AyahCardProps) {
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
   const { currentAyah, setCurrentAyah } = useAyahStore();
+  const activeIsoCode = useLanguageStore((state) => state.activeIsoCode);
+  const activeDirection = useLanguageStore((state) => state.config.direction);
   
   // Use store version if it exists, otherwise use prop
   const displayAyah = currentAyah || ayah;
@@ -26,13 +31,6 @@ export function AyahCard({ ayah }: AyahCardProps) {
     // If store is empty, initialize it with the server-fetched ayah
     if (!currentAyah && ayah) {
        setCurrentAyah(ayah);
-    }
-    // If the server ayah changes (e.g. via shuffle) and we AREN'T showing a whisper,
-    // we should sync the store so that the 'displayAyah' logic (line 23) picks it up.
-    if (currentAyah && ayah && currentAyah.verse_key !== ayah.verse_key) {
-        // Only override if the current store version looks like a previous daily guidiance
-        // OR if the user specifically requested a shuffle (handled by clearing currentAyah above).
-        // For reliability, we stick to the 'clear store' pattern in ShuffleAyahButton.
     }
   }, [ayah, currentAyah, setCurrentAyah]);
 
@@ -77,14 +75,16 @@ export function AyahCard({ ayah }: AyahCardProps) {
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
-            <span className="font-serif italic text-primary text-xl">{displayAyah.chapter_id}</span>
+            <span className="font-serif italic text-primary text-xl">
+              {formatNumber(displayAyah.chapter_id || 0, activeIsoCode)}
+            </span>
           </div>
           <div>
             <h3 className="font-serif text-lg text-primary leading-none mb-1">
               {displayAyah.chapter_name_english}
             </h3>
             <span className="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface-variant">
-              Verse {displayAyah.verse_number}
+              {t('verse', activeIsoCode)} {formatNumber(displayAyah.verse_number || 0, activeIsoCode)}
             </span>
           </div>
         </div>
@@ -93,7 +93,7 @@ export function AyahCard({ ayah }: AyahCardProps) {
           "font-label text-[10px] tracking-widest px-4 py-1.5 border-none transition-all duration-500",
           currentAyah && ayah && currentAyah.verse_key !== ayah.verse_key ? "silk-gradient text-white shadow-lg scale-105" : "bg-tertiary-fixed text-on-tertiary-fixed"
         )}>
-           {currentAyah && ayah && currentAyah.verse_key !== ayah.verse_key ? 'WHISPER GUIDANCE' : 'DAILY GUIDANCE'}
+           {currentAyah && ayah && currentAyah.verse_key !== ayah.verse_key ? t('navWhisper', activeIsoCode).toUpperCase() : t('todaysSanctuary', activeIsoCode).toUpperCase()}
         </Badge>
       </div>
 
@@ -101,17 +101,18 @@ export function AyahCard({ ayah }: AyahCardProps) {
         <span className="absolute -top-6 -left-4 text-primary/5 select-none pointer-events-none">
           <Quote className="w-16 h-16 fill-current" />
         </span>
-        <p
-          className="font-serif text-2xl md:text-3xl text-primary leading-[1.4] md:leading-[1.6] text-center mb-4"
-          dir="rtl"
-        >
-          {displayAyah.text_uthmani}
+        <p className="text-center mb-4">
+          <span className="quran-text text-primary" dir="rtl" lang="ar">
+            {displayAyah.text_uthmani}
+          </span>
         </p>
       </div>
 
       <div className="max-w-2xl mx-auto text-center mb-6">
         <p className="font-body text-sm md:text-base text-on-surface leading-relaxed italic">
-          &ldquo;{displayAyah.translation}&rdquo;
+          <span dir={activeDirection} lang={activeIsoCode}>
+            &ldquo;{displayAyah.translation}&rdquo;
+          </span>
         </p>
       </div>
 
@@ -122,7 +123,9 @@ export function AyahCard({ ayah }: AyahCardProps) {
               <div className="w-1.5 h-1.5 rounded-full bg-gold" />
             </div>
             <p className="font-body text-xs text-on-surface-variant leading-relaxed italic">
-              {displayAyah.tafsir_snippet}
+              <span dir={activeDirection} lang={activeIsoCode}>
+                {displayAyah.tafsir_snippet}
+              </span>
             </p>
           </div>
         </div>
@@ -142,7 +145,7 @@ export function AyahCard({ ayah }: AyahCardProps) {
               )}
             </div>
             <span className="font-label text-[10px] tracking-[0.2em] uppercase text-primary font-bold">
-              {isPlaying ? 'Listening...' : 'Listen'}
+              {isPlaying ? '...' : t('listen', activeIsoCode)} 
             </span>
           </button>
         )}
@@ -159,7 +162,7 @@ export function AyahCard({ ayah }: AyahCardProps) {
             )}
           </div>
           <span className="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface-variant font-bold group-hover:text-primary transition-colors">
-            {copied ? 'Copied' : 'Preserve'}
+            {copied ? t('copied', activeIsoCode) : t('preserveInsight', activeIsoCode)}
           </span>
         </button>
       </div>

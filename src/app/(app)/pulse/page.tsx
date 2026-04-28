@@ -13,7 +13,7 @@ export default function UmmahPulsePage() {
   const [pulseData, setPulseData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const isoCode = useLanguageStore((state) => state.isoCode);
+  const isoCode = useLanguageStore((state) => state.activeIsoCode);
 
   useEffect(() => {
     fetchPulse();
@@ -85,18 +85,18 @@ export default function UmmahPulsePage() {
                      <div className="flex items-start gap-4">
                         <Sparkles className="w-8 h-8 text-secondary shrink-0 mt-1" />
                         <p className="font-body text-xl md:text-2xl text-on-surface leading-loose italic">
-                           "{pulseData.personalized_message}"
+                           &ldquo;{pulseData.personalized_message}&rdquo;
                         </p>
                      </div>
                    </div>
                    
                    {/* Personal Verse Highlight */}
                    <div className="flex-1 w-full p-8 md:p-12 rounded-[2rem] bg-surface-container-low border border-primary/5">
-                      <p className="font-arabic text-2xl md:text-3xl lg:text-4xl xl:text-5xl leading-[2.2] text-primary text-right mb-6 drop-shadow-sm" dir="rtl">
+                      <p className="quran-text text-2xl md:text-3xl lg:text-4xl xl:text-5xl leading-[2.2] text-primary text-right mb-6 drop-shadow-sm" dir="rtl">
                          {pulseData.personal_verse?.text_uthmani}
                       </p>
                       <h4 className="font-serif text-2xl text-primary mt-8 mb-2">
-                         {pulseData.personal_verse?.chapter_name_english} {pulseData.personal_verse?.verse_key}
+                         {pulseData.personal_verse?.chapter_name} {pulseData.personal_verse?.verse_key}
                       </h4>
                       <p className="font-body text-lg text-on-surface-variant italic">
                          {pulseData.personal_verse?.translation && `"${pulseData.personal_verse?.translation}"`}
@@ -124,7 +124,7 @@ export default function UmmahPulsePage() {
                                <div className="flex-1 space-y-3">
                                   <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-2">
                                      <h4 className="font-serif text-2xl text-primary">
-                                        {item.meta?.chapter_name_english} {item.meta?.verse_key || item.verse_key}
+                                        {item.meta?.chapter_name} {item.meta?.verse_key || item.verse_key}
                                      </h4>
                                      {item.theme && (
                                        <span className="px-3 py-1 bg-secondary/10 text-secondary rounded-full font-label text-[10px] tracking-widest uppercase border border-secondary/20">
@@ -132,7 +132,7 @@ export default function UmmahPulsePage() {
                                        </span>
                                      )}
                                   </div>
-                                  <p className="font-arabic text-2xl leading-loose text-primary text-center md:text-right" dir="rtl">
+                                  <p className="quran-text text-2xl leading-loose text-primary text-center md:text-right" dir="rtl">
                                      {item.meta?.text_uthmani}
                                   </p>
                                   <p className="font-body text-base text-on-surface-variant italic">

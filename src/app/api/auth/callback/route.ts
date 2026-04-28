@@ -234,20 +234,22 @@ export async function GET(request: NextRequest) {
       }
 
       // Reverse lookup via local Language Configuration map directly, avoiding double external API calls
-      const { LANGUAGE_CONFIG } = await import('@/lib/config/languageMap');
-      const matchedConfig = Object.entries(LANGUAGE_CONFIG).find(([iso, config]) => config.resourceId === translationId);
+      const { LANGUAGE_CONFIGS } = await import('@/config/languageConfig');
+      const matchedConfig = Object.entries(LANGUAGE_CONFIGS).find(([, config]) => config.quranTranslationId === translationId);
       
       if (matchedConfig) {
          session.isoCode = matchedConfig[0];
          session.direction = matchedConfig[1].direction;
          session.nativeName = matchedConfig[1].nativeName;
          session.translationResourceId = translationId;
+         session.tafsirResourceId = matchedConfig[1].tafsirResourceId;
       } else {
          // Fallback if the user has a custom ID configured not in our map
          session.isoCode = 'en';
          session.direction = 'ltr';
          session.nativeName = 'English';
-         session.translationResourceId = translationId;
+         session.translationResourceId = translationId || 131;
+         session.tafsirResourceId = 169;
       }
     } catch (err) {
       console.warn('[Auth/Callback] Preferences Rehydration failed (non-critical):', err);

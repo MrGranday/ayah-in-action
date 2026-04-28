@@ -8,6 +8,9 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarEle
 
 import { useTheme } from 'next-themes';
 import { isAyahInActionNote, parseNoteBody } from '@/lib/utils';
+import { useLanguageStore } from '@/stores/useLanguageStore';
+import { t } from '@/lib/i18n/uiStrings';
+import { formatNumber } from '@/config/languageConfig';
 
 interface Note {
   id: string;
@@ -24,6 +27,7 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
   const [mounted, setMounted] = useState(false);
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
+  const isoCode = useLanguageStore((state) => state.activeIsoCode);
 
   useEffect(() => {
     setMounted(true);
@@ -60,7 +64,7 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
     : ['#004c3b', '#d4a017', '#8b5c16', '#006b54', '#a67c00'];
 
   const doughnutData = {
-    labels: topCategories.map(([cat]) => cat),
+    labels: topCategories.map(([cat]) => t(`cat${cat}` as any, isoCode)),
     datasets: [
       {
         data: topCategories.map(([, count]) => count),
@@ -82,7 +86,7 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
     const d = new Date(today);
     d.setDate(d.getDate() - (d.getDay()) - (i * 7)); // Start of week (Sunday)
     const weekKey = d.toLocaleDateString('en-CA');
-    last6WeeksLabels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+    last6WeeksLabels.push(d.toLocaleDateString(isoCode, { month: 'short', day: 'numeric' }));
     last6WeeksCounts.push(weeklyData[weekKey] || 0);
   }
 
@@ -90,7 +94,7 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
     labels: last6WeeksLabels,
     datasets: [
       {
-        label: 'Weekly Reflections',
+        label: t('archiveTitle', isoCode),
         data: last6WeeksCounts,
         backgroundColor: isDark ? '#a3f2d6' : '#004c3b',
         borderRadius: 12,
@@ -138,8 +142,10 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div className="bg-surface-container-lowest rounded-3xl p-6 border border-outline-variant/10 editorial-shadow parchment-texture">
-        <span className="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface-variant font-bold mb-4 block">Virtue Distribution</span>
-        <h3 className="font-serif text-lg text-primary mb-6">Dominant Moral Themes</h3>
+        <span className="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface-variant font-bold mb-4 block">
+          {t('virtueDistribution', isoCode)}
+        </span>
+        <h3 className="font-serif text-lg text-primary mb-6">{t('dominantMoralThemes', isoCode)}</h3>
         <div className="h-60">
           {topCategories.length > 0 ? (
             <Doughnut
@@ -149,15 +155,17 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
           ) : (
             <div className="flex flex-col items-center justify-center h-full text-on-surface-variant/40 space-y-4">
               <div className="w-12 h-12 rounded-full border border-dashed border-outline-variant/30" />
-              <p className="font-body italic">The pattern of your virtues is still unfolding.</p>
+              <p className="font-body italic">{t('legacySecure', isoCode)}</p>
             </div>
           )}
         </div>
       </div>
 
       <div className="bg-surface-container-lowest rounded-3xl p-6 border border-outline-variant/10 editorial-shadow parchment-texture">
-        <span className="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface-variant font-bold mb-4 block">Activity Velocity</span>
-        <h3 className="font-serif text-lg text-primary mb-6">Weekly Transcendence</h3>
+        <span className="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface-variant font-bold mb-4 block">
+          {t('activityVelocity', isoCode)}
+        </span>
+        <h3 className="font-serif text-lg text-primary mb-6">{t('weeklyTranscendence', isoCode)}</h3>
         <div className="h-60">
           {last6WeeksLabels.length > 0 ? (
             <Bar
@@ -177,6 +185,7 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
                       stepSize: 1,
                       font: { family: "'Inter', sans-serif", size: 10 },
                       color: themeTextColor,
+                      callback: (val: any) => formatNumber(val, isoCode)
                     },
                   },
                   x: {
@@ -193,7 +202,7 @@ export function ImpactStats({ notes }: ImpactStatsProps) {
           ) : (
             <div className="flex flex-col items-center justify-center h-full text-on-surface-variant/40 space-y-4">
               <div className="w-12 h-12 rounded-full border border-dashed border-outline-variant/30" />
-              <p className="font-body italic">Consistency is a journey that begins with a single step.</p>
+              <p className="font-body italic">{t('legacySecure', isoCode)}</p>
             </div>
           )}
         </div>

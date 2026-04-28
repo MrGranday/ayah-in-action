@@ -1,0 +1,5672 @@
+{
+  "translations": {
+    "en": [
+      {
+        "id": 85,
+        "name": "M.A.S. Abdel Haleem"
+      },
+      {
+        "id": 149,
+        "name": "Fadel Soliman, Bridges’ translation"
+      },
+      {
+        "id": 84,
+        "name": "T. Usmani"
+      },
+      {
+        "id": 95,
+        "name": "A. Maududi (Tafhim commentary)"
+      },
+      {
+        "id": 78,
+        "name": "Ministry of Awqaf, Egypt"
+      },
+      {
+        "id": 19,
+        "name": "M. Pickthall"
+      },
+      {
+        "id": 79,
+        "name": "Abu Adel"
+      },
+      {
+        "id": 80,
+        "name": "Muhammad Karakunnu and Vanidas Elayavoor"
+      },
+      {
+        "id": 81,
+        "name": "Burhan Muhammad-Amin"
+      },
+      {
+        "id": 83,
+        "name": "Sheikh Isa Garcia"
+      },
+      {
+        "id": 86,
+        "name": "Office of the president of Maldives"
+      },
+      {
+        "id": 76,
+        "name": "Muhammad Saleh"
+      },
+      {
+        "id": 75,
+        "name": "Alikhan Musayev"
+      },
+      {
+        "id": 22,
+        "name": "A. Yusuf Ali"
+      },
+      {
+        "id": 20,
+        "name": "Saheeh International"
+      },
+      {
+        "id": 203,
+        "name": "Al-Hilali & Khan"
+      },
+      {
+        "id": 234,
+        "name": "Fatah Muhammad Jalandhari"
+      },
+      {
+        "id": 57,
+        "name": "Transliteration"
+      },
+      {
+        "id": 54,
+        "name": "Maulana Muhammad Junagarhi"
+      },
+      {
+        "id": 156,
+        "name": "Fe Zilal al-Qur'an"
+      },
+      {
+        "id": 151,
+        "name": "Shaykh al-Hind Mahmud al-Hasan(with Tafsir E Usmani)"
+      },
+      {
+        "id": 158,
+        "name": "Bayan-ul-Quran"
+      },
+      {
+        "id": 97,
+        "name": "Tafheem e Qur'an - Syed Abu Ali Maududi"
+      },
+      {
+        "id": 136,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 135,
+        "name": "IslamHouse.com"
+      },
+      {
+        "id": 139,
+        "name": "Khawaja Mirof & Khawaja Mir"
+      },
+      {
+        "id": 35,
+        "name": "Ryoichi Mita"
+      },
+      {
+        "id": 134,
+        "name": "King Fahad Quran Complex"
+      },
+      {
+        "id": 153,
+        "name": "Hamza Roberto Piccardo"
+      },
+      {
+        "id": 161,
+        "name": "Taisirul Quran"
+      },
+      {
+        "id": 163,
+        "name": "Sheikh Mujibur Rahman"
+      },
+      {
+        "id": 162,
+        "name": "Rawai Al-bayan"
+      },
+      {
+        "id": 210,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 211,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 217,
+        "name": "Dr. Mikhailo Yaqubovic"
+      },
+      {
+        "id": 229,
+        "name": "Sheikh Omar Sharif bin Abdul Salam"
+      },
+      {
+        "id": 55,
+        "name": "Muhammad Sodiq Muhammad Yusuf (Latin) "
+      },
+      {
+        "id": 143,
+        "name": "Muhammad Saleh Bamoki"
+      },
+      {
+        "id": 141,
+        "name": "The Sabiq Company"
+      },
+      {
+        "id": 140,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 214,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 227,
+        "name": "Maulana Abder-Rahim ibn Muhammad"
+      },
+      {
+        "id": 226,
+        "name": "Muhammad Shafi’i Ansari"
+      },
+      {
+        "id": 233,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 225,
+        "name": "Rabila Al-Umry"
+      },
+      {
+        "id": 224,
+        "name": "Abdul-Hamid Haidar & Kanhi Muhammad"
+      },
+      {
+        "id": 232,
+        "name": "African Development Foundation"
+      },
+      {
+        "id": 235,
+        "name": "Malak Faris Abdalsalaam"
+      },
+      {
+        "id": 231,
+        "name": "Dr. Abdullah Muhammad Abu Bakr and Sheikh Nasir Khamis"
+      },
+      {
+        "id": 230,
+        "name": "Society of Institutes and Universities"
+      },
+      {
+        "id": 223,
+        "name": "Pioneers of Translation Center"
+      },
+      {
+        "id": 222,
+        "name": "Khalifa Altay"
+      },
+      {
+        "id": 220,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 144,
+        "name": "Sofian S. Siregar"
+      },
+      {
+        "id": 88,
+        "name": "Hasan Efendi Nahi"
+      },
+      {
+        "id": 87,
+        "name": "Sadiq and Sani"
+      },
+      {
+        "id": 50,
+        "name": "Jan Trust Foundation"
+      },
+      {
+        "id": 49,
+        "name": "Ali Muhsin Al-Barwani"
+      },
+      {
+        "id": 48,
+        "name": "Knut Bernström"
+      },
+      {
+        "id": 128,
+        "name": "Cambodian Muslim Community Development"
+      },
+      {
+        "id": 45,
+        "name": "Russian Translation ( Elmir Kuliev )"
+      },
+      {
+        "id": 77,
+        "name": "Turkish Translation(Diyanet)"
+      },
+      {
+        "id": 39,
+        "name": "Abdullah Muhammad Basmeih"
+      },
+      {
+        "id": 36,
+        "name": "Korean"
+      },
+      {
+        "id": 30,
+        "name": "Finnish"
+      },
+      {
+        "id": 26,
+        "name": "Czech"
+      },
+      {
+        "id": 103,
+        "name": "Helmi Nasr"
+      },
+      {
+        "id": 74,
+        "name": "Tajik"
+      },
+      {
+        "id": 23,
+        "name": "Azerbaijani"
+      },
+      {
+        "id": 101,
+        "name": "Alauddin Mansour"
+      },
+      {
+        "id": 53,
+        "name": "Tatar"
+      },
+      {
+        "id": 47,
+        "name": "Albanian"
+      },
+      {
+        "id": 44,
+        "name": "Grigore"
+      },
+      {
+        "id": 42,
+        "name": "Józef Bielawski"
+      },
+      {
+        "id": 41,
+        "name": "Norwegian"
+      },
+      {
+        "id": 237,
+        "name": "Tzvetan Theophanov"
+      },
+      {
+        "id": 106,
+        "name": "Magomed Magomedov"
+      },
+      {
+        "id": 236,
+        "name": "Ramdane At Mansour"
+      },
+      {
+        "id": 238,
+        "name": "Taj Mehmood Amroti"
+      },
+      {
+        "id": 125,
+        "name": "Shaykh Abu Rahimah Mikael Aykyuni"
+      },
+      {
+        "id": 124,
+        "name": "Muslim Shahin"
+      },
+      {
+        "id": 46,
+        "name": "Mahmud Muhammad Abduh"
+      },
+      {
+        "id": 113,
+        "name": "Khalifah Altai"
+      },
+      {
+        "id": 112,
+        "name": "Shaban Britch"
+      },
+      {
+        "id": 38,
+        "name": "Maranao"
+      },
+      {
+        "id": 89,
+        "name": "Albanian Translation"
+      },
+      {
+        "id": 56,
+        "name": "Chinese Translation (Simplified) - Ma Jain"
+      },
+      {
+        "id": 32,
+        "name": "Hausa Translation(Abubakar Gumi)"
+      },
+      {
+        "id": 108,
+        "name": "Ahl Al-Hadith Central Society of Nepal"
+      },
+      {
+        "id": 37,
+        "name": "Malayalam Translation(Abdul Hameed and Kunhi)"
+      },
+      {
+        "id": 43,
+        "name": "Portuguese Translation( Samir )"
+      },
+      {
+        "id": 51,
+        "name": "Thai Translatio (King Fahad Quran Complex)"
+      },
+      {
+        "id": 111,
+        "name": "Ghali Apapur Apaghuna"
+      },
+      {
+        "id": 115,
+        "name": "Abubakar Mahmood Jummi"
+      },
+      {
+        "id": 31,
+        "name": "Muhammad Hamidullah"
+      },
+      {
+        "id": 29,
+        "name": "Hussein Taji Kal Dari"
+      },
+      {
+        "id": 208,
+        "name": "Abu Reda Muhammad ibn Ahmad"
+      },
+      {
+        "id": 209,
+        "name": "Othman al-Sharif"
+      },
+      {
+        "id": 133,
+        "name": "Abdul Hameed Baqavi"
+      },
+      {
+        "id": 25,
+        "name": "Muhamed Mehanović"
+      },
+      {
+        "id": 221,
+        "name": "Hasan Abdul-Karim"
+      },
+      {
+        "id": 219,
+        "name": "Hamed Choi"
+      },
+      {
+        "id": 52,
+        "name": "Elmalili Hamdi Yazir"
+      },
+      {
+        "id": 213,
+        "name": "Dr. Abu Bakr Muhammad Zakaria"
+      },
+      {
+        "id": 199,
+        "name": "Noor International Center"
+      },
+      {
+        "id": 218,
+        "name": "Saeed Sato"
+      },
+      {
+        "id": 228,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 126,
+        "name": "Besim Korkut"
+      },
+      {
+        "id": 122,
+        "name": "Maulana Azizul Haque al-Umari"
+      },
+      {
+        "id": 120,
+        "name": "Shaykh Rafeequl Islam Habibur-Rahman"
+      },
+      {
+        "id": 127,
+        "name": "Muhammad Sodik Muhammad Yusuf"
+      },
+      {
+        "id": 118,
+        "name": "Zakaria Abulsalam"
+      },
+      {
+        "id": 109,
+        "name": "Muhammad Makin"
+      },
+      {
+        "id": 27,
+        "name": "Frank Bubenheim and Nadeem"
+      },
+      {
+        "id": 33,
+        "name": "Indonesian Islamic Affairs Ministry"
+      },
+      {
+        "id": 831,
+        "name": "Abul Ala Maududi(Roman Urdu)"
+      },
+      {
+        "id": 819,
+        "name": "Maulana Wahiduddin Khan"
+      },
+      {
+        "id": 771,
+        "name": "Kannada Translation"
+      },
+      {
+        "id": 785,
+        "name": "Mawlawi Muhammad Anwar Badkhashani"
+      },
+      {
+        "id": 840,
+        "name": "Abu Bakr Ibrahim Ali (Bakurube)"
+      },
+      {
+        "id": 795,
+        "name": "Suliman Kanti"
+      },
+      {
+        "id": 779,
+        "name": "Rashid Maash"
+      },
+      {
+        "id": 782,
+        "name": "Islamic and Cultural League"
+      },
+      {
+        "id": 796,
+        "name": "Baba Mamady Jani"
+      },
+      {
+        "id": 798,
+        "name": "Abdul Hamid Silika"
+      },
+      {
+        "id": 774,
+        "name": "The Rwanda Muslims Association team"
+      }
+    ],
+    "ar": [
+      {
+        "id": 85,
+        "name": "M.A.S. Abdel Haleem"
+      },
+      {
+        "id": 149,
+        "name": "Fadel Soliman, Bridges’ translation"
+      },
+      {
+        "id": 84,
+        "name": "T. Usmani"
+      },
+      {
+        "id": 95,
+        "name": "A. Maududi (Tafhim commentary)"
+      },
+      {
+        "id": 19,
+        "name": "M. Pickthall"
+      },
+      {
+        "id": 83,
+        "name": "Sheikh Isa Garcia"
+      },
+      {
+        "id": 79,
+        "name": "Abu Adel"
+      },
+      {
+        "id": 80,
+        "name": "Muhammad Karakunnu and Vanidas Elayavoor"
+      },
+      {
+        "id": 81,
+        "name": "Burhan Muhammad-Amin"
+      },
+      {
+        "id": 76,
+        "name": "Muhammad Saleh"
+      },
+      {
+        "id": 86,
+        "name": "Office of the president of Maldives"
+      },
+      {
+        "id": 78,
+        "name": "Ministry of Awqaf, Egypt"
+      },
+      {
+        "id": 75,
+        "name": "Alikhan Musayev"
+      },
+      {
+        "id": 22,
+        "name": "A. Yusuf Ali"
+      },
+      {
+        "id": 20,
+        "name": "Saheeh International"
+      },
+      {
+        "id": 203,
+        "name": "Al-Hilali & Khan"
+      },
+      {
+        "id": 234,
+        "name": "Fatah Muhammad Jalandhari"
+      },
+      {
+        "id": 57,
+        "name": "Transliteration"
+      },
+      {
+        "id": 54,
+        "name": "Maulana Muhammad Junagarhi"
+      },
+      {
+        "id": 156,
+        "name": "Fe Zilal al-Qur'an"
+      },
+      {
+        "id": 151,
+        "name": "Shaykh al-Hind Mahmud al-Hasan(with Tafsir E Usmani)"
+      },
+      {
+        "id": 158,
+        "name": "Bayan-ul-Quran"
+      },
+      {
+        "id": 97,
+        "name": "Tafheem e Qur'an - Syed Abu Ali Maududi"
+      },
+      {
+        "id": 136,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 135,
+        "name": "IslamHouse.com"
+      },
+      {
+        "id": 139,
+        "name": "Khawaja Mirof & Khawaja Mir"
+      },
+      {
+        "id": 35,
+        "name": "Ryoichi Mita"
+      },
+      {
+        "id": 134,
+        "name": "King Fahad Quran Complex"
+      },
+      {
+        "id": 153,
+        "name": "Hamza Roberto Piccardo"
+      },
+      {
+        "id": 161,
+        "name": "Taisirul Quran"
+      },
+      {
+        "id": 163,
+        "name": "Sheikh Mujibur Rahman"
+      },
+      {
+        "id": 162,
+        "name": "Rawai Al-bayan"
+      },
+      {
+        "id": 210,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 211,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 217,
+        "name": "Dr. Mikhailo Yaqubovic"
+      },
+      {
+        "id": 229,
+        "name": "Sheikh Omar Sharif bin Abdul Salam"
+      },
+      {
+        "id": 55,
+        "name": "Muhammad Sodiq Muhammad Yusuf (Latin) "
+      },
+      {
+        "id": 143,
+        "name": "Muhammad Saleh Bamoki"
+      },
+      {
+        "id": 141,
+        "name": "The Sabiq Company"
+      },
+      {
+        "id": 140,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 214,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 227,
+        "name": "Maulana Abder-Rahim ibn Muhammad"
+      },
+      {
+        "id": 226,
+        "name": "Muhammad Shafi’i Ansari"
+      },
+      {
+        "id": 233,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 225,
+        "name": "Rabila Al-Umry"
+      },
+      {
+        "id": 224,
+        "name": "Abdul-Hamid Haidar & Kanhi Muhammad"
+      },
+      {
+        "id": 235,
+        "name": "Malak Faris Abdalsalaam"
+      },
+      {
+        "id": 232,
+        "name": "African Development Foundation"
+      },
+      {
+        "id": 231,
+        "name": "Dr. Abdullah Muhammad Abu Bakr and Sheikh Nasir Khamis"
+      },
+      {
+        "id": 230,
+        "name": "Society of Institutes and Universities"
+      },
+      {
+        "id": 223,
+        "name": "Pioneers of Translation Center"
+      },
+      {
+        "id": 222,
+        "name": "Khalifa Altay"
+      },
+      {
+        "id": 220,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 144,
+        "name": "Sofian S. Siregar"
+      },
+      {
+        "id": 88,
+        "name": "Hasan Efendi Nahi"
+      },
+      {
+        "id": 87,
+        "name": "Sadiq and Sani"
+      },
+      {
+        "id": 50,
+        "name": "Jan Trust Foundation"
+      },
+      {
+        "id": 49,
+        "name": "Ali Muhsin Al-Barwani"
+      },
+      {
+        "id": 48,
+        "name": "Knut Bernström"
+      },
+      {
+        "id": 128,
+        "name": "Cambodian Muslim Community Development"
+      },
+      {
+        "id": 45,
+        "name": "Russian Translation ( Elmir Kuliev )"
+      },
+      {
+        "id": 77,
+        "name": "Turkish Translation(Diyanet)"
+      },
+      {
+        "id": 39,
+        "name": "Abdullah Muhammad Basmeih"
+      },
+      {
+        "id": 36,
+        "name": "Korean"
+      },
+      {
+        "id": 30,
+        "name": "Finnish"
+      },
+      {
+        "id": 26,
+        "name": "Czech"
+      },
+      {
+        "id": 103,
+        "name": "Helmi Nasr"
+      },
+      {
+        "id": 74,
+        "name": "Tajik"
+      },
+      {
+        "id": 23,
+        "name": "Azerbaijani"
+      },
+      {
+        "id": 101,
+        "name": "Alauddin Mansour"
+      },
+      {
+        "id": 53,
+        "name": "Tatar"
+      },
+      {
+        "id": 47,
+        "name": "Albanian"
+      },
+      {
+        "id": 44,
+        "name": "Grigore"
+      },
+      {
+        "id": 42,
+        "name": "Józef Bielawski"
+      },
+      {
+        "id": 41,
+        "name": "Norwegian"
+      },
+      {
+        "id": 238,
+        "name": "Taj Mehmood Amroti"
+      },
+      {
+        "id": 106,
+        "name": "Magomed Magomedov"
+      },
+      {
+        "id": 236,
+        "name": "Ramdane At Mansour"
+      },
+      {
+        "id": 237,
+        "name": "Tzvetan Theophanov"
+      },
+      {
+        "id": 125,
+        "name": "Shaykh Abu Rahimah Mikael Aykyuni"
+      },
+      {
+        "id": 124,
+        "name": "Muslim Shahin"
+      },
+      {
+        "id": 46,
+        "name": "Mahmud Muhammad Abduh"
+      },
+      {
+        "id": 113,
+        "name": "Khalifah Altai"
+      },
+      {
+        "id": 112,
+        "name": "Shaban Britch"
+      },
+      {
+        "id": 38,
+        "name": "Maranao"
+      },
+      {
+        "id": 89,
+        "name": "Albanian Translation"
+      },
+      {
+        "id": 56,
+        "name": "Chinese Translation (Simplified) - Ma Jain"
+      },
+      {
+        "id": 32,
+        "name": "Hausa Translation(Abubakar Gumi)"
+      },
+      {
+        "id": 108,
+        "name": "Ahl Al-Hadith Central Society of Nepal"
+      },
+      {
+        "id": 37,
+        "name": "Malayalam Translation(Abdul Hameed and Kunhi)"
+      },
+      {
+        "id": 43,
+        "name": "Portuguese Translation( Samir )"
+      },
+      {
+        "id": 51,
+        "name": "Thai Translatio (King Fahad Quran Complex)"
+      },
+      {
+        "id": 111,
+        "name": "Ghali Apapur Apaghuna"
+      },
+      {
+        "id": 115,
+        "name": "Abubakar Mahmood Jummi"
+      },
+      {
+        "id": 31,
+        "name": "Muhammad Hamidullah"
+      },
+      {
+        "id": 29,
+        "name": "Hussein Taji Kal Dari"
+      },
+      {
+        "id": 208,
+        "name": "Abu Reda Muhammad ibn Ahmad"
+      },
+      {
+        "id": 209,
+        "name": "Othman al-Sharif"
+      },
+      {
+        "id": 133,
+        "name": "Abdul Hameed Baqavi"
+      },
+      {
+        "id": 25,
+        "name": "Muhamed Mehanović"
+      },
+      {
+        "id": 221,
+        "name": "Hasan Abdul-Karim"
+      },
+      {
+        "id": 219,
+        "name": "Hamed Choi"
+      },
+      {
+        "id": 52,
+        "name": "Elmalili Hamdi Yazir"
+      },
+      {
+        "id": 213,
+        "name": "Dr. Abu Bakr Muhammad Zakaria"
+      },
+      {
+        "id": 199,
+        "name": "Noor International Center"
+      },
+      {
+        "id": 218,
+        "name": "Saeed Sato"
+      },
+      {
+        "id": 228,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 126,
+        "name": "Besim Korkut"
+      },
+      {
+        "id": 122,
+        "name": "Maulana Azizul Haque al-Umari"
+      },
+      {
+        "id": 120,
+        "name": "Shaykh Rafeequl Islam Habibur-Rahman"
+      },
+      {
+        "id": 127,
+        "name": "Muhammad Sodik Muhammad Yusuf"
+      },
+      {
+        "id": 118,
+        "name": "Zakaria Abulsalam"
+      },
+      {
+        "id": 109,
+        "name": "Muhammad Makin"
+      },
+      {
+        "id": 27,
+        "name": "Frank Bubenheim and Nadeem"
+      },
+      {
+        "id": 33,
+        "name": "Indonesian Islamic Affairs Ministry"
+      },
+      {
+        "id": 795,
+        "name": "Suliman Kanti"
+      },
+      {
+        "id": 779,
+        "name": "Rashid Maash"
+      },
+      {
+        "id": 782,
+        "name": "Islamic and Cultural League"
+      },
+      {
+        "id": 771,
+        "name": "Kannada Translation"
+      },
+      {
+        "id": 840,
+        "name": "Abu Bakr Ibrahim Ali (Bakurube)"
+      },
+      {
+        "id": 798,
+        "name": "Abdul Hamid Silika"
+      },
+      {
+        "id": 774,
+        "name": "The Rwanda Muslims Association team"
+      },
+      {
+        "id": 796,
+        "name": "Baba Mamady Jani"
+      },
+      {
+        "id": 819,
+        "name": "Maulana Wahiduddin Khan"
+      },
+      {
+        "id": 831,
+        "name": "Abul Ala Maududi(Roman Urdu)"
+      },
+      {
+        "id": 785,
+        "name": "Mawlawi Muhammad Anwar Badkhashani"
+      }
+    ],
+    "ur": [
+      {
+        "id": 85,
+        "name": "M.A.S. Abdel Haleem"
+      },
+      {
+        "id": 149,
+        "name": "Fadel Soliman, Bridges’ translation"
+      },
+      {
+        "id": 84,
+        "name": "T. Usmani"
+      },
+      {
+        "id": 95,
+        "name": "A. Maududi (Tafhim commentary)"
+      },
+      {
+        "id": 76,
+        "name": "Muhammad Saleh"
+      },
+      {
+        "id": 78,
+        "name": "Ministry of Awqaf, Egypt"
+      },
+      {
+        "id": 81,
+        "name": "Burhan Muhammad-Amin"
+      },
+      {
+        "id": 80,
+        "name": "Muhammad Karakunnu and Vanidas Elayavoor"
+      },
+      {
+        "id": 19,
+        "name": "M. Pickthall"
+      },
+      {
+        "id": 79,
+        "name": "Abu Adel"
+      },
+      {
+        "id": 86,
+        "name": "Office of the president of Maldives"
+      },
+      {
+        "id": 83,
+        "name": "Sheikh Isa Garcia"
+      },
+      {
+        "id": 75,
+        "name": "Alikhan Musayev"
+      },
+      {
+        "id": 22,
+        "name": "A. Yusuf Ali"
+      },
+      {
+        "id": 20,
+        "name": "Saheeh International"
+      },
+      {
+        "id": 203,
+        "name": "Al-Hilali & Khan"
+      },
+      {
+        "id": 234,
+        "name": "Fatah Muhammad Jalandhari"
+      },
+      {
+        "id": 57,
+        "name": "Transliteration"
+      },
+      {
+        "id": 54,
+        "name": "Maulana Muhammad Junagarhi"
+      },
+      {
+        "id": 156,
+        "name": "Fe Zilal al-Qur'an"
+      },
+      {
+        "id": 151,
+        "name": "Shaykh al-Hind Mahmud al-Hasan(with Tafsir E Usmani)"
+      },
+      {
+        "id": 158,
+        "name": "Bayan-ul-Quran"
+      },
+      {
+        "id": 97,
+        "name": "Tafheem e Qur'an - Syed Abu Ali Maududi"
+      },
+      {
+        "id": 136,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 135,
+        "name": "IslamHouse.com"
+      },
+      {
+        "id": 139,
+        "name": "Khawaja Mirof & Khawaja Mir"
+      },
+      {
+        "id": 35,
+        "name": "Ryoichi Mita"
+      },
+      {
+        "id": 134,
+        "name": "King Fahad Quran Complex"
+      },
+      {
+        "id": 153,
+        "name": "Hamza Roberto Piccardo"
+      },
+      {
+        "id": 161,
+        "name": "Taisirul Quran"
+      },
+      {
+        "id": 163,
+        "name": "Sheikh Mujibur Rahman"
+      },
+      {
+        "id": 162,
+        "name": "Rawai Al-bayan"
+      },
+      {
+        "id": 210,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 211,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 217,
+        "name": "Dr. Mikhailo Yaqubovic"
+      },
+      {
+        "id": 229,
+        "name": "Sheikh Omar Sharif bin Abdul Salam"
+      },
+      {
+        "id": 55,
+        "name": "Muhammad Sodiq Muhammad Yusuf (Latin) "
+      },
+      {
+        "id": 143,
+        "name": "Muhammad Saleh Bamoki"
+      },
+      {
+        "id": 141,
+        "name": "The Sabiq Company"
+      },
+      {
+        "id": 140,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 214,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 227,
+        "name": "Maulana Abder-Rahim ibn Muhammad"
+      },
+      {
+        "id": 226,
+        "name": "Muhammad Shafi’i Ansari"
+      },
+      {
+        "id": 233,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 225,
+        "name": "Rabila Al-Umry"
+      },
+      {
+        "id": 224,
+        "name": "Abdul-Hamid Haidar & Kanhi Muhammad"
+      },
+      {
+        "id": 232,
+        "name": "African Development Foundation"
+      },
+      {
+        "id": 235,
+        "name": "Malak Faris Abdalsalaam"
+      },
+      {
+        "id": 231,
+        "name": "Dr. Abdullah Muhammad Abu Bakr and Sheikh Nasir Khamis"
+      },
+      {
+        "id": 230,
+        "name": "Society of Institutes and Universities"
+      },
+      {
+        "id": 223,
+        "name": "Pioneers of Translation Center"
+      },
+      {
+        "id": 222,
+        "name": "Khalifa Altay"
+      },
+      {
+        "id": 220,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 144,
+        "name": "Sofian S. Siregar"
+      },
+      {
+        "id": 88,
+        "name": "Hasan Efendi Nahi"
+      },
+      {
+        "id": 87,
+        "name": "Sadiq and Sani"
+      },
+      {
+        "id": 50,
+        "name": "Jan Trust Foundation"
+      },
+      {
+        "id": 49,
+        "name": "Ali Muhsin Al-Barwani"
+      },
+      {
+        "id": 48,
+        "name": "Knut Bernström"
+      },
+      {
+        "id": 128,
+        "name": "Cambodian Muslim Community Development"
+      },
+      {
+        "id": 45,
+        "name": "Russian Translation ( Elmir Kuliev )"
+      },
+      {
+        "id": 77,
+        "name": "Turkish Translation(Diyanet)"
+      },
+      {
+        "id": 39,
+        "name": "Abdullah Muhammad Basmeih"
+      },
+      {
+        "id": 36,
+        "name": "Korean"
+      },
+      {
+        "id": 30,
+        "name": "Finnish"
+      },
+      {
+        "id": 26,
+        "name": "Czech"
+      },
+      {
+        "id": 103,
+        "name": "Helmi Nasr"
+      },
+      {
+        "id": 74,
+        "name": "Tajik"
+      },
+      {
+        "id": 23,
+        "name": "Azerbaijani"
+      },
+      {
+        "id": 101,
+        "name": "Alauddin Mansour"
+      },
+      {
+        "id": 53,
+        "name": "Tatar"
+      },
+      {
+        "id": 47,
+        "name": "Albanian"
+      },
+      {
+        "id": 44,
+        "name": "Grigore"
+      },
+      {
+        "id": 42,
+        "name": "Józef Bielawski"
+      },
+      {
+        "id": 41,
+        "name": "Norwegian"
+      },
+      {
+        "id": 238,
+        "name": "Taj Mehmood Amroti"
+      },
+      {
+        "id": 237,
+        "name": "Tzvetan Theophanov"
+      },
+      {
+        "id": 236,
+        "name": "Ramdane At Mansour"
+      },
+      {
+        "id": 106,
+        "name": "Magomed Magomedov"
+      },
+      {
+        "id": 125,
+        "name": "Shaykh Abu Rahimah Mikael Aykyuni"
+      },
+      {
+        "id": 124,
+        "name": "Muslim Shahin"
+      },
+      {
+        "id": 46,
+        "name": "Mahmud Muhammad Abduh"
+      },
+      {
+        "id": 113,
+        "name": "Khalifah Altai"
+      },
+      {
+        "id": 112,
+        "name": "Shaban Britch"
+      },
+      {
+        "id": 38,
+        "name": "Maranao"
+      },
+      {
+        "id": 89,
+        "name": "Albanian Translation"
+      },
+      {
+        "id": 56,
+        "name": "Chinese Translation (Simplified) - Ma Jain"
+      },
+      {
+        "id": 32,
+        "name": "Hausa Translation(Abubakar Gumi)"
+      },
+      {
+        "id": 108,
+        "name": "Ahl Al-Hadith Central Society of Nepal"
+      },
+      {
+        "id": 37,
+        "name": "Malayalam Translation(Abdul Hameed and Kunhi)"
+      },
+      {
+        "id": 43,
+        "name": "Portuguese Translation( Samir )"
+      },
+      {
+        "id": 51,
+        "name": "Thai Translatio (King Fahad Quran Complex)"
+      },
+      {
+        "id": 111,
+        "name": "Ghali Apapur Apaghuna"
+      },
+      {
+        "id": 115,
+        "name": "Abubakar Mahmood Jummi"
+      },
+      {
+        "id": 31,
+        "name": "Muhammad Hamidullah"
+      },
+      {
+        "id": 29,
+        "name": "Hussein Taji Kal Dari"
+      },
+      {
+        "id": 208,
+        "name": "Abu Reda Muhammad ibn Ahmad"
+      },
+      {
+        "id": 209,
+        "name": "Othman al-Sharif"
+      },
+      {
+        "id": 133,
+        "name": "Abdul Hameed Baqavi"
+      },
+      {
+        "id": 25,
+        "name": "Muhamed Mehanović"
+      },
+      {
+        "id": 221,
+        "name": "Hasan Abdul-Karim"
+      },
+      {
+        "id": 219,
+        "name": "Hamed Choi"
+      },
+      {
+        "id": 52,
+        "name": "Elmalili Hamdi Yazir"
+      },
+      {
+        "id": 213,
+        "name": "Dr. Abu Bakr Muhammad Zakaria"
+      },
+      {
+        "id": 199,
+        "name": "Noor International Center"
+      },
+      {
+        "id": 218,
+        "name": "Saeed Sato"
+      },
+      {
+        "id": 228,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 126,
+        "name": "Besim Korkut"
+      },
+      {
+        "id": 122,
+        "name": "Maulana Azizul Haque al-Umari"
+      },
+      {
+        "id": 120,
+        "name": "Shaykh Rafeequl Islam Habibur-Rahman"
+      },
+      {
+        "id": 127,
+        "name": "Muhammad Sodik Muhammad Yusuf"
+      },
+      {
+        "id": 118,
+        "name": "Zakaria Abulsalam"
+      },
+      {
+        "id": 109,
+        "name": "Muhammad Makin"
+      },
+      {
+        "id": 27,
+        "name": "Frank Bubenheim and Nadeem"
+      },
+      {
+        "id": 33,
+        "name": "Indonesian Islamic Affairs Ministry"
+      },
+      {
+        "id": 774,
+        "name": "The Rwanda Muslims Association team"
+      },
+      {
+        "id": 798,
+        "name": "Abdul Hamid Silika"
+      },
+      {
+        "id": 831,
+        "name": "Abul Ala Maududi(Roman Urdu)"
+      },
+      {
+        "id": 819,
+        "name": "Maulana Wahiduddin Khan"
+      },
+      {
+        "id": 840,
+        "name": "Abu Bakr Ibrahim Ali (Bakurube)"
+      },
+      {
+        "id": 771,
+        "name": "Kannada Translation"
+      },
+      {
+        "id": 796,
+        "name": "Baba Mamady Jani"
+      },
+      {
+        "id": 785,
+        "name": "Mawlawi Muhammad Anwar Badkhashani"
+      },
+      {
+        "id": 795,
+        "name": "Suliman Kanti"
+      },
+      {
+        "id": 779,
+        "name": "Rashid Maash"
+      },
+      {
+        "id": 782,
+        "name": "Islamic and Cultural League"
+      }
+    ],
+    "bn": [
+      {
+        "id": 85,
+        "name": "M.A.S. Abdel Haleem"
+      },
+      {
+        "id": 149,
+        "name": "Fadel Soliman, Bridges’ translation"
+      },
+      {
+        "id": 84,
+        "name": "T. Usmani"
+      },
+      {
+        "id": 95,
+        "name": "A. Maududi (Tafhim commentary)"
+      },
+      {
+        "id": 83,
+        "name": "Sheikh Isa Garcia"
+      },
+      {
+        "id": 81,
+        "name": "Burhan Muhammad-Amin"
+      },
+      {
+        "id": 80,
+        "name": "Muhammad Karakunnu and Vanidas Elayavoor"
+      },
+      {
+        "id": 76,
+        "name": "Muhammad Saleh"
+      },
+      {
+        "id": 86,
+        "name": "Office of the president of Maldives"
+      },
+      {
+        "id": 19,
+        "name": "M. Pickthall"
+      },
+      {
+        "id": 79,
+        "name": "Abu Adel"
+      },
+      {
+        "id": 75,
+        "name": "Alikhan Musayev"
+      },
+      {
+        "id": 78,
+        "name": "Ministry of Awqaf, Egypt"
+      },
+      {
+        "id": 22,
+        "name": "A. Yusuf Ali"
+      },
+      {
+        "id": 20,
+        "name": "Saheeh International"
+      },
+      {
+        "id": 203,
+        "name": "Al-Hilali & Khan"
+      },
+      {
+        "id": 234,
+        "name": "Fatah Muhammad Jalandhari"
+      },
+      {
+        "id": 57,
+        "name": "Transliteration"
+      },
+      {
+        "id": 54,
+        "name": "Maulana Muhammad Junagarhi"
+      },
+      {
+        "id": 156,
+        "name": "Fe Zilal al-Qur'an"
+      },
+      {
+        "id": 151,
+        "name": "Shaykh al-Hind Mahmud al-Hasan(with Tafsir E Usmani)"
+      },
+      {
+        "id": 158,
+        "name": "Bayan-ul-Quran"
+      },
+      {
+        "id": 97,
+        "name": "Tafheem e Qur'an - Syed Abu Ali Maududi"
+      },
+      {
+        "id": 136,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 135,
+        "name": "IslamHouse.com"
+      },
+      {
+        "id": 139,
+        "name": "Khawaja Mirof & Khawaja Mir"
+      },
+      {
+        "id": 35,
+        "name": "Ryoichi Mita"
+      },
+      {
+        "id": 134,
+        "name": "King Fahad Quran Complex"
+      },
+      {
+        "id": 153,
+        "name": "Hamza Roberto Piccardo"
+      },
+      {
+        "id": 161,
+        "name": "Taisirul Quran"
+      },
+      {
+        "id": 163,
+        "name": "Sheikh Mujibur Rahman"
+      },
+      {
+        "id": 162,
+        "name": "Rawai Al-bayan"
+      },
+      {
+        "id": 210,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 211,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 217,
+        "name": "Dr. Mikhailo Yaqubovic"
+      },
+      {
+        "id": 229,
+        "name": "Sheikh Omar Sharif bin Abdul Salam"
+      },
+      {
+        "id": 55,
+        "name": "Muhammad Sodiq Muhammad Yusuf (Latin) "
+      },
+      {
+        "id": 143,
+        "name": "Muhammad Saleh Bamoki"
+      },
+      {
+        "id": 141,
+        "name": "The Sabiq Company"
+      },
+      {
+        "id": 140,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 214,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 227,
+        "name": "Maulana Abder-Rahim ibn Muhammad"
+      },
+      {
+        "id": 226,
+        "name": "Muhammad Shafi’i Ansari"
+      },
+      {
+        "id": 233,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 225,
+        "name": "Rabila Al-Umry"
+      },
+      {
+        "id": 224,
+        "name": "Abdul-Hamid Haidar & Kanhi Muhammad"
+      },
+      {
+        "id": 232,
+        "name": "African Development Foundation"
+      },
+      {
+        "id": 235,
+        "name": "Malak Faris Abdalsalaam"
+      },
+      {
+        "id": 231,
+        "name": "Dr. Abdullah Muhammad Abu Bakr and Sheikh Nasir Khamis"
+      },
+      {
+        "id": 230,
+        "name": "Society of Institutes and Universities"
+      },
+      {
+        "id": 223,
+        "name": "Pioneers of Translation Center"
+      },
+      {
+        "id": 222,
+        "name": "Khalifa Altay"
+      },
+      {
+        "id": 220,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 144,
+        "name": "Sofian S. Siregar"
+      },
+      {
+        "id": 88,
+        "name": "Hasan Efendi Nahi"
+      },
+      {
+        "id": 87,
+        "name": "Sadiq and Sani"
+      },
+      {
+        "id": 50,
+        "name": "Jan Trust Foundation"
+      },
+      {
+        "id": 49,
+        "name": "Ali Muhsin Al-Barwani"
+      },
+      {
+        "id": 48,
+        "name": "Knut Bernström"
+      },
+      {
+        "id": 128,
+        "name": "Cambodian Muslim Community Development"
+      },
+      {
+        "id": 45,
+        "name": "Russian Translation ( Elmir Kuliev )"
+      },
+      {
+        "id": 77,
+        "name": "Turkish Translation(Diyanet)"
+      },
+      {
+        "id": 39,
+        "name": "Abdullah Muhammad Basmeih"
+      },
+      {
+        "id": 36,
+        "name": "Korean"
+      },
+      {
+        "id": 30,
+        "name": "Finnish"
+      },
+      {
+        "id": 26,
+        "name": "Czech"
+      },
+      {
+        "id": 103,
+        "name": "Helmi Nasr"
+      },
+      {
+        "id": 74,
+        "name": "Tajik"
+      },
+      {
+        "id": 23,
+        "name": "Azerbaijani"
+      },
+      {
+        "id": 101,
+        "name": "Alauddin Mansour"
+      },
+      {
+        "id": 53,
+        "name": "Tatar"
+      },
+      {
+        "id": 47,
+        "name": "Albanian"
+      },
+      {
+        "id": 44,
+        "name": "Grigore"
+      },
+      {
+        "id": 42,
+        "name": "Józef Bielawski"
+      },
+      {
+        "id": 41,
+        "name": "Norwegian"
+      },
+      {
+        "id": 237,
+        "name": "Tzvetan Theophanov"
+      },
+      {
+        "id": 106,
+        "name": "Magomed Magomedov"
+      },
+      {
+        "id": 238,
+        "name": "Taj Mehmood Amroti"
+      },
+      {
+        "id": 236,
+        "name": "Ramdane At Mansour"
+      },
+      {
+        "id": 125,
+        "name": "Shaykh Abu Rahimah Mikael Aykyuni"
+      },
+      {
+        "id": 124,
+        "name": "Muslim Shahin"
+      },
+      {
+        "id": 46,
+        "name": "Mahmud Muhammad Abduh"
+      },
+      {
+        "id": 113,
+        "name": "Khalifah Altai"
+      },
+      {
+        "id": 112,
+        "name": "Shaban Britch"
+      },
+      {
+        "id": 38,
+        "name": "Maranao"
+      },
+      {
+        "id": 89,
+        "name": "Albanian Translation"
+      },
+      {
+        "id": 56,
+        "name": "Chinese Translation (Simplified) - Ma Jain"
+      },
+      {
+        "id": 32,
+        "name": "Hausa Translation(Abubakar Gumi)"
+      },
+      {
+        "id": 108,
+        "name": "Ahl Al-Hadith Central Society of Nepal"
+      },
+      {
+        "id": 37,
+        "name": "Malayalam Translation(Abdul Hameed and Kunhi)"
+      },
+      {
+        "id": 43,
+        "name": "Portuguese Translation( Samir )"
+      },
+      {
+        "id": 51,
+        "name": "Thai Translatio (King Fahad Quran Complex)"
+      },
+      {
+        "id": 111,
+        "name": "Ghali Apapur Apaghuna"
+      },
+      {
+        "id": 115,
+        "name": "Abubakar Mahmood Jummi"
+      },
+      {
+        "id": 31,
+        "name": "Muhammad Hamidullah"
+      },
+      {
+        "id": 29,
+        "name": "Hussein Taji Kal Dari"
+      },
+      {
+        "id": 208,
+        "name": "Abu Reda Muhammad ibn Ahmad"
+      },
+      {
+        "id": 209,
+        "name": "Othman al-Sharif"
+      },
+      {
+        "id": 133,
+        "name": "Abdul Hameed Baqavi"
+      },
+      {
+        "id": 25,
+        "name": "Muhamed Mehanović"
+      },
+      {
+        "id": 221,
+        "name": "Hasan Abdul-Karim"
+      },
+      {
+        "id": 219,
+        "name": "Hamed Choi"
+      },
+      {
+        "id": 52,
+        "name": "Elmalili Hamdi Yazir"
+      },
+      {
+        "id": 213,
+        "name": "Dr. Abu Bakr Muhammad Zakaria"
+      },
+      {
+        "id": 199,
+        "name": "Noor International Center"
+      },
+      {
+        "id": 218,
+        "name": "Saeed Sato"
+      },
+      {
+        "id": 228,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 126,
+        "name": "Besim Korkut"
+      },
+      {
+        "id": 122,
+        "name": "Maulana Azizul Haque al-Umari"
+      },
+      {
+        "id": 120,
+        "name": "Shaykh Rafeequl Islam Habibur-Rahman"
+      },
+      {
+        "id": 127,
+        "name": "Muhammad Sodik Muhammad Yusuf"
+      },
+      {
+        "id": 118,
+        "name": "Zakaria Abulsalam"
+      },
+      {
+        "id": 109,
+        "name": "Muhammad Makin"
+      },
+      {
+        "id": 27,
+        "name": "Frank Bubenheim and Nadeem"
+      },
+      {
+        "id": 33,
+        "name": "Indonesian Islamic Affairs Ministry"
+      },
+      {
+        "id": 785,
+        "name": "Mawlawi Muhammad Anwar Badkhashani"
+      },
+      {
+        "id": 795,
+        "name": "Suliman Kanti"
+      },
+      {
+        "id": 819,
+        "name": "Maulana Wahiduddin Khan"
+      },
+      {
+        "id": 779,
+        "name": "Rashid Maash"
+      },
+      {
+        "id": 782,
+        "name": "Islamic and Cultural League"
+      },
+      {
+        "id": 796,
+        "name": "Baba Mamady Jani"
+      },
+      {
+        "id": 798,
+        "name": "Abdul Hamid Silika"
+      },
+      {
+        "id": 774,
+        "name": "The Rwanda Muslims Association team"
+      },
+      {
+        "id": 840,
+        "name": "Abu Bakr Ibrahim Ali (Bakurube)"
+      },
+      {
+        "id": 831,
+        "name": "Abul Ala Maududi(Roman Urdu)"
+      },
+      {
+        "id": 771,
+        "name": "Kannada Translation"
+      }
+    ],
+    "ru": [
+      {
+        "id": 85,
+        "name": "M.A.S. Abdel Haleem"
+      },
+      {
+        "id": 149,
+        "name": "Fadel Soliman, Bridges’ translation"
+      },
+      {
+        "id": 84,
+        "name": "T. Usmani"
+      },
+      {
+        "id": 95,
+        "name": "A. Maududi (Tafhim commentary)"
+      },
+      {
+        "id": 78,
+        "name": "Ministry of Awqaf, Egypt"
+      },
+      {
+        "id": 19,
+        "name": "M. Pickthall"
+      },
+      {
+        "id": 79,
+        "name": "Abu Adel"
+      },
+      {
+        "id": 80,
+        "name": "Muhammad Karakunnu and Vanidas Elayavoor"
+      },
+      {
+        "id": 81,
+        "name": "Burhan Muhammad-Amin"
+      },
+      {
+        "id": 83,
+        "name": "Sheikh Isa Garcia"
+      },
+      {
+        "id": 86,
+        "name": "Office of the president of Maldives"
+      },
+      {
+        "id": 76,
+        "name": "Muhammad Saleh"
+      },
+      {
+        "id": 75,
+        "name": "Alikhan Musayev"
+      },
+      {
+        "id": 22,
+        "name": "A. Yusuf Ali"
+      },
+      {
+        "id": 20,
+        "name": "Saheeh International"
+      },
+      {
+        "id": 203,
+        "name": "Al-Hilali & Khan"
+      },
+      {
+        "id": 234,
+        "name": "Fatah Muhammad Jalandhari"
+      },
+      {
+        "id": 57,
+        "name": "Transliteration"
+      },
+      {
+        "id": 54,
+        "name": "Maulana Muhammad Junagarhi"
+      },
+      {
+        "id": 156,
+        "name": "Fe Zilal al-Qur'an"
+      },
+      {
+        "id": 151,
+        "name": "Shaykh al-Hind Mahmud al-Hasan(with Tafsir E Usmani)"
+      },
+      {
+        "id": 158,
+        "name": "Bayan-ul-Quran"
+      },
+      {
+        "id": 97,
+        "name": "Tafheem e Qur'an - Syed Abu Ali Maududi"
+      },
+      {
+        "id": 136,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 135,
+        "name": "IslamHouse.com"
+      },
+      {
+        "id": 139,
+        "name": "Khawaja Mirof & Khawaja Mir"
+      },
+      {
+        "id": 35,
+        "name": "Ryoichi Mita"
+      },
+      {
+        "id": 134,
+        "name": "King Fahad Quran Complex"
+      },
+      {
+        "id": 153,
+        "name": "Hamza Roberto Piccardo"
+      },
+      {
+        "id": 161,
+        "name": "Taisirul Quran"
+      },
+      {
+        "id": 163,
+        "name": "Sheikh Mujibur Rahman"
+      },
+      {
+        "id": 162,
+        "name": "Rawai Al-bayan"
+      },
+      {
+        "id": 210,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 211,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 217,
+        "name": "Dr. Mikhailo Yaqubovic"
+      },
+      {
+        "id": 229,
+        "name": "Sheikh Omar Sharif bin Abdul Salam"
+      },
+      {
+        "id": 55,
+        "name": "Muhammad Sodiq Muhammad Yusuf (Latin) "
+      },
+      {
+        "id": 143,
+        "name": "Muhammad Saleh Bamoki"
+      },
+      {
+        "id": 141,
+        "name": "The Sabiq Company"
+      },
+      {
+        "id": 140,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 214,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 227,
+        "name": "Maulana Abder-Rahim ibn Muhammad"
+      },
+      {
+        "id": 226,
+        "name": "Muhammad Shafi’i Ansari"
+      },
+      {
+        "id": 233,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 225,
+        "name": "Rabila Al-Umry"
+      },
+      {
+        "id": 224,
+        "name": "Abdul-Hamid Haidar & Kanhi Muhammad"
+      },
+      {
+        "id": 232,
+        "name": "African Development Foundation"
+      },
+      {
+        "id": 235,
+        "name": "Malak Faris Abdalsalaam"
+      },
+      {
+        "id": 231,
+        "name": "Dr. Abdullah Muhammad Abu Bakr and Sheikh Nasir Khamis"
+      },
+      {
+        "id": 230,
+        "name": "Society of Institutes and Universities"
+      },
+      {
+        "id": 223,
+        "name": "Pioneers of Translation Center"
+      },
+      {
+        "id": 222,
+        "name": "Khalifa Altay"
+      },
+      {
+        "id": 220,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 144,
+        "name": "Sofian S. Siregar"
+      },
+      {
+        "id": 88,
+        "name": "Hasan Efendi Nahi"
+      },
+      {
+        "id": 87,
+        "name": "Sadiq and Sani"
+      },
+      {
+        "id": 50,
+        "name": "Jan Trust Foundation"
+      },
+      {
+        "id": 49,
+        "name": "Ali Muhsin Al-Barwani"
+      },
+      {
+        "id": 48,
+        "name": "Knut Bernström"
+      },
+      {
+        "id": 128,
+        "name": "Cambodian Muslim Community Development"
+      },
+      {
+        "id": 45,
+        "name": "Russian Translation ( Elmir Kuliev )"
+      },
+      {
+        "id": 77,
+        "name": "Turkish Translation(Diyanet)"
+      },
+      {
+        "id": 39,
+        "name": "Abdullah Muhammad Basmeih"
+      },
+      {
+        "id": 36,
+        "name": "Korean"
+      },
+      {
+        "id": 30,
+        "name": "Finnish"
+      },
+      {
+        "id": 26,
+        "name": "Czech"
+      },
+      {
+        "id": 103,
+        "name": "Helmi Nasr"
+      },
+      {
+        "id": 74,
+        "name": "Tajik"
+      },
+      {
+        "id": 23,
+        "name": "Azerbaijani"
+      },
+      {
+        "id": 101,
+        "name": "Alauddin Mansour"
+      },
+      {
+        "id": 53,
+        "name": "Tatar"
+      },
+      {
+        "id": 47,
+        "name": "Albanian"
+      },
+      {
+        "id": 44,
+        "name": "Grigore"
+      },
+      {
+        "id": 42,
+        "name": "Józef Bielawski"
+      },
+      {
+        "id": 41,
+        "name": "Norwegian"
+      },
+      {
+        "id": 237,
+        "name": "Tzvetan Theophanov"
+      },
+      {
+        "id": 106,
+        "name": "Magomed Magomedov"
+      },
+      {
+        "id": 236,
+        "name": "Ramdane At Mansour"
+      },
+      {
+        "id": 238,
+        "name": "Taj Mehmood Amroti"
+      },
+      {
+        "id": 125,
+        "name": "Shaykh Abu Rahimah Mikael Aykyuni"
+      },
+      {
+        "id": 124,
+        "name": "Muslim Shahin"
+      },
+      {
+        "id": 46,
+        "name": "Mahmud Muhammad Abduh"
+      },
+      {
+        "id": 113,
+        "name": "Khalifah Altai"
+      },
+      {
+        "id": 112,
+        "name": "Shaban Britch"
+      },
+      {
+        "id": 38,
+        "name": "Maranao"
+      },
+      {
+        "id": 89,
+        "name": "Albanian Translation"
+      },
+      {
+        "id": 56,
+        "name": "Chinese Translation (Simplified) - Ma Jain"
+      },
+      {
+        "id": 32,
+        "name": "Hausa Translation(Abubakar Gumi)"
+      },
+      {
+        "id": 108,
+        "name": "Ahl Al-Hadith Central Society of Nepal"
+      },
+      {
+        "id": 37,
+        "name": "Malayalam Translation(Abdul Hameed and Kunhi)"
+      },
+      {
+        "id": 43,
+        "name": "Portuguese Translation( Samir )"
+      },
+      {
+        "id": 51,
+        "name": "Thai Translatio (King Fahad Quran Complex)"
+      },
+      {
+        "id": 111,
+        "name": "Ghali Apapur Apaghuna"
+      },
+      {
+        "id": 115,
+        "name": "Abubakar Mahmood Jummi"
+      },
+      {
+        "id": 31,
+        "name": "Muhammad Hamidullah"
+      },
+      {
+        "id": 29,
+        "name": "Hussein Taji Kal Dari"
+      },
+      {
+        "id": 208,
+        "name": "Abu Reda Muhammad ibn Ahmad"
+      },
+      {
+        "id": 209,
+        "name": "Othman al-Sharif"
+      },
+      {
+        "id": 133,
+        "name": "Abdul Hameed Baqavi"
+      },
+      {
+        "id": 25,
+        "name": "Muhamed Mehanović"
+      },
+      {
+        "id": 221,
+        "name": "Hasan Abdul-Karim"
+      },
+      {
+        "id": 219,
+        "name": "Hamed Choi"
+      },
+      {
+        "id": 52,
+        "name": "Elmalili Hamdi Yazir"
+      },
+      {
+        "id": 213,
+        "name": "Dr. Abu Bakr Muhammad Zakaria"
+      },
+      {
+        "id": 199,
+        "name": "Noor International Center"
+      },
+      {
+        "id": 218,
+        "name": "Saeed Sato"
+      },
+      {
+        "id": 228,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 126,
+        "name": "Besim Korkut"
+      },
+      {
+        "id": 122,
+        "name": "Maulana Azizul Haque al-Umari"
+      },
+      {
+        "id": 120,
+        "name": "Shaykh Rafeequl Islam Habibur-Rahman"
+      },
+      {
+        "id": 127,
+        "name": "Muhammad Sodik Muhammad Yusuf"
+      },
+      {
+        "id": 118,
+        "name": "Zakaria Abulsalam"
+      },
+      {
+        "id": 109,
+        "name": "Muhammad Makin"
+      },
+      {
+        "id": 27,
+        "name": "Frank Bubenheim and Nadeem"
+      },
+      {
+        "id": 33,
+        "name": "Indonesian Islamic Affairs Ministry"
+      },
+      {
+        "id": 831,
+        "name": "Abul Ala Maududi(Roman Urdu)"
+      },
+      {
+        "id": 819,
+        "name": "Maulana Wahiduddin Khan"
+      },
+      {
+        "id": 771,
+        "name": "Kannada Translation"
+      },
+      {
+        "id": 785,
+        "name": "Mawlawi Muhammad Anwar Badkhashani"
+      },
+      {
+        "id": 840,
+        "name": "Abu Bakr Ibrahim Ali (Bakurube)"
+      },
+      {
+        "id": 795,
+        "name": "Suliman Kanti"
+      },
+      {
+        "id": 779,
+        "name": "Rashid Maash"
+      },
+      {
+        "id": 782,
+        "name": "Islamic and Cultural League"
+      },
+      {
+        "id": 796,
+        "name": "Baba Mamady Jani"
+      },
+      {
+        "id": 798,
+        "name": "Abdul Hamid Silika"
+      },
+      {
+        "id": 774,
+        "name": "The Rwanda Muslims Association team"
+      }
+    ],
+    "tr": [
+      {
+        "id": 85,
+        "name": "M.A.S. Abdel Haleem"
+      },
+      {
+        "id": 149,
+        "name": "Fadel Soliman, Bridges’ translation"
+      },
+      {
+        "id": 84,
+        "name": "T. Usmani"
+      },
+      {
+        "id": 95,
+        "name": "A. Maududi (Tafhim commentary)"
+      },
+      {
+        "id": 78,
+        "name": "Ministry of Awqaf, Egypt"
+      },
+      {
+        "id": 19,
+        "name": "M. Pickthall"
+      },
+      {
+        "id": 79,
+        "name": "Abu Adel"
+      },
+      {
+        "id": 80,
+        "name": "Muhammad Karakunnu and Vanidas Elayavoor"
+      },
+      {
+        "id": 81,
+        "name": "Burhan Muhammad-Amin"
+      },
+      {
+        "id": 83,
+        "name": "Sheikh Isa Garcia"
+      },
+      {
+        "id": 86,
+        "name": "Office of the president of Maldives"
+      },
+      {
+        "id": 76,
+        "name": "Muhammad Saleh"
+      },
+      {
+        "id": 75,
+        "name": "Alikhan Musayev"
+      },
+      {
+        "id": 22,
+        "name": "A. Yusuf Ali"
+      },
+      {
+        "id": 20,
+        "name": "Saheeh International"
+      },
+      {
+        "id": 203,
+        "name": "Al-Hilali & Khan"
+      },
+      {
+        "id": 234,
+        "name": "Fatah Muhammad Jalandhari"
+      },
+      {
+        "id": 57,
+        "name": "Transliteration"
+      },
+      {
+        "id": 54,
+        "name": "Maulana Muhammad Junagarhi"
+      },
+      {
+        "id": 156,
+        "name": "Fe Zilal al-Qur'an"
+      },
+      {
+        "id": 151,
+        "name": "Shaykh al-Hind Mahmud al-Hasan(with Tafsir E Usmani)"
+      },
+      {
+        "id": 158,
+        "name": "Bayan-ul-Quran"
+      },
+      {
+        "id": 97,
+        "name": "Tafheem e Qur'an - Syed Abu Ali Maududi"
+      },
+      {
+        "id": 136,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 135,
+        "name": "IslamHouse.com"
+      },
+      {
+        "id": 139,
+        "name": "Khawaja Mirof & Khawaja Mir"
+      },
+      {
+        "id": 35,
+        "name": "Ryoichi Mita"
+      },
+      {
+        "id": 134,
+        "name": "King Fahad Quran Complex"
+      },
+      {
+        "id": 153,
+        "name": "Hamza Roberto Piccardo"
+      },
+      {
+        "id": 161,
+        "name": "Taisirul Quran"
+      },
+      {
+        "id": 163,
+        "name": "Sheikh Mujibur Rahman"
+      },
+      {
+        "id": 162,
+        "name": "Rawai Al-bayan"
+      },
+      {
+        "id": 210,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 211,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 217,
+        "name": "Dr. Mikhailo Yaqubovic"
+      },
+      {
+        "id": 229,
+        "name": "Sheikh Omar Sharif bin Abdul Salam"
+      },
+      {
+        "id": 55,
+        "name": "Muhammad Sodiq Muhammad Yusuf (Latin) "
+      },
+      {
+        "id": 143,
+        "name": "Muhammad Saleh Bamoki"
+      },
+      {
+        "id": 141,
+        "name": "The Sabiq Company"
+      },
+      {
+        "id": 140,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 214,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 227,
+        "name": "Maulana Abder-Rahim ibn Muhammad"
+      },
+      {
+        "id": 226,
+        "name": "Muhammad Shafi’i Ansari"
+      },
+      {
+        "id": 233,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 225,
+        "name": "Rabila Al-Umry"
+      },
+      {
+        "id": 224,
+        "name": "Abdul-Hamid Haidar & Kanhi Muhammad"
+      },
+      {
+        "id": 232,
+        "name": "African Development Foundation"
+      },
+      {
+        "id": 235,
+        "name": "Malak Faris Abdalsalaam"
+      },
+      {
+        "id": 231,
+        "name": "Dr. Abdullah Muhammad Abu Bakr and Sheikh Nasir Khamis"
+      },
+      {
+        "id": 230,
+        "name": "Society of Institutes and Universities"
+      },
+      {
+        "id": 223,
+        "name": "Pioneers of Translation Center"
+      },
+      {
+        "id": 222,
+        "name": "Khalifa Altay"
+      },
+      {
+        "id": 220,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 144,
+        "name": "Sofian S. Siregar"
+      },
+      {
+        "id": 88,
+        "name": "Hasan Efendi Nahi"
+      },
+      {
+        "id": 87,
+        "name": "Sadiq and Sani"
+      },
+      {
+        "id": 50,
+        "name": "Jan Trust Foundation"
+      },
+      {
+        "id": 49,
+        "name": "Ali Muhsin Al-Barwani"
+      },
+      {
+        "id": 48,
+        "name": "Knut Bernström"
+      },
+      {
+        "id": 128,
+        "name": "Cambodian Muslim Community Development"
+      },
+      {
+        "id": 45,
+        "name": "Russian Translation ( Elmir Kuliev )"
+      },
+      {
+        "id": 77,
+        "name": "Turkish Translation(Diyanet)"
+      },
+      {
+        "id": 39,
+        "name": "Abdullah Muhammad Basmeih"
+      },
+      {
+        "id": 36,
+        "name": "Korean"
+      },
+      {
+        "id": 30,
+        "name": "Finnish"
+      },
+      {
+        "id": 26,
+        "name": "Czech"
+      },
+      {
+        "id": 103,
+        "name": "Helmi Nasr"
+      },
+      {
+        "id": 74,
+        "name": "Tajik"
+      },
+      {
+        "id": 23,
+        "name": "Azerbaijani"
+      },
+      {
+        "id": 101,
+        "name": "Alauddin Mansour"
+      },
+      {
+        "id": 53,
+        "name": "Tatar"
+      },
+      {
+        "id": 47,
+        "name": "Albanian"
+      },
+      {
+        "id": 44,
+        "name": "Grigore"
+      },
+      {
+        "id": 42,
+        "name": "Józef Bielawski"
+      },
+      {
+        "id": 41,
+        "name": "Norwegian"
+      },
+      {
+        "id": 237,
+        "name": "Tzvetan Theophanov"
+      },
+      {
+        "id": 106,
+        "name": "Magomed Magomedov"
+      },
+      {
+        "id": 236,
+        "name": "Ramdane At Mansour"
+      },
+      {
+        "id": 238,
+        "name": "Taj Mehmood Amroti"
+      },
+      {
+        "id": 125,
+        "name": "Shaykh Abu Rahimah Mikael Aykyuni"
+      },
+      {
+        "id": 124,
+        "name": "Muslim Shahin"
+      },
+      {
+        "id": 46,
+        "name": "Mahmud Muhammad Abduh"
+      },
+      {
+        "id": 113,
+        "name": "Khalifah Altai"
+      },
+      {
+        "id": 112,
+        "name": "Shaban Britch"
+      },
+      {
+        "id": 38,
+        "name": "Maranao"
+      },
+      {
+        "id": 89,
+        "name": "Albanian Translation"
+      },
+      {
+        "id": 56,
+        "name": "Chinese Translation (Simplified) - Ma Jain"
+      },
+      {
+        "id": 32,
+        "name": "Hausa Translation(Abubakar Gumi)"
+      },
+      {
+        "id": 108,
+        "name": "Ahl Al-Hadith Central Society of Nepal"
+      },
+      {
+        "id": 37,
+        "name": "Malayalam Translation(Abdul Hameed and Kunhi)"
+      },
+      {
+        "id": 43,
+        "name": "Portuguese Translation( Samir )"
+      },
+      {
+        "id": 51,
+        "name": "Thai Translatio (King Fahad Quran Complex)"
+      },
+      {
+        "id": 111,
+        "name": "Ghali Apapur Apaghuna"
+      },
+      {
+        "id": 115,
+        "name": "Abubakar Mahmood Jummi"
+      },
+      {
+        "id": 31,
+        "name": "Muhammad Hamidullah"
+      },
+      {
+        "id": 29,
+        "name": "Hussein Taji Kal Dari"
+      },
+      {
+        "id": 208,
+        "name": "Abu Reda Muhammad ibn Ahmad"
+      },
+      {
+        "id": 209,
+        "name": "Othman al-Sharif"
+      },
+      {
+        "id": 133,
+        "name": "Abdul Hameed Baqavi"
+      },
+      {
+        "id": 25,
+        "name": "Muhamed Mehanović"
+      },
+      {
+        "id": 221,
+        "name": "Hasan Abdul-Karim"
+      },
+      {
+        "id": 219,
+        "name": "Hamed Choi"
+      },
+      {
+        "id": 52,
+        "name": "Elmalili Hamdi Yazir"
+      },
+      {
+        "id": 213,
+        "name": "Dr. Abu Bakr Muhammad Zakaria"
+      },
+      {
+        "id": 199,
+        "name": "Noor International Center"
+      },
+      {
+        "id": 218,
+        "name": "Saeed Sato"
+      },
+      {
+        "id": 228,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 126,
+        "name": "Besim Korkut"
+      },
+      {
+        "id": 122,
+        "name": "Maulana Azizul Haque al-Umari"
+      },
+      {
+        "id": 120,
+        "name": "Shaykh Rafeequl Islam Habibur-Rahman"
+      },
+      {
+        "id": 127,
+        "name": "Muhammad Sodik Muhammad Yusuf"
+      },
+      {
+        "id": 118,
+        "name": "Zakaria Abulsalam"
+      },
+      {
+        "id": 109,
+        "name": "Muhammad Makin"
+      },
+      {
+        "id": 27,
+        "name": "Frank Bubenheim and Nadeem"
+      },
+      {
+        "id": 33,
+        "name": "Indonesian Islamic Affairs Ministry"
+      },
+      {
+        "id": 831,
+        "name": "Abul Ala Maududi(Roman Urdu)"
+      },
+      {
+        "id": 819,
+        "name": "Maulana Wahiduddin Khan"
+      },
+      {
+        "id": 771,
+        "name": "Kannada Translation"
+      },
+      {
+        "id": 785,
+        "name": "Mawlawi Muhammad Anwar Badkhashani"
+      },
+      {
+        "id": 840,
+        "name": "Abu Bakr Ibrahim Ali (Bakurube)"
+      },
+      {
+        "id": 795,
+        "name": "Suliman Kanti"
+      },
+      {
+        "id": 779,
+        "name": "Rashid Maash"
+      },
+      {
+        "id": 782,
+        "name": "Islamic and Cultural League"
+      },
+      {
+        "id": 796,
+        "name": "Baba Mamady Jani"
+      },
+      {
+        "id": 798,
+        "name": "Abdul Hamid Silika"
+      },
+      {
+        "id": 774,
+        "name": "The Rwanda Muslims Association team"
+      }
+    ],
+    "id": [
+      {
+        "id": 85,
+        "name": "M.A.S. Abdel Haleem"
+      },
+      {
+        "id": 149,
+        "name": "Fadel Soliman, Bridges’ translation"
+      },
+      {
+        "id": 84,
+        "name": "T. Usmani"
+      },
+      {
+        "id": 95,
+        "name": "A. Maududi (Tafhim commentary)"
+      },
+      {
+        "id": 78,
+        "name": "Ministry of Awqaf, Egypt"
+      },
+      {
+        "id": 19,
+        "name": "M. Pickthall"
+      },
+      {
+        "id": 79,
+        "name": "Abu Adel"
+      },
+      {
+        "id": 80,
+        "name": "Muhammad Karakunnu and Vanidas Elayavoor"
+      },
+      {
+        "id": 81,
+        "name": "Burhan Muhammad-Amin"
+      },
+      {
+        "id": 83,
+        "name": "Sheikh Isa Garcia"
+      },
+      {
+        "id": 86,
+        "name": "Office of the president of Maldives"
+      },
+      {
+        "id": 76,
+        "name": "Muhammad Saleh"
+      },
+      {
+        "id": 75,
+        "name": "Alikhan Musayev"
+      },
+      {
+        "id": 22,
+        "name": "A. Yusuf Ali"
+      },
+      {
+        "id": 20,
+        "name": "Saheeh International"
+      },
+      {
+        "id": 203,
+        "name": "Al-Hilali & Khan"
+      },
+      {
+        "id": 234,
+        "name": "Fatah Muhammad Jalandhari"
+      },
+      {
+        "id": 57,
+        "name": "Transliteration"
+      },
+      {
+        "id": 54,
+        "name": "Maulana Muhammad Junagarhi"
+      },
+      {
+        "id": 156,
+        "name": "Fe Zilal al-Qur'an"
+      },
+      {
+        "id": 151,
+        "name": "Shaykh al-Hind Mahmud al-Hasan(with Tafsir E Usmani)"
+      },
+      {
+        "id": 158,
+        "name": "Bayan-ul-Quran"
+      },
+      {
+        "id": 97,
+        "name": "Tafheem e Qur'an - Syed Abu Ali Maududi"
+      },
+      {
+        "id": 136,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 135,
+        "name": "IslamHouse.com"
+      },
+      {
+        "id": 139,
+        "name": "Khawaja Mirof & Khawaja Mir"
+      },
+      {
+        "id": 35,
+        "name": "Ryoichi Mita"
+      },
+      {
+        "id": 134,
+        "name": "King Fahad Quran Complex"
+      },
+      {
+        "id": 153,
+        "name": "Hamza Roberto Piccardo"
+      },
+      {
+        "id": 161,
+        "name": "Taisirul Quran"
+      },
+      {
+        "id": 163,
+        "name": "Sheikh Mujibur Rahman"
+      },
+      {
+        "id": 162,
+        "name": "Rawai Al-bayan"
+      },
+      {
+        "id": 210,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 211,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 217,
+        "name": "Dr. Mikhailo Yaqubovic"
+      },
+      {
+        "id": 229,
+        "name": "Sheikh Omar Sharif bin Abdul Salam"
+      },
+      {
+        "id": 55,
+        "name": "Muhammad Sodiq Muhammad Yusuf (Latin) "
+      },
+      {
+        "id": 143,
+        "name": "Muhammad Saleh Bamoki"
+      },
+      {
+        "id": 141,
+        "name": "The Sabiq Company"
+      },
+      {
+        "id": 140,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 214,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 227,
+        "name": "Maulana Abder-Rahim ibn Muhammad"
+      },
+      {
+        "id": 226,
+        "name": "Muhammad Shafi’i Ansari"
+      },
+      {
+        "id": 233,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 225,
+        "name": "Rabila Al-Umry"
+      },
+      {
+        "id": 224,
+        "name": "Abdul-Hamid Haidar & Kanhi Muhammad"
+      },
+      {
+        "id": 232,
+        "name": "African Development Foundation"
+      },
+      {
+        "id": 235,
+        "name": "Malak Faris Abdalsalaam"
+      },
+      {
+        "id": 231,
+        "name": "Dr. Abdullah Muhammad Abu Bakr and Sheikh Nasir Khamis"
+      },
+      {
+        "id": 230,
+        "name": "Society of Institutes and Universities"
+      },
+      {
+        "id": 223,
+        "name": "Pioneers of Translation Center"
+      },
+      {
+        "id": 222,
+        "name": "Khalifa Altay"
+      },
+      {
+        "id": 220,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 144,
+        "name": "Sofian S. Siregar"
+      },
+      {
+        "id": 88,
+        "name": "Hasan Efendi Nahi"
+      },
+      {
+        "id": 87,
+        "name": "Sadiq and Sani"
+      },
+      {
+        "id": 50,
+        "name": "Jan Trust Foundation"
+      },
+      {
+        "id": 49,
+        "name": "Ali Muhsin Al-Barwani"
+      },
+      {
+        "id": 48,
+        "name": "Knut Bernström"
+      },
+      {
+        "id": 128,
+        "name": "Cambodian Muslim Community Development"
+      },
+      {
+        "id": 45,
+        "name": "Russian Translation ( Elmir Kuliev )"
+      },
+      {
+        "id": 77,
+        "name": "Turkish Translation(Diyanet)"
+      },
+      {
+        "id": 39,
+        "name": "Abdullah Muhammad Basmeih"
+      },
+      {
+        "id": 36,
+        "name": "Korean"
+      },
+      {
+        "id": 30,
+        "name": "Finnish"
+      },
+      {
+        "id": 26,
+        "name": "Czech"
+      },
+      {
+        "id": 103,
+        "name": "Helmi Nasr"
+      },
+      {
+        "id": 74,
+        "name": "Tajik"
+      },
+      {
+        "id": 23,
+        "name": "Azerbaijani"
+      },
+      {
+        "id": 101,
+        "name": "Alauddin Mansour"
+      },
+      {
+        "id": 53,
+        "name": "Tatar"
+      },
+      {
+        "id": 47,
+        "name": "Albanian"
+      },
+      {
+        "id": 44,
+        "name": "Grigore"
+      },
+      {
+        "id": 42,
+        "name": "Józef Bielawski"
+      },
+      {
+        "id": 41,
+        "name": "Norwegian"
+      },
+      {
+        "id": 237,
+        "name": "Tzvetan Theophanov"
+      },
+      {
+        "id": 106,
+        "name": "Magomed Magomedov"
+      },
+      {
+        "id": 236,
+        "name": "Ramdane At Mansour"
+      },
+      {
+        "id": 238,
+        "name": "Taj Mehmood Amroti"
+      },
+      {
+        "id": 125,
+        "name": "Shaykh Abu Rahimah Mikael Aykyuni"
+      },
+      {
+        "id": 124,
+        "name": "Muslim Shahin"
+      },
+      {
+        "id": 46,
+        "name": "Mahmud Muhammad Abduh"
+      },
+      {
+        "id": 113,
+        "name": "Khalifah Altai"
+      },
+      {
+        "id": 112,
+        "name": "Shaban Britch"
+      },
+      {
+        "id": 38,
+        "name": "Maranao"
+      },
+      {
+        "id": 89,
+        "name": "Albanian Translation"
+      },
+      {
+        "id": 56,
+        "name": "Chinese Translation (Simplified) - Ma Jain"
+      },
+      {
+        "id": 32,
+        "name": "Hausa Translation(Abubakar Gumi)"
+      },
+      {
+        "id": 108,
+        "name": "Ahl Al-Hadith Central Society of Nepal"
+      },
+      {
+        "id": 37,
+        "name": "Malayalam Translation(Abdul Hameed and Kunhi)"
+      },
+      {
+        "id": 43,
+        "name": "Portuguese Translation( Samir )"
+      },
+      {
+        "id": 51,
+        "name": "Thai Translatio (King Fahad Quran Complex)"
+      },
+      {
+        "id": 111,
+        "name": "Ghali Apapur Apaghuna"
+      },
+      {
+        "id": 115,
+        "name": "Abubakar Mahmood Jummi"
+      },
+      {
+        "id": 31,
+        "name": "Muhammad Hamidullah"
+      },
+      {
+        "id": 29,
+        "name": "Hussein Taji Kal Dari"
+      },
+      {
+        "id": 208,
+        "name": "Abu Reda Muhammad ibn Ahmad"
+      },
+      {
+        "id": 209,
+        "name": "Othman al-Sharif"
+      },
+      {
+        "id": 133,
+        "name": "Abdul Hameed Baqavi"
+      },
+      {
+        "id": 25,
+        "name": "Muhamed Mehanović"
+      },
+      {
+        "id": 221,
+        "name": "Hasan Abdul-Karim"
+      },
+      {
+        "id": 219,
+        "name": "Hamed Choi"
+      },
+      {
+        "id": 52,
+        "name": "Elmalili Hamdi Yazir"
+      },
+      {
+        "id": 213,
+        "name": "Dr. Abu Bakr Muhammad Zakaria"
+      },
+      {
+        "id": 199,
+        "name": "Noor International Center"
+      },
+      {
+        "id": 218,
+        "name": "Saeed Sato"
+      },
+      {
+        "id": 228,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 126,
+        "name": "Besim Korkut"
+      },
+      {
+        "id": 122,
+        "name": "Maulana Azizul Haque al-Umari"
+      },
+      {
+        "id": 120,
+        "name": "Shaykh Rafeequl Islam Habibur-Rahman"
+      },
+      {
+        "id": 127,
+        "name": "Muhammad Sodik Muhammad Yusuf"
+      },
+      {
+        "id": 118,
+        "name": "Zakaria Abulsalam"
+      },
+      {
+        "id": 109,
+        "name": "Muhammad Makin"
+      },
+      {
+        "id": 27,
+        "name": "Frank Bubenheim and Nadeem"
+      },
+      {
+        "id": 33,
+        "name": "Indonesian Islamic Affairs Ministry"
+      },
+      {
+        "id": 831,
+        "name": "Abul Ala Maududi(Roman Urdu)"
+      },
+      {
+        "id": 819,
+        "name": "Maulana Wahiduddin Khan"
+      },
+      {
+        "id": 771,
+        "name": "Kannada Translation"
+      },
+      {
+        "id": 785,
+        "name": "Mawlawi Muhammad Anwar Badkhashani"
+      },
+      {
+        "id": 840,
+        "name": "Abu Bakr Ibrahim Ali (Bakurube)"
+      },
+      {
+        "id": 795,
+        "name": "Suliman Kanti"
+      },
+      {
+        "id": 779,
+        "name": "Rashid Maash"
+      },
+      {
+        "id": 782,
+        "name": "Islamic and Cultural League"
+      },
+      {
+        "id": 796,
+        "name": "Baba Mamady Jani"
+      },
+      {
+        "id": 798,
+        "name": "Abdul Hamid Silika"
+      },
+      {
+        "id": 774,
+        "name": "The Rwanda Muslims Association team"
+      }
+    ],
+    "fa": [
+      {
+        "id": 85,
+        "name": "M.A.S. Abdel Haleem"
+      },
+      {
+        "id": 149,
+        "name": "Fadel Soliman, Bridges’ translation"
+      },
+      {
+        "id": 84,
+        "name": "T. Usmani"
+      },
+      {
+        "id": 95,
+        "name": "A. Maududi (Tafhim commentary)"
+      },
+      {
+        "id": 78,
+        "name": "Ministry of Awqaf, Egypt"
+      },
+      {
+        "id": 19,
+        "name": "M. Pickthall"
+      },
+      {
+        "id": 79,
+        "name": "Abu Adel"
+      },
+      {
+        "id": 80,
+        "name": "Muhammad Karakunnu and Vanidas Elayavoor"
+      },
+      {
+        "id": 81,
+        "name": "Burhan Muhammad-Amin"
+      },
+      {
+        "id": 83,
+        "name": "Sheikh Isa Garcia"
+      },
+      {
+        "id": 86,
+        "name": "Office of the president of Maldives"
+      },
+      {
+        "id": 76,
+        "name": "Muhammad Saleh"
+      },
+      {
+        "id": 75,
+        "name": "Alikhan Musayev"
+      },
+      {
+        "id": 22,
+        "name": "A. Yusuf Ali"
+      },
+      {
+        "id": 20,
+        "name": "Saheeh International"
+      },
+      {
+        "id": 203,
+        "name": "Al-Hilali & Khan"
+      },
+      {
+        "id": 234,
+        "name": "Fatah Muhammad Jalandhari"
+      },
+      {
+        "id": 57,
+        "name": "Transliteration"
+      },
+      {
+        "id": 54,
+        "name": "Maulana Muhammad Junagarhi"
+      },
+      {
+        "id": 156,
+        "name": "Fe Zilal al-Qur'an"
+      },
+      {
+        "id": 151,
+        "name": "Shaykh al-Hind Mahmud al-Hasan(with Tafsir E Usmani)"
+      },
+      {
+        "id": 158,
+        "name": "Bayan-ul-Quran"
+      },
+      {
+        "id": 97,
+        "name": "Tafheem e Qur'an - Syed Abu Ali Maududi"
+      },
+      {
+        "id": 136,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 135,
+        "name": "IslamHouse.com"
+      },
+      {
+        "id": 139,
+        "name": "Khawaja Mirof & Khawaja Mir"
+      },
+      {
+        "id": 35,
+        "name": "Ryoichi Mita"
+      },
+      {
+        "id": 134,
+        "name": "King Fahad Quran Complex"
+      },
+      {
+        "id": 153,
+        "name": "Hamza Roberto Piccardo"
+      },
+      {
+        "id": 161,
+        "name": "Taisirul Quran"
+      },
+      {
+        "id": 163,
+        "name": "Sheikh Mujibur Rahman"
+      },
+      {
+        "id": 162,
+        "name": "Rawai Al-bayan"
+      },
+      {
+        "id": 210,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 211,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 217,
+        "name": "Dr. Mikhailo Yaqubovic"
+      },
+      {
+        "id": 229,
+        "name": "Sheikh Omar Sharif bin Abdul Salam"
+      },
+      {
+        "id": 55,
+        "name": "Muhammad Sodiq Muhammad Yusuf (Latin) "
+      },
+      {
+        "id": 143,
+        "name": "Muhammad Saleh Bamoki"
+      },
+      {
+        "id": 141,
+        "name": "The Sabiq Company"
+      },
+      {
+        "id": 140,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 214,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 227,
+        "name": "Maulana Abder-Rahim ibn Muhammad"
+      },
+      {
+        "id": 226,
+        "name": "Muhammad Shafi’i Ansari"
+      },
+      {
+        "id": 233,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 225,
+        "name": "Rabila Al-Umry"
+      },
+      {
+        "id": 224,
+        "name": "Abdul-Hamid Haidar & Kanhi Muhammad"
+      },
+      {
+        "id": 232,
+        "name": "African Development Foundation"
+      },
+      {
+        "id": 235,
+        "name": "Malak Faris Abdalsalaam"
+      },
+      {
+        "id": 231,
+        "name": "Dr. Abdullah Muhammad Abu Bakr and Sheikh Nasir Khamis"
+      },
+      {
+        "id": 230,
+        "name": "Society of Institutes and Universities"
+      },
+      {
+        "id": 223,
+        "name": "Pioneers of Translation Center"
+      },
+      {
+        "id": 222,
+        "name": "Khalifa Altay"
+      },
+      {
+        "id": 220,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 144,
+        "name": "Sofian S. Siregar"
+      },
+      {
+        "id": 88,
+        "name": "Hasan Efendi Nahi"
+      },
+      {
+        "id": 87,
+        "name": "Sadiq and Sani"
+      },
+      {
+        "id": 50,
+        "name": "Jan Trust Foundation"
+      },
+      {
+        "id": 49,
+        "name": "Ali Muhsin Al-Barwani"
+      },
+      {
+        "id": 48,
+        "name": "Knut Bernström"
+      },
+      {
+        "id": 128,
+        "name": "Cambodian Muslim Community Development"
+      },
+      {
+        "id": 45,
+        "name": "Russian Translation ( Elmir Kuliev )"
+      },
+      {
+        "id": 77,
+        "name": "Turkish Translation(Diyanet)"
+      },
+      {
+        "id": 39,
+        "name": "Abdullah Muhammad Basmeih"
+      },
+      {
+        "id": 36,
+        "name": "Korean"
+      },
+      {
+        "id": 30,
+        "name": "Finnish"
+      },
+      {
+        "id": 26,
+        "name": "Czech"
+      },
+      {
+        "id": 103,
+        "name": "Helmi Nasr"
+      },
+      {
+        "id": 74,
+        "name": "Tajik"
+      },
+      {
+        "id": 23,
+        "name": "Azerbaijani"
+      },
+      {
+        "id": 101,
+        "name": "Alauddin Mansour"
+      },
+      {
+        "id": 53,
+        "name": "Tatar"
+      },
+      {
+        "id": 47,
+        "name": "Albanian"
+      },
+      {
+        "id": 44,
+        "name": "Grigore"
+      },
+      {
+        "id": 42,
+        "name": "Józef Bielawski"
+      },
+      {
+        "id": 41,
+        "name": "Norwegian"
+      },
+      {
+        "id": 237,
+        "name": "Tzvetan Theophanov"
+      },
+      {
+        "id": 106,
+        "name": "Magomed Magomedov"
+      },
+      {
+        "id": 236,
+        "name": "Ramdane At Mansour"
+      },
+      {
+        "id": 238,
+        "name": "Taj Mehmood Amroti"
+      },
+      {
+        "id": 125,
+        "name": "Shaykh Abu Rahimah Mikael Aykyuni"
+      },
+      {
+        "id": 124,
+        "name": "Muslim Shahin"
+      },
+      {
+        "id": 46,
+        "name": "Mahmud Muhammad Abduh"
+      },
+      {
+        "id": 113,
+        "name": "Khalifah Altai"
+      },
+      {
+        "id": 112,
+        "name": "Shaban Britch"
+      },
+      {
+        "id": 38,
+        "name": "Maranao"
+      },
+      {
+        "id": 89,
+        "name": "Albanian Translation"
+      },
+      {
+        "id": 56,
+        "name": "Chinese Translation (Simplified) - Ma Jain"
+      },
+      {
+        "id": 32,
+        "name": "Hausa Translation(Abubakar Gumi)"
+      },
+      {
+        "id": 108,
+        "name": "Ahl Al-Hadith Central Society of Nepal"
+      },
+      {
+        "id": 37,
+        "name": "Malayalam Translation(Abdul Hameed and Kunhi)"
+      },
+      {
+        "id": 43,
+        "name": "Portuguese Translation( Samir )"
+      },
+      {
+        "id": 51,
+        "name": "Thai Translatio (King Fahad Quran Complex)"
+      },
+      {
+        "id": 111,
+        "name": "Ghali Apapur Apaghuna"
+      },
+      {
+        "id": 115,
+        "name": "Abubakar Mahmood Jummi"
+      },
+      {
+        "id": 31,
+        "name": "Muhammad Hamidullah"
+      },
+      {
+        "id": 29,
+        "name": "Hussein Taji Kal Dari"
+      },
+      {
+        "id": 208,
+        "name": "Abu Reda Muhammad ibn Ahmad"
+      },
+      {
+        "id": 209,
+        "name": "Othman al-Sharif"
+      },
+      {
+        "id": 133,
+        "name": "Abdul Hameed Baqavi"
+      },
+      {
+        "id": 25,
+        "name": "Muhamed Mehanović"
+      },
+      {
+        "id": 221,
+        "name": "Hasan Abdul-Karim"
+      },
+      {
+        "id": 219,
+        "name": "Hamed Choi"
+      },
+      {
+        "id": 52,
+        "name": "Elmalili Hamdi Yazir"
+      },
+      {
+        "id": 213,
+        "name": "Dr. Abu Bakr Muhammad Zakaria"
+      },
+      {
+        "id": 199,
+        "name": "Noor International Center"
+      },
+      {
+        "id": 218,
+        "name": "Saeed Sato"
+      },
+      {
+        "id": 228,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 126,
+        "name": "Besim Korkut"
+      },
+      {
+        "id": 122,
+        "name": "Maulana Azizul Haque al-Umari"
+      },
+      {
+        "id": 120,
+        "name": "Shaykh Rafeequl Islam Habibur-Rahman"
+      },
+      {
+        "id": 127,
+        "name": "Muhammad Sodik Muhammad Yusuf"
+      },
+      {
+        "id": 118,
+        "name": "Zakaria Abulsalam"
+      },
+      {
+        "id": 109,
+        "name": "Muhammad Makin"
+      },
+      {
+        "id": 27,
+        "name": "Frank Bubenheim and Nadeem"
+      },
+      {
+        "id": 33,
+        "name": "Indonesian Islamic Affairs Ministry"
+      },
+      {
+        "id": 831,
+        "name": "Abul Ala Maududi(Roman Urdu)"
+      },
+      {
+        "id": 819,
+        "name": "Maulana Wahiduddin Khan"
+      },
+      {
+        "id": 771,
+        "name": "Kannada Translation"
+      },
+      {
+        "id": 785,
+        "name": "Mawlawi Muhammad Anwar Badkhashani"
+      },
+      {
+        "id": 840,
+        "name": "Abu Bakr Ibrahim Ali (Bakurube)"
+      },
+      {
+        "id": 795,
+        "name": "Suliman Kanti"
+      },
+      {
+        "id": 779,
+        "name": "Rashid Maash"
+      },
+      {
+        "id": 782,
+        "name": "Islamic and Cultural League"
+      },
+      {
+        "id": 796,
+        "name": "Baba Mamady Jani"
+      },
+      {
+        "id": 798,
+        "name": "Abdul Hamid Silika"
+      },
+      {
+        "id": 774,
+        "name": "The Rwanda Muslims Association team"
+      }
+    ],
+    "fr": [
+      {
+        "id": 85,
+        "name": "M.A.S. Abdel Haleem"
+      },
+      {
+        "id": 149,
+        "name": "Fadel Soliman, Bridges’ translation"
+      },
+      {
+        "id": 84,
+        "name": "T. Usmani"
+      },
+      {
+        "id": 95,
+        "name": "A. Maududi (Tafhim commentary)"
+      },
+      {
+        "id": 78,
+        "name": "Ministry of Awqaf, Egypt"
+      },
+      {
+        "id": 19,
+        "name": "M. Pickthall"
+      },
+      {
+        "id": 79,
+        "name": "Abu Adel"
+      },
+      {
+        "id": 80,
+        "name": "Muhammad Karakunnu and Vanidas Elayavoor"
+      },
+      {
+        "id": 81,
+        "name": "Burhan Muhammad-Amin"
+      },
+      {
+        "id": 83,
+        "name": "Sheikh Isa Garcia"
+      },
+      {
+        "id": 86,
+        "name": "Office of the president of Maldives"
+      },
+      {
+        "id": 76,
+        "name": "Muhammad Saleh"
+      },
+      {
+        "id": 75,
+        "name": "Alikhan Musayev"
+      },
+      {
+        "id": 22,
+        "name": "A. Yusuf Ali"
+      },
+      {
+        "id": 20,
+        "name": "Saheeh International"
+      },
+      {
+        "id": 203,
+        "name": "Al-Hilali & Khan"
+      },
+      {
+        "id": 234,
+        "name": "Fatah Muhammad Jalandhari"
+      },
+      {
+        "id": 57,
+        "name": "Transliteration"
+      },
+      {
+        "id": 54,
+        "name": "Maulana Muhammad Junagarhi"
+      },
+      {
+        "id": 156,
+        "name": "Fe Zilal al-Qur'an"
+      },
+      {
+        "id": 151,
+        "name": "Shaykh al-Hind Mahmud al-Hasan(with Tafsir E Usmani)"
+      },
+      {
+        "id": 158,
+        "name": "Bayan-ul-Quran"
+      },
+      {
+        "id": 97,
+        "name": "Tafheem e Qur'an - Syed Abu Ali Maududi"
+      },
+      {
+        "id": 136,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 135,
+        "name": "IslamHouse.com"
+      },
+      {
+        "id": 139,
+        "name": "Khawaja Mirof & Khawaja Mir"
+      },
+      {
+        "id": 35,
+        "name": "Ryoichi Mita"
+      },
+      {
+        "id": 134,
+        "name": "King Fahad Quran Complex"
+      },
+      {
+        "id": 153,
+        "name": "Hamza Roberto Piccardo"
+      },
+      {
+        "id": 161,
+        "name": "Taisirul Quran"
+      },
+      {
+        "id": 163,
+        "name": "Sheikh Mujibur Rahman"
+      },
+      {
+        "id": 162,
+        "name": "Rawai Al-bayan"
+      },
+      {
+        "id": 210,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 211,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 217,
+        "name": "Dr. Mikhailo Yaqubovic"
+      },
+      {
+        "id": 229,
+        "name": "Sheikh Omar Sharif bin Abdul Salam"
+      },
+      {
+        "id": 55,
+        "name": "Muhammad Sodiq Muhammad Yusuf (Latin) "
+      },
+      {
+        "id": 143,
+        "name": "Muhammad Saleh Bamoki"
+      },
+      {
+        "id": 141,
+        "name": "The Sabiq Company"
+      },
+      {
+        "id": 140,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 214,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 227,
+        "name": "Maulana Abder-Rahim ibn Muhammad"
+      },
+      {
+        "id": 226,
+        "name": "Muhammad Shafi’i Ansari"
+      },
+      {
+        "id": 233,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 225,
+        "name": "Rabila Al-Umry"
+      },
+      {
+        "id": 224,
+        "name": "Abdul-Hamid Haidar & Kanhi Muhammad"
+      },
+      {
+        "id": 232,
+        "name": "African Development Foundation"
+      },
+      {
+        "id": 235,
+        "name": "Malak Faris Abdalsalaam"
+      },
+      {
+        "id": 231,
+        "name": "Dr. Abdullah Muhammad Abu Bakr and Sheikh Nasir Khamis"
+      },
+      {
+        "id": 230,
+        "name": "Society of Institutes and Universities"
+      },
+      {
+        "id": 223,
+        "name": "Pioneers of Translation Center"
+      },
+      {
+        "id": 222,
+        "name": "Khalifa Altay"
+      },
+      {
+        "id": 220,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 144,
+        "name": "Sofian S. Siregar"
+      },
+      {
+        "id": 88,
+        "name": "Hasan Efendi Nahi"
+      },
+      {
+        "id": 87,
+        "name": "Sadiq and Sani"
+      },
+      {
+        "id": 50,
+        "name": "Jan Trust Foundation"
+      },
+      {
+        "id": 49,
+        "name": "Ali Muhsin Al-Barwani"
+      },
+      {
+        "id": 48,
+        "name": "Knut Bernström"
+      },
+      {
+        "id": 128,
+        "name": "Cambodian Muslim Community Development"
+      },
+      {
+        "id": 45,
+        "name": "Russian Translation ( Elmir Kuliev )"
+      },
+      {
+        "id": 77,
+        "name": "Turkish Translation(Diyanet)"
+      },
+      {
+        "id": 39,
+        "name": "Abdullah Muhammad Basmeih"
+      },
+      {
+        "id": 36,
+        "name": "Korean"
+      },
+      {
+        "id": 30,
+        "name": "Finnish"
+      },
+      {
+        "id": 26,
+        "name": "Czech"
+      },
+      {
+        "id": 103,
+        "name": "Helmi Nasr"
+      },
+      {
+        "id": 74,
+        "name": "Tajik"
+      },
+      {
+        "id": 23,
+        "name": "Azerbaijani"
+      },
+      {
+        "id": 101,
+        "name": "Alauddin Mansour"
+      },
+      {
+        "id": 53,
+        "name": "Tatar"
+      },
+      {
+        "id": 47,
+        "name": "Albanian"
+      },
+      {
+        "id": 44,
+        "name": "Grigore"
+      },
+      {
+        "id": 42,
+        "name": "Józef Bielawski"
+      },
+      {
+        "id": 41,
+        "name": "Norwegian"
+      },
+      {
+        "id": 237,
+        "name": "Tzvetan Theophanov"
+      },
+      {
+        "id": 106,
+        "name": "Magomed Magomedov"
+      },
+      {
+        "id": 236,
+        "name": "Ramdane At Mansour"
+      },
+      {
+        "id": 238,
+        "name": "Taj Mehmood Amroti"
+      },
+      {
+        "id": 125,
+        "name": "Shaykh Abu Rahimah Mikael Aykyuni"
+      },
+      {
+        "id": 124,
+        "name": "Muslim Shahin"
+      },
+      {
+        "id": 46,
+        "name": "Mahmud Muhammad Abduh"
+      },
+      {
+        "id": 113,
+        "name": "Khalifah Altai"
+      },
+      {
+        "id": 112,
+        "name": "Shaban Britch"
+      },
+      {
+        "id": 38,
+        "name": "Maranao"
+      },
+      {
+        "id": 89,
+        "name": "Albanian Translation"
+      },
+      {
+        "id": 56,
+        "name": "Chinese Translation (Simplified) - Ma Jain"
+      },
+      {
+        "id": 32,
+        "name": "Hausa Translation(Abubakar Gumi)"
+      },
+      {
+        "id": 108,
+        "name": "Ahl Al-Hadith Central Society of Nepal"
+      },
+      {
+        "id": 37,
+        "name": "Malayalam Translation(Abdul Hameed and Kunhi)"
+      },
+      {
+        "id": 43,
+        "name": "Portuguese Translation( Samir )"
+      },
+      {
+        "id": 51,
+        "name": "Thai Translatio (King Fahad Quran Complex)"
+      },
+      {
+        "id": 111,
+        "name": "Ghali Apapur Apaghuna"
+      },
+      {
+        "id": 115,
+        "name": "Abubakar Mahmood Jummi"
+      },
+      {
+        "id": 31,
+        "name": "Muhammad Hamidullah"
+      },
+      {
+        "id": 29,
+        "name": "Hussein Taji Kal Dari"
+      },
+      {
+        "id": 208,
+        "name": "Abu Reda Muhammad ibn Ahmad"
+      },
+      {
+        "id": 209,
+        "name": "Othman al-Sharif"
+      },
+      {
+        "id": 133,
+        "name": "Abdul Hameed Baqavi"
+      },
+      {
+        "id": 25,
+        "name": "Muhamed Mehanović"
+      },
+      {
+        "id": 221,
+        "name": "Hasan Abdul-Karim"
+      },
+      {
+        "id": 219,
+        "name": "Hamed Choi"
+      },
+      {
+        "id": 52,
+        "name": "Elmalili Hamdi Yazir"
+      },
+      {
+        "id": 213,
+        "name": "Dr. Abu Bakr Muhammad Zakaria"
+      },
+      {
+        "id": 199,
+        "name": "Noor International Center"
+      },
+      {
+        "id": 218,
+        "name": "Saeed Sato"
+      },
+      {
+        "id": 228,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 126,
+        "name": "Besim Korkut"
+      },
+      {
+        "id": 122,
+        "name": "Maulana Azizul Haque al-Umari"
+      },
+      {
+        "id": 120,
+        "name": "Shaykh Rafeequl Islam Habibur-Rahman"
+      },
+      {
+        "id": 127,
+        "name": "Muhammad Sodik Muhammad Yusuf"
+      },
+      {
+        "id": 118,
+        "name": "Zakaria Abulsalam"
+      },
+      {
+        "id": 109,
+        "name": "Muhammad Makin"
+      },
+      {
+        "id": 27,
+        "name": "Frank Bubenheim and Nadeem"
+      },
+      {
+        "id": 33,
+        "name": "Indonesian Islamic Affairs Ministry"
+      },
+      {
+        "id": 831,
+        "name": "Abul Ala Maududi(Roman Urdu)"
+      },
+      {
+        "id": 819,
+        "name": "Maulana Wahiduddin Khan"
+      },
+      {
+        "id": 771,
+        "name": "Kannada Translation"
+      },
+      {
+        "id": 785,
+        "name": "Mawlawi Muhammad Anwar Badkhashani"
+      },
+      {
+        "id": 840,
+        "name": "Abu Bakr Ibrahim Ali (Bakurube)"
+      },
+      {
+        "id": 795,
+        "name": "Suliman Kanti"
+      },
+      {
+        "id": 779,
+        "name": "Rashid Maash"
+      },
+      {
+        "id": 782,
+        "name": "Islamic and Cultural League"
+      },
+      {
+        "id": 796,
+        "name": "Baba Mamady Jani"
+      },
+      {
+        "id": 798,
+        "name": "Abdul Hamid Silika"
+      },
+      {
+        "id": 774,
+        "name": "The Rwanda Muslims Association team"
+      }
+    ],
+    "es": [
+      {
+        "id": 85,
+        "name": "M.A.S. Abdel Haleem"
+      },
+      {
+        "id": 149,
+        "name": "Fadel Soliman, Bridges’ translation"
+      },
+      {
+        "id": 84,
+        "name": "T. Usmani"
+      },
+      {
+        "id": 95,
+        "name": "A. Maududi (Tafhim commentary)"
+      },
+      {
+        "id": 78,
+        "name": "Ministry of Awqaf, Egypt"
+      },
+      {
+        "id": 19,
+        "name": "M. Pickthall"
+      },
+      {
+        "id": 79,
+        "name": "Abu Adel"
+      },
+      {
+        "id": 80,
+        "name": "Muhammad Karakunnu and Vanidas Elayavoor"
+      },
+      {
+        "id": 81,
+        "name": "Burhan Muhammad-Amin"
+      },
+      {
+        "id": 83,
+        "name": "Sheikh Isa Garcia"
+      },
+      {
+        "id": 86,
+        "name": "Office of the president of Maldives"
+      },
+      {
+        "id": 76,
+        "name": "Muhammad Saleh"
+      },
+      {
+        "id": 75,
+        "name": "Alikhan Musayev"
+      },
+      {
+        "id": 22,
+        "name": "A. Yusuf Ali"
+      },
+      {
+        "id": 20,
+        "name": "Saheeh International"
+      },
+      {
+        "id": 203,
+        "name": "Al-Hilali & Khan"
+      },
+      {
+        "id": 234,
+        "name": "Fatah Muhammad Jalandhari"
+      },
+      {
+        "id": 57,
+        "name": "Transliteration"
+      },
+      {
+        "id": 54,
+        "name": "Maulana Muhammad Junagarhi"
+      },
+      {
+        "id": 156,
+        "name": "Fe Zilal al-Qur'an"
+      },
+      {
+        "id": 151,
+        "name": "Shaykh al-Hind Mahmud al-Hasan(with Tafsir E Usmani)"
+      },
+      {
+        "id": 158,
+        "name": "Bayan-ul-Quran"
+      },
+      {
+        "id": 97,
+        "name": "Tafheem e Qur'an - Syed Abu Ali Maududi"
+      },
+      {
+        "id": 136,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 135,
+        "name": "IslamHouse.com"
+      },
+      {
+        "id": 139,
+        "name": "Khawaja Mirof & Khawaja Mir"
+      },
+      {
+        "id": 35,
+        "name": "Ryoichi Mita"
+      },
+      {
+        "id": 134,
+        "name": "King Fahad Quran Complex"
+      },
+      {
+        "id": 153,
+        "name": "Hamza Roberto Piccardo"
+      },
+      {
+        "id": 161,
+        "name": "Taisirul Quran"
+      },
+      {
+        "id": 163,
+        "name": "Sheikh Mujibur Rahman"
+      },
+      {
+        "id": 162,
+        "name": "Rawai Al-bayan"
+      },
+      {
+        "id": 210,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 211,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 217,
+        "name": "Dr. Mikhailo Yaqubovic"
+      },
+      {
+        "id": 229,
+        "name": "Sheikh Omar Sharif bin Abdul Salam"
+      },
+      {
+        "id": 55,
+        "name": "Muhammad Sodiq Muhammad Yusuf (Latin) "
+      },
+      {
+        "id": 143,
+        "name": "Muhammad Saleh Bamoki"
+      },
+      {
+        "id": 141,
+        "name": "The Sabiq Company"
+      },
+      {
+        "id": 140,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 214,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 227,
+        "name": "Maulana Abder-Rahim ibn Muhammad"
+      },
+      {
+        "id": 226,
+        "name": "Muhammad Shafi’i Ansari"
+      },
+      {
+        "id": 233,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 225,
+        "name": "Rabila Al-Umry"
+      },
+      {
+        "id": 224,
+        "name": "Abdul-Hamid Haidar & Kanhi Muhammad"
+      },
+      {
+        "id": 232,
+        "name": "African Development Foundation"
+      },
+      {
+        "id": 235,
+        "name": "Malak Faris Abdalsalaam"
+      },
+      {
+        "id": 231,
+        "name": "Dr. Abdullah Muhammad Abu Bakr and Sheikh Nasir Khamis"
+      },
+      {
+        "id": 230,
+        "name": "Society of Institutes and Universities"
+      },
+      {
+        "id": 223,
+        "name": "Pioneers of Translation Center"
+      },
+      {
+        "id": 222,
+        "name": "Khalifa Altay"
+      },
+      {
+        "id": 220,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 144,
+        "name": "Sofian S. Siregar"
+      },
+      {
+        "id": 88,
+        "name": "Hasan Efendi Nahi"
+      },
+      {
+        "id": 87,
+        "name": "Sadiq and Sani"
+      },
+      {
+        "id": 50,
+        "name": "Jan Trust Foundation"
+      },
+      {
+        "id": 49,
+        "name": "Ali Muhsin Al-Barwani"
+      },
+      {
+        "id": 48,
+        "name": "Knut Bernström"
+      },
+      {
+        "id": 128,
+        "name": "Cambodian Muslim Community Development"
+      },
+      {
+        "id": 45,
+        "name": "Russian Translation ( Elmir Kuliev )"
+      },
+      {
+        "id": 77,
+        "name": "Turkish Translation(Diyanet)"
+      },
+      {
+        "id": 39,
+        "name": "Abdullah Muhammad Basmeih"
+      },
+      {
+        "id": 36,
+        "name": "Korean"
+      },
+      {
+        "id": 30,
+        "name": "Finnish"
+      },
+      {
+        "id": 26,
+        "name": "Czech"
+      },
+      {
+        "id": 103,
+        "name": "Helmi Nasr"
+      },
+      {
+        "id": 74,
+        "name": "Tajik"
+      },
+      {
+        "id": 23,
+        "name": "Azerbaijani"
+      },
+      {
+        "id": 101,
+        "name": "Alauddin Mansour"
+      },
+      {
+        "id": 53,
+        "name": "Tatar"
+      },
+      {
+        "id": 47,
+        "name": "Albanian"
+      },
+      {
+        "id": 44,
+        "name": "Grigore"
+      },
+      {
+        "id": 42,
+        "name": "Józef Bielawski"
+      },
+      {
+        "id": 41,
+        "name": "Norwegian"
+      },
+      {
+        "id": 237,
+        "name": "Tzvetan Theophanov"
+      },
+      {
+        "id": 106,
+        "name": "Magomed Magomedov"
+      },
+      {
+        "id": 236,
+        "name": "Ramdane At Mansour"
+      },
+      {
+        "id": 238,
+        "name": "Taj Mehmood Amroti"
+      },
+      {
+        "id": 125,
+        "name": "Shaykh Abu Rahimah Mikael Aykyuni"
+      },
+      {
+        "id": 124,
+        "name": "Muslim Shahin"
+      },
+      {
+        "id": 46,
+        "name": "Mahmud Muhammad Abduh"
+      },
+      {
+        "id": 113,
+        "name": "Khalifah Altai"
+      },
+      {
+        "id": 112,
+        "name": "Shaban Britch"
+      },
+      {
+        "id": 38,
+        "name": "Maranao"
+      },
+      {
+        "id": 89,
+        "name": "Albanian Translation"
+      },
+      {
+        "id": 56,
+        "name": "Chinese Translation (Simplified) - Ma Jain"
+      },
+      {
+        "id": 32,
+        "name": "Hausa Translation(Abubakar Gumi)"
+      },
+      {
+        "id": 108,
+        "name": "Ahl Al-Hadith Central Society of Nepal"
+      },
+      {
+        "id": 37,
+        "name": "Malayalam Translation(Abdul Hameed and Kunhi)"
+      },
+      {
+        "id": 43,
+        "name": "Portuguese Translation( Samir )"
+      },
+      {
+        "id": 51,
+        "name": "Thai Translatio (King Fahad Quran Complex)"
+      },
+      {
+        "id": 111,
+        "name": "Ghali Apapur Apaghuna"
+      },
+      {
+        "id": 115,
+        "name": "Abubakar Mahmood Jummi"
+      },
+      {
+        "id": 31,
+        "name": "Muhammad Hamidullah"
+      },
+      {
+        "id": 29,
+        "name": "Hussein Taji Kal Dari"
+      },
+      {
+        "id": 208,
+        "name": "Abu Reda Muhammad ibn Ahmad"
+      },
+      {
+        "id": 209,
+        "name": "Othman al-Sharif"
+      },
+      {
+        "id": 133,
+        "name": "Abdul Hameed Baqavi"
+      },
+      {
+        "id": 25,
+        "name": "Muhamed Mehanović"
+      },
+      {
+        "id": 221,
+        "name": "Hasan Abdul-Karim"
+      },
+      {
+        "id": 219,
+        "name": "Hamed Choi"
+      },
+      {
+        "id": 52,
+        "name": "Elmalili Hamdi Yazir"
+      },
+      {
+        "id": 213,
+        "name": "Dr. Abu Bakr Muhammad Zakaria"
+      },
+      {
+        "id": 199,
+        "name": "Noor International Center"
+      },
+      {
+        "id": 218,
+        "name": "Saeed Sato"
+      },
+      {
+        "id": 228,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 126,
+        "name": "Besim Korkut"
+      },
+      {
+        "id": 122,
+        "name": "Maulana Azizul Haque al-Umari"
+      },
+      {
+        "id": 120,
+        "name": "Shaykh Rafeequl Islam Habibur-Rahman"
+      },
+      {
+        "id": 127,
+        "name": "Muhammad Sodik Muhammad Yusuf"
+      },
+      {
+        "id": 118,
+        "name": "Zakaria Abulsalam"
+      },
+      {
+        "id": 109,
+        "name": "Muhammad Makin"
+      },
+      {
+        "id": 27,
+        "name": "Frank Bubenheim and Nadeem"
+      },
+      {
+        "id": 33,
+        "name": "Indonesian Islamic Affairs Ministry"
+      },
+      {
+        "id": 831,
+        "name": "Abul Ala Maududi(Roman Urdu)"
+      },
+      {
+        "id": 819,
+        "name": "Maulana Wahiduddin Khan"
+      },
+      {
+        "id": 771,
+        "name": "Kannada Translation"
+      },
+      {
+        "id": 785,
+        "name": "Mawlawi Muhammad Anwar Badkhashani"
+      },
+      {
+        "id": 840,
+        "name": "Abu Bakr Ibrahim Ali (Bakurube)"
+      },
+      {
+        "id": 795,
+        "name": "Suliman Kanti"
+      },
+      {
+        "id": 779,
+        "name": "Rashid Maash"
+      },
+      {
+        "id": 782,
+        "name": "Islamic and Cultural League"
+      },
+      {
+        "id": 796,
+        "name": "Baba Mamady Jani"
+      },
+      {
+        "id": 798,
+        "name": "Abdul Hamid Silika"
+      },
+      {
+        "id": 774,
+        "name": "The Rwanda Muslims Association team"
+      }
+    ],
+    "zh": [
+      {
+        "id": 85,
+        "name": "M.A.S. Abdel Haleem"
+      },
+      {
+        "id": 149,
+        "name": "Fadel Soliman, Bridges’ translation"
+      },
+      {
+        "id": 84,
+        "name": "T. Usmani"
+      },
+      {
+        "id": 95,
+        "name": "A. Maududi (Tafhim commentary)"
+      },
+      {
+        "id": 78,
+        "name": "Ministry of Awqaf, Egypt"
+      },
+      {
+        "id": 19,
+        "name": "M. Pickthall"
+      },
+      {
+        "id": 79,
+        "name": "Abu Adel"
+      },
+      {
+        "id": 80,
+        "name": "Muhammad Karakunnu and Vanidas Elayavoor"
+      },
+      {
+        "id": 81,
+        "name": "Burhan Muhammad-Amin"
+      },
+      {
+        "id": 83,
+        "name": "Sheikh Isa Garcia"
+      },
+      {
+        "id": 86,
+        "name": "Office of the president of Maldives"
+      },
+      {
+        "id": 76,
+        "name": "Muhammad Saleh"
+      },
+      {
+        "id": 75,
+        "name": "Alikhan Musayev"
+      },
+      {
+        "id": 22,
+        "name": "A. Yusuf Ali"
+      },
+      {
+        "id": 20,
+        "name": "Saheeh International"
+      },
+      {
+        "id": 203,
+        "name": "Al-Hilali & Khan"
+      },
+      {
+        "id": 234,
+        "name": "Fatah Muhammad Jalandhari"
+      },
+      {
+        "id": 57,
+        "name": "Transliteration"
+      },
+      {
+        "id": 54,
+        "name": "Maulana Muhammad Junagarhi"
+      },
+      {
+        "id": 156,
+        "name": "Fe Zilal al-Qur'an"
+      },
+      {
+        "id": 151,
+        "name": "Shaykh al-Hind Mahmud al-Hasan(with Tafsir E Usmani)"
+      },
+      {
+        "id": 158,
+        "name": "Bayan-ul-Quran"
+      },
+      {
+        "id": 97,
+        "name": "Tafheem e Qur'an - Syed Abu Ali Maududi"
+      },
+      {
+        "id": 136,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 135,
+        "name": "IslamHouse.com"
+      },
+      {
+        "id": 139,
+        "name": "Khawaja Mirof & Khawaja Mir"
+      },
+      {
+        "id": 35,
+        "name": "Ryoichi Mita"
+      },
+      {
+        "id": 134,
+        "name": "King Fahad Quran Complex"
+      },
+      {
+        "id": 153,
+        "name": "Hamza Roberto Piccardo"
+      },
+      {
+        "id": 161,
+        "name": "Taisirul Quran"
+      },
+      {
+        "id": 163,
+        "name": "Sheikh Mujibur Rahman"
+      },
+      {
+        "id": 162,
+        "name": "Rawai Al-bayan"
+      },
+      {
+        "id": 210,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 211,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 217,
+        "name": "Dr. Mikhailo Yaqubovic"
+      },
+      {
+        "id": 229,
+        "name": "Sheikh Omar Sharif bin Abdul Salam"
+      },
+      {
+        "id": 55,
+        "name": "Muhammad Sodiq Muhammad Yusuf (Latin) "
+      },
+      {
+        "id": 143,
+        "name": "Muhammad Saleh Bamoki"
+      },
+      {
+        "id": 141,
+        "name": "The Sabiq Company"
+      },
+      {
+        "id": 140,
+        "name": "Montada Islamic Foundation"
+      },
+      {
+        "id": 214,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 227,
+        "name": "Maulana Abder-Rahim ibn Muhammad"
+      },
+      {
+        "id": 226,
+        "name": "Muhammad Shafi’i Ansari"
+      },
+      {
+        "id": 233,
+        "name": "Dar Al-Salam Center"
+      },
+      {
+        "id": 225,
+        "name": "Rabila Al-Umry"
+      },
+      {
+        "id": 224,
+        "name": "Abdul-Hamid Haidar & Kanhi Muhammad"
+      },
+      {
+        "id": 232,
+        "name": "African Development Foundation"
+      },
+      {
+        "id": 235,
+        "name": "Malak Faris Abdalsalaam"
+      },
+      {
+        "id": 231,
+        "name": "Dr. Abdullah Muhammad Abu Bakr and Sheikh Nasir Khamis"
+      },
+      {
+        "id": 230,
+        "name": "Society of Institutes and Universities"
+      },
+      {
+        "id": 223,
+        "name": "Pioneers of Translation Center"
+      },
+      {
+        "id": 222,
+        "name": "Khalifa Altay"
+      },
+      {
+        "id": 220,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 144,
+        "name": "Sofian S. Siregar"
+      },
+      {
+        "id": 88,
+        "name": "Hasan Efendi Nahi"
+      },
+      {
+        "id": 87,
+        "name": "Sadiq and Sani"
+      },
+      {
+        "id": 50,
+        "name": "Jan Trust Foundation"
+      },
+      {
+        "id": 49,
+        "name": "Ali Muhsin Al-Barwani"
+      },
+      {
+        "id": 48,
+        "name": "Knut Bernström"
+      },
+      {
+        "id": 128,
+        "name": "Cambodian Muslim Community Development"
+      },
+      {
+        "id": 45,
+        "name": "Russian Translation ( Elmir Kuliev )"
+      },
+      {
+        "id": 77,
+        "name": "Turkish Translation(Diyanet)"
+      },
+      {
+        "id": 39,
+        "name": "Abdullah Muhammad Basmeih"
+      },
+      {
+        "id": 36,
+        "name": "Korean"
+      },
+      {
+        "id": 30,
+        "name": "Finnish"
+      },
+      {
+        "id": 26,
+        "name": "Czech"
+      },
+      {
+        "id": 103,
+        "name": "Helmi Nasr"
+      },
+      {
+        "id": 74,
+        "name": "Tajik"
+      },
+      {
+        "id": 23,
+        "name": "Azerbaijani"
+      },
+      {
+        "id": 101,
+        "name": "Alauddin Mansour"
+      },
+      {
+        "id": 53,
+        "name": "Tatar"
+      },
+      {
+        "id": 47,
+        "name": "Albanian"
+      },
+      {
+        "id": 44,
+        "name": "Grigore"
+      },
+      {
+        "id": 42,
+        "name": "Józef Bielawski"
+      },
+      {
+        "id": 41,
+        "name": "Norwegian"
+      },
+      {
+        "id": 237,
+        "name": "Tzvetan Theophanov"
+      },
+      {
+        "id": 106,
+        "name": "Magomed Magomedov"
+      },
+      {
+        "id": 236,
+        "name": "Ramdane At Mansour"
+      },
+      {
+        "id": 238,
+        "name": "Taj Mehmood Amroti"
+      },
+      {
+        "id": 125,
+        "name": "Shaykh Abu Rahimah Mikael Aykyuni"
+      },
+      {
+        "id": 124,
+        "name": "Muslim Shahin"
+      },
+      {
+        "id": 46,
+        "name": "Mahmud Muhammad Abduh"
+      },
+      {
+        "id": 113,
+        "name": "Khalifah Altai"
+      },
+      {
+        "id": 112,
+        "name": "Shaban Britch"
+      },
+      {
+        "id": 38,
+        "name": "Maranao"
+      },
+      {
+        "id": 89,
+        "name": "Albanian Translation"
+      },
+      {
+        "id": 56,
+        "name": "Chinese Translation (Simplified) - Ma Jain"
+      },
+      {
+        "id": 32,
+        "name": "Hausa Translation(Abubakar Gumi)"
+      },
+      {
+        "id": 108,
+        "name": "Ahl Al-Hadith Central Society of Nepal"
+      },
+      {
+        "id": 37,
+        "name": "Malayalam Translation(Abdul Hameed and Kunhi)"
+      },
+      {
+        "id": 43,
+        "name": "Portuguese Translation( Samir )"
+      },
+      {
+        "id": 51,
+        "name": "Thai Translatio (King Fahad Quran Complex)"
+      },
+      {
+        "id": 111,
+        "name": "Ghali Apapur Apaghuna"
+      },
+      {
+        "id": 115,
+        "name": "Abubakar Mahmood Jummi"
+      },
+      {
+        "id": 31,
+        "name": "Muhammad Hamidullah"
+      },
+      {
+        "id": 29,
+        "name": "Hussein Taji Kal Dari"
+      },
+      {
+        "id": 208,
+        "name": "Abu Reda Muhammad ibn Ahmad"
+      },
+      {
+        "id": 209,
+        "name": "Othman al-Sharif"
+      },
+      {
+        "id": 133,
+        "name": "Abdul Hameed Baqavi"
+      },
+      {
+        "id": 25,
+        "name": "Muhamed Mehanović"
+      },
+      {
+        "id": 221,
+        "name": "Hasan Abdul-Karim"
+      },
+      {
+        "id": 219,
+        "name": "Hamed Choi"
+      },
+      {
+        "id": 52,
+        "name": "Elmalili Hamdi Yazir"
+      },
+      {
+        "id": 213,
+        "name": "Dr. Abu Bakr Muhammad Zakaria"
+      },
+      {
+        "id": 199,
+        "name": "Noor International Center"
+      },
+      {
+        "id": 218,
+        "name": "Saeed Sato"
+      },
+      {
+        "id": 228,
+        "name": "Ruwwad Center"
+      },
+      {
+        "id": 126,
+        "name": "Besim Korkut"
+      },
+      {
+        "id": 122,
+        "name": "Maulana Azizul Haque al-Umari"
+      },
+      {
+        "id": 120,
+        "name": "Shaykh Rafeequl Islam Habibur-Rahman"
+      },
+      {
+        "id": 127,
+        "name": "Muhammad Sodik Muhammad Yusuf"
+      },
+      {
+        "id": 118,
+        "name": "Zakaria Abulsalam"
+      },
+      {
+        "id": 109,
+        "name": "Muhammad Makin"
+      },
+      {
+        "id": 27,
+        "name": "Frank Bubenheim and Nadeem"
+      },
+      {
+        "id": 33,
+        "name": "Indonesian Islamic Affairs Ministry"
+      },
+      {
+        "id": 831,
+        "name": "Abul Ala Maududi(Roman Urdu)"
+      },
+      {
+        "id": 819,
+        "name": "Maulana Wahiduddin Khan"
+      },
+      {
+        "id": 771,
+        "name": "Kannada Translation"
+      },
+      {
+        "id": 785,
+        "name": "Mawlawi Muhammad Anwar Badkhashani"
+      },
+      {
+        "id": 840,
+        "name": "Abu Bakr Ibrahim Ali (Bakurube)"
+      },
+      {
+        "id": 795,
+        "name": "Suliman Kanti"
+      },
+      {
+        "id": 779,
+        "name": "Rashid Maash"
+      },
+      {
+        "id": 782,
+        "name": "Islamic and Cultural League"
+      },
+      {
+        "id": 796,
+        "name": "Baba Mamady Jani"
+      },
+      {
+        "id": 798,
+        "name": "Abdul Hamid Silika"
+      },
+      {
+        "id": 774,
+        "name": "The Rwanda Muslims Association team"
+      }
+    ]
+  },
+  "tafsirs": [
+    {
+      "id": 169,
+      "lang": "english",
+      "name": "Ibn Kathir (Abridged)"
+    },
+    {
+      "id": 381,
+      "lang": "bengali",
+      "name": "Tafsir Fathul Majid"
+    },
+    {
+      "id": 16,
+      "lang": "arabic",
+      "name": "Tafsir Muyassar"
+    },
+    {
+      "id": 165,
+      "lang": "bengali",
+      "name": "Tafsir Ahsanul Bayaan"
+    },
+    {
+      "id": 166,
+      "lang": "bengali",
+      "name": "Tafsir Abu Bakr Zakaria"
+    },
+    {
+      "id": 93,
+      "lang": "arabic",
+      "name": "Al-Tafsir al-Wasit (Tantawi)"
+    },
+    {
+      "id": 14,
+      "lang": "arabic",
+      "name": "Tafsir Ibn Kathir"
+    },
+    {
+      "id": 15,
+      "lang": "arabic",
+      "name": "Tafsir al-Tabari"
+    },
+    {
+      "id": 164,
+      "lang": "bengali",
+      "name": "Tafseer ibn Kathir"
+    },
+    {
+      "id": 90,
+      "lang": "arabic",
+      "name": "Al-Qurtubi"
+    },
+    {
+      "id": 168,
+      "lang": "english",
+      "name": "Ma'arif al-Qur'an"
+    },
+    {
+      "id": 91,
+      "lang": "arabic",
+      "name": "السعدي Al-Sa'di"
+    },
+    {
+      "id": 170,
+      "lang": "russian",
+      "name": "Al-Sa'di"
+    },
+    {
+      "id": 94,
+      "lang": "arabic",
+      "name": "Tafseer Al-Baghawi"
+    },
+    {
+      "id": 157,
+      "lang": "urdu",
+      "name": "Fi Zilal al-Quran"
+    },
+    {
+      "id": 804,
+      "lang": "Kurdish",
+      "name": "Rebar Kurdish Tafsir"
+    },
+    {
+      "id": 817,
+      "lang": "english",
+      "name": "Tazkirul Quran(Maulana Wahiduddin Khan)"
+    },
+    {
+      "id": 160,
+      "lang": "urdu",
+      "name": "Tafsir Ibn Kathir"
+    },
+    {
+      "id": 818,
+      "lang": "urdu",
+      "name": "Tazkir ul Quran"
+    },
+    {
+      "id": 159,
+      "lang": "urdu",
+      "name": "Bayan ul Quran"
+    }
+  ]
+}

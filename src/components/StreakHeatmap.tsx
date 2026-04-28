@@ -1,16 +1,19 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useLanguageStore } from '@/stores/useLanguageStore';
+import { t } from '@/lib/i18n/uiStrings';
+import { formatNumber } from '@/config/languageConfig';
 
 interface StreakHeatmapProps {
   values: Array<{ date: string; count: number }>;
 }
 
 const DAYS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
-const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-function buildGrid(values: Array<{ date: string; count: number }>) {
+function buildGrid(values: Array<{ date: string; count: number }>, isoCode: string) {
   const map = new Map(values.map(v => [v.date, v.count]));
+  const MONTHS = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
 
   // Always show last 52 full weeks + partial current week = GitHub style
   const today = new Date();
@@ -37,7 +40,7 @@ function buildGrid(values: Array<{ date: string; count: number }>) {
         col.push({ date: iso, count: map.get(iso) ?? 0 });
         const m = current.getMonth();
         if (m !== lastMonth && dow === 0) {
-          monthLabels.push({ label: MONTHS[m], col: colIdx });
+          monthLabels.push({ label: t(MONTHS[m] as any, isoCode), col: colIdx });
           lastMonth = m;
         }
       }
@@ -58,7 +61,8 @@ function cellColor(count: number): string {
 }
 
 export function StreakHeatmap({ values }: StreakHeatmapProps) {
-  const { cols, monthLabels } = useMemo(() => buildGrid(values), [values]);
+  const isoCode = useLanguageStore(state => state.activeIsoCode);
+  const { cols, monthLabels } = useMemo(() => buildGrid(values, isoCode), [values, isoCode]);
 
   const CELL = 13;   // px — cell size
   const GAP = 3;     // px — gap between cells
@@ -105,7 +109,7 @@ export function StreakHeatmap({ values }: StreakHeatmapProps) {
               className="text-on-surface-variant/40"
               style={{ fontFamily: 'var(--font-inter, system-ui)' }}
             >
-              {label}
+              {t(label.toLowerCase() as any, isoCode)}
             </text>
           ) : null
         )}
@@ -125,7 +129,11 @@ export function StreakHeatmap({ values }: StreakHeatmapProps) {
                 fill={cellColor(cell.count)}
                 style={{ transition: 'fill 0.15s ease' }}
               >
-                <title>{cell.count > 0 ? `${cell.count} reflection${cell.count > 1 ? 's' : ''} on ${cell.date}` : `No activity on ${cell.date}`}</title>
+                <title>
+                  {cell.count > 0 
+                    ? `${formatNumber(cell.count, isoCode)} ${cell.count > 1 ? t('reflections', isoCode) : t('reflection', isoCode)} ${t('onDate', isoCode)} ${new Date(cell.date).toLocaleDateString(isoCode)}` 
+                    : `${t('noActivity', isoCode)} ${t('onDate', isoCode)} ${new Date(cell.date).toLocaleDateString(isoCode)}`}
+                </title>
               </rect>
             ) : (
               <rect
@@ -145,14 +153,14 @@ export function StreakHeatmap({ values }: StreakHeatmapProps) {
 
       {/* Legend */}
       <div className="flex items-center gap-2 mt-3 justify-end pr-1">
-        <span className="text-[10px] tracking-widest uppercase text-on-surface-variant/40 font-label">Less</span>
+        <span className="text-[10px] tracking-widest uppercase text-on-surface-variant/40 font-label">{t('less', isoCode)}</span>
         {['var(--heatmap-empty)', 'var(--heatmap-l1)', 'var(--heatmap-l2)', 'var(--heatmap-l3)'].map((color, i) => (
           <div
             key={i}
             style={{ width: CELL, height: CELL, background: color, borderRadius: 3 }}
           />
         ))}
-        <span className="text-[10px] tracking-widest uppercase text-on-surface-variant/40 font-label">More</span>
+        <span className="text-[10px] tracking-widest uppercase text-on-surface-variant/40 font-label">{t('more', isoCode)}</span>
       </div>
     </div>
   );

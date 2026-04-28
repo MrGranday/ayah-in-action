@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { getTypedSession } from '@/lib/session';
+import { LANGUAGE_CONFIGS } from '@/config/languageConfig';
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json();
-    const { isoCode, direction, translationResourceId, nativeName } = body;
+    const { isoCode } = await req.json();
+    const config = LANGUAGE_CONFIGS[isoCode as keyof typeof LANGUAGE_CONFIGS];
 
-    // Validate payloads
-    if (!isoCode || !direction || !translationResourceId || !nativeName) {
-      return NextResponse.json({ error: 'Missing language data' }, { status: 400 });
+    if (!config) {
+      return NextResponse.json({ error: 'Unsupported language' }, { status: 400 });
     }
 
     const cookieStore = await cookies();
@@ -17,22 +17,22 @@ export async function POST(request: NextRequest) {
 
     // Hydrate the session
     session.isoCode = isoCode;
-    session.direction = direction;
-    session.translationResourceId = translationResourceId;
-    session.nativeName = nativeName;
+    session.direction = config.direction;
+    session.translationResourceId = config.quranTranslationId ?? undefined;
+    session.tafsirResourceId = config.tafsirResourceId;
+    session.nativeName = config.nativeName;
 
     await session.save();
 
     // Sync to QF Backing Preferences API
     if (session.accessToken) {
       const { setPreference } = await import('@/lib/api');
-      const { LANGUAGE_CONFIG } = await import('@/lib/config/languageMap');
       
       // Always store the translation resource ID (integer values are supported unboundedly)
-      await setPreference(session.accessToken, 'translations', 'selectedTranslations', [translationResourceId]);
+      await setPreference(session.accessToken, 'translations', 'selectedTranslations', [session.translationResourceId]);
       
       // Limit ISO language uploads to the QF supported enums to avoid 422 crash
-      if (LANGUAGE_CONFIG[isoCode]?.qfPreferenceSupported) {
+      if (config.qfPreferenceSupported) {
         await setPreference(session.accessToken, 'language', 'language', isoCode);
       }
     }

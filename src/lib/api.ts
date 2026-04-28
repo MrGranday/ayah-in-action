@@ -4,6 +4,7 @@ export interface Note {
   id: string;
   body: string;
   createdAt: string;
+  created_at?: string;
   updatedAt?: string;
 }
 

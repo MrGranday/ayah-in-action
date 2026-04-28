@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, Amiri, Newsreader } from "next/font/google";
+import { 
+  Inter, 
+  Amiri, 
+  Newsreader, 
+  Noto_Naskh_Arabic, 
+  Noto_Nastaliq_Urdu,
+  Vazirmatn,
+  Noto_Sans_Bengali,
+  Noto_Sans_SC
+} from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -22,7 +31,38 @@ const newsreader = Newsreader({
   style: ["normal", "italic"],
 });
 
+const notoNaskh = Noto_Naskh_Arabic({
+  variable: "--font-noto-naskh",
+  subsets: ["arabic"],
+  display: "swap",
+});
+
+const notoNastaliq = Noto_Nastaliq_Urdu({
+  variable: "--font-noto-nastaliq",
+  subsets: ["arabic"],
+  display: "swap",
+});
+
+const vazirmatn = Vazirmatn({
+  variable: "--font-vazirmatn",
+  subsets: ["arabic", "latin"],
+  display: "swap",
+});
+
+const notoBengali = Noto_Sans_Bengali({
+  variable: "--font-noto-bengali",
+  subsets: ["bengali"],
+  display: "swap",
+});
+
+const notoChinese = Noto_Sans_SC({
+  variable: "--font-noto-chinese",
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
+  metadataBase: new URL('https://ayah-in-action.vercel.app/'),
   title: {
     default: 'Ayah in Action',
     template: '%s | Ayah in Action',
@@ -83,7 +123,7 @@ export default async function RootLayout({
     <html
       lang={session.isoCode || "en"}
       dir={session.direction || "ltr"}
-      className={`${inter.variable} ${amiri.variable} ${newsreader.variable} h-full antialiased`}
+      className={`${inter.variable} ${amiri.variable} ${newsreader.variable} ${notoNaskh.variable} ${notoNastaliq.variable} ${vazirmatn.variable} ${notoBengali.variable} ${notoChinese.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
