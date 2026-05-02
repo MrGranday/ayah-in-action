@@ -28,9 +28,11 @@ export async function generateAtelierGuidance() {
 
   if (!key) return { error: 'no_key' };
 
+  const config = await import('@/config/languageConfig').then(m => m.getLanguageConfig(isoCode));
+
   const SYSTEM_PROMPT = `${buildLanguageSystemBlock(isoCode)}
 
-You are 'The Atelier' technical guide. Your goal is to explain the value of the user's current AI configuration in ${isoCode}.
+You are 'The Atelier' technical guide. Your goal is to explain the value of the user's current AI configuration in ${config.llmName}.
 
 Rules:
 - Briefly explain why their selected model (${model}) is a good choice for spiritual guidance.
@@ -40,11 +42,11 @@ Rules:
 Format:
 {
   "_lang_audit": "${buildLangAuditDescription(isoCode)}",
-  "technical_insight": "A brief explanation of their AI setup in ${isoCode}...",
+  "technical_insight": "A brief explanation of their AI setup in ${config.llmName}...",
   "recommendation": "A friendly encouragement to continue their spiritual tracking."
 }`;
 
-  const userMsg = wrapUserPrompt(`Explain my AI configuration using ${model}.`, isoCode);
+  const userMsg = wrapUserPrompt(`Explain my AI configuration for model: ${model}.`, isoCode);
 
   const callModel = async () => {
     let text = '';

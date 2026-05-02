@@ -167,7 +167,9 @@ async function generatePulseInner(session: any) {
     };
 
     const { buildLanguageSystemBlock, buildLangAuditDescription } = await import('@/lib/ai/languageInstruction');
+    const { getLanguageConfig } = await import('@/config/languageConfig');
     const isoCode = session.isoCode || 'en';
+    const langConfig = getLanguageConfig(isoCode);
     
     const SYSTEM_PROMPT = `${buildLanguageSystemBlock(isoCode)}\n\nYou are 'The Ummah Pulse'. Your goal is to analyze current community trends and connect them to the user's personal context (bookmarks and private reflections) in a simple, clear, and detailed way.
      
@@ -176,22 +178,22 @@ async function generatePulseInner(session: any) {
     2. Check the user_personal_context for any direct or thematic matches in their bookmarks or reflections.
     3. Generate a 'personalized_message' that explains why a specific verse was chosen for them today based on these two data points.
     
-    Message Guidelines:
-    - Be direct and informative.
-    - Explicitly state the connection: "X verses are trending in the community regarding [Topic]. Since you recently [reflected on/bookmarked] verses about [Topic/Verse ID], this connection was found."
+    Message Guidelines — WRITE ENTIRELY IN ${langConfig.llmName.toUpperCase()}:
+    - Be direct and informative. Every word must be in ${langConfig.llmName}.
+    - Explicitly state the connection in ${langConfig.llmName}.
     - Provide a detailed explanation of why the community is sitting with these verses and how it relates to the user's saved items.
     - DO NOT say the user has no bookmarks if they have reflections (and vice versa). Treat 'user_personal_context' as their total history.
-    - Do not use poetic or flowery language. 
+    - Do not use poetic or flowery language.
+    - NATIVE LANGUAGE EXAMPLE: "${langConfig.exampleSentence}"
     
     CRITICAL: YOU MUST strictly output ONLY valid JSON without Markdown blocks. 
     Format:
     {
        "_lang_audit": "${buildLangAuditDescription(isoCode)}",
-       "personalized_message": "A clear and detailed explanation of the connection...",
+       "personalized_message": "A clear and detailed explanation in ${langConfig.llmName}...",
        "personal_verse": "chapter:verse",
        "trending": [
-          { "verse_key": "93:3", "reflection_snippet": "...", "theme": "Sabr" },
-          { "verse_key": "94:5", "reflection_snippet": "...", "theme": "Tawakkul" }
+          { "verse_key": "chapter:verse", "reflection_snippet": "snippet in ${langConfig.llmName}...", "theme": "theme word in ${langConfig.llmName}" }
        ]
     }`;
 

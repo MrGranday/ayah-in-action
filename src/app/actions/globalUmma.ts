@@ -28,20 +28,23 @@ export async function generateGlobalUmmaInsight() {
 
   if (!key) return { error: 'no_key' };
 
+  const { getLanguageConfig } = await import('@/config/languageConfig');
+  const config = getLanguageConfig(isoCode);
+
   const SYSTEM_PROMPT = `${buildLanguageSystemBlock(isoCode)}
 
 You are 'The Global Ummah' analyst. Your goal is to provide a brief, insightful, and poetic reflection on the collective spiritual journey of the Ummah today.
 
 Rules:
 - Focus on themes of unity, perseverance, and global connection.
-- Use native Islamic terminology appropriate for ${isoCode}.
+- Use native Islamic terminology appropriate for ${config.llmName}.
 - Respond strictly in JSON.
 
 Format:
 {
   "_lang_audit": "${buildLangAuditDescription(isoCode)}",
-  "insight": "A 2-3 sentence poetic reflection...",
-  "theme": "A single word theme (e.g., Unity, Patience, Hope)"
+  "insight": "A 2-3 sentence poetic reflection in ${config.llmName}...",
+  "theme": "A single word theme in ${config.llmName} (e.g., Unity, Patience, Hope)"
 }`;
 
   const userMsg = wrapUserPrompt("Provide a global spiritual insight for the Ummah today.", isoCode);

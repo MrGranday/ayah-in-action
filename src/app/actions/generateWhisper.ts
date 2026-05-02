@@ -183,14 +183,24 @@ const TOOLS_GEMINI: FunctionDeclaration[] = [
 
 
 
-/** 
- * SYNTHESIS_PROMPT: Used for Phase 2 of Groq/HF generation.
- * This instructs the model to take the gathered tool data and finalize the JSON output.
+/**
+ * Native-language fallbacks for when the AI provider fails to return a valid response.
+ * These are used instead of the previously hardcoded English fallback text.
+ * BUG FIX: The English fallback was being shown regardless of the user's language.
  */
-const SYNTHESIS_PROMPT = `Based on the Quranic search results and Tafsir provided in the conversation history, finalize the spiritual guidance. 
-You MUST output strictly a JSON object with this structure:
-{ "_lang_audit": "...", "verse_key": "...", "guidance": "...", "reflection": "..." }
-Do not provide any conversational text before or after the JSON.`;
+const NATIVE_FALLBACKS: Record<string, { guidance: string; reflection: string }> = {
+  en: { guidance: 'Indeed, with hardship comes ease. (Quran 94:6)', reflection: 'Take a moment to breathe and trust in Allah\'s plan.' },
+  ar: { guidance: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا — مع كل صعوبة يسر. (94:6)', reflection: 'خذ لحظة للتنفس وتوكل على الله.' },
+  ur: { guidance: 'بے شک ہر مشکل کے ساتھ آسانی ہے۔ (سورۃ 94:6)', reflection: 'ایک لمحہ رکیں اور اللہ پر بھروسہ رکھیں۔' },
+  bn: { guidance: 'নিশ্চয়ই প্রতিটি কষ্টের সাথে স্বস্তি আছে। (94:6)', reflection: 'একটু শ্বাস নিন এবং আল্লাহর পরিকল্পনায় বিশ্বাস রাখুন।' },
+  ru: { guidance: 'Воистину, с каждой трудностью приходит облегчение. (94:6)', reflection: 'Сделайте паузу и доверьтесь плану Аллаха.' },
+  tr: { guidance: 'Şüphesiz her güçlükle birlikte bir kolaylık vardır. (94:6)', reflection: 'Bir an nefes alın ve Allah\'ın planına güvenin.' },
+  id: { guidance: 'Sesungguhnya bersama kesulitan ada kemudahan. (94:6)', reflection: 'Ambil napas sejenak dan percayakan kepada rencana Allah.' },
+  fa: { guidance: 'به راستی با هر سختی آسانی است. (94:6)', reflection: 'لحظه‌ای نفس بکشید و به برنامه الهی اعتماد کنید.' },
+  fr: { guidance: 'En vérité, avec chaque épreuve vient un soulagement. (94:6)', reflection: 'Prenez un moment pour respirer et faites confiance au plan d\'Allah.' },
+  es: { guidance: 'Ciertamente, con cada dificultad hay alivio. (94:6)', reflection: 'Tómate un momento para respirar y confía en el plan de Allah.' },
+  zh: { guidance: '确实，每一次困难之后，都有轻松。（94:6）', reflection: '停下来深呼吸，相信真主的安排。' },
+};
 
 export async function generateWhisper(challenge: string) {
   const session = await getServerSession();
@@ -395,12 +405,15 @@ Output your final response in this exact JSON structure:
       }
 
       // Phase 2: Synthesis (Convert gathered API knowledge into final JSON)
-      // This final call has NO tools enabled, preventing any further hallucination.
+      // BUG FIX: SYNTHESIS_PROMPT was previously hardcoded English, causing Groq/HF
+      // to revert to English for their final output, overriding the language lock.
+      // Now uses buildSynthesisPrompt(isoCode) which injects the full language block.
+      const { buildSynthesisPrompt } = await import('@/lib/ai/languageInstruction');
       const synthesisResponse = await openai.chat.completions.create({
         model: isGroq ? 'llama-3.3-70b-versatile' : 'meta-llama/Meta-Llama-3-70B-Instruct',
         messages: [
           ...messages,
-          { role: 'user', content: SYNTHESIS_PROMPT }
+          { role: 'user', content: buildSynthesisPrompt(isoCode) }
         ],
         response_format: isGroq ? { type: 'json_object' } : undefined
       });
@@ -478,12 +491,15 @@ Output your final response in this exact JSON structure:
     if (finalJson && !finalJson.verse_key && finalJson.verse) finalJson.verse_key = finalJson.verse;
 
     // ─── Validate result or inject graceful fallback ───────────────────────
+    // BUG FIX: Previously used hardcoded English fallback text regardless of language.
+    // Now uses a native-language fallback from the NATIVE_FALLBACKS map above.
     if (!finalJson || !finalJson.verse_key) {
-      console.warn("Model failed to output a verse_key, injecting a gentle fallback.");
+      console.warn(`[Whisper] Model failed to output a verse_key for ${isoCode}. Injecting native fallback.`);
+      const fallback = NATIVE_FALLBACKS[isoCode] || NATIVE_FALLBACKS['en'];
       finalJson = {
-        verse_key: "94:5",
-        guidance: "A brief spiritual discontinuity interrupted the connection. This verse has been drawn for you universally: Indeed, with hardship comes ease.",
-        reflection: "Take a deep breath. Know that whatever you are facing is temporary. You may resubmit your question when you are ready."
+        verse_key: '94:6',
+        guidance: fallback.guidance,
+        reflection: fallback.reflection,
       };
     }
 
