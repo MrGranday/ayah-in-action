@@ -339,7 +339,18 @@ export default function WhisperPage() {
                     key={item.id}
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    className="bg-surface-container-low hover:bg-surface-container-high p-8 rounded-[2rem] border border-outline-variant/10 transition-all duration-500 group"
+                    onClick={() => {
+                      setResult({
+                        verse_key: item.metadata?.verse_key || item.metadata?.verseKey,
+                        arabic: item.metadata?.arabic || item.text_uthmani,
+                        text_uthmani: item.metadata?.arabic || item.text_uthmani,
+                        translation: item.metadata?.translation,
+                        guidance: item.metadata?.guidance,
+                        reflection: item.metadata?.reflection
+                      });
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="bg-surface-container-low hover:bg-surface-container-high p-8 rounded-[2rem] border border-outline-variant/10 transition-all duration-500 group cursor-pointer"
                   >
                     <div className="flex flex-col md:flex-row gap-8 md:items-start">
                        <div className="md:w-48 shrink-0">

@@ -94,6 +94,7 @@ export async function getWhisperHistory() {
         const { logText, metadata } = parseNoteBody(n.body);
         return {
           id: n.id,
+          createdAt: n.createdAt,
           date: n.createdAt,
           logText,
           metadata
